@@ -11,6 +11,8 @@
 # ignore the binaries
 bin/*
 
+obj/*
+
 # Built Visual Studio Code Extensions
 *.vsix
 
