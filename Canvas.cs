@@ -16,6 +16,14 @@ public class Canvas : Form
     private GameLoop? gameLoop;
     private Thread thread;
 
+    private class MyCanvas : Form {
+
+    }
+
+    private class Engine {
+        
+    }
+
     public Canvas()
     {
 
