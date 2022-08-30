@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public class GameLoop
 {
-    private Game _myGame;
+    private IGame _myGame;
 
     /// <summary>
     /// Status of GameLoop
@@ -16,7 +16,7 @@ public class GameLoop
     /// <summary>
     /// Load Game into GameLoop
     /// </summary>
-    public void Load(Game gameObj)
+    public void Load(IGame gameObj)
     {
         _myGame = gameObj;
     }
