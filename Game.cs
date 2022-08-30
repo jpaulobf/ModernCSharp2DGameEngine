@@ -10,6 +10,13 @@ public class Game
 
     public Size Resolution { get; set; }
 
+    /**
+        Game-class constructor
+    */
+    public Game() {
+
+    }
+
     public void Load()
     {
         // Load new sprite class
@@ -23,6 +30,7 @@ public class Game
         // Set sprite coodinates
         playerSprite.X = 300;
         playerSprite.Y = 300;
+        
         // Set sprite Velocity
         playerSprite.Velocity = 300;
     }
@@ -63,7 +71,6 @@ public class Game
     public void Draw(Graphics gfx)
     {
         // Draw Background Color
-        //gfx.FillRectangle(new SolidBrush(Color.CornflowerBlue), new Rectangle(0, 0, Resolution.Width, Resolution.Height));
         gfx.Clear(Color.CornflowerBlue);
 
         // Draw Player Sprite
