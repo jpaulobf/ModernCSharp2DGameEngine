@@ -4,7 +4,7 @@ using System;
 using System.Drawing;
 using System.Windows.Input;
 
-public class Game
+public class Game : IGame
 {
     private GameSprite playerSprite;
 
