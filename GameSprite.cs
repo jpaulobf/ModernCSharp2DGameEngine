@@ -15,6 +15,10 @@ public class GameSprite
     {
     }
 
+    public void Update(Graphics gfx, long timeframe) {
+        
+    }
+
     public void Draw(Graphics gfx)
     {
         // Draw sprite image on screen
