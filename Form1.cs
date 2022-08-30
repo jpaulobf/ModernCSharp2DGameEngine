@@ -4,7 +4,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-public class Form1 : Form
+public class Canvas : Form
 {
     /*
     //System.Windows.Forms.Timer graphicsTimer;
@@ -16,7 +16,7 @@ public class Form1 : Form
     private GameLoop? gameLoop;
     private Thread thread;
 
-    public Form1()
+    public Canvas()
     {
 
         this.DoubleBuffered = true;
@@ -24,7 +24,7 @@ public class Form1 : Form
         this.components = new System.ComponentModel.Container();
         this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
         this.ClientSize = new System.Drawing.Size(800, 450);
-        this.Text = "Form1";
+        this.Text = "My C# Modern GameEngine";
 
         /*
         graphicsTimer = new System.Windows.Forms.Timer();
