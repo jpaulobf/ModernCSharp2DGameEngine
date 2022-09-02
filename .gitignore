@@ -31,3 +31,4 @@ obj/*
 obj/project.nuget.cache
 obj/project.assets.json
 obj/GameEngine.csproj.nuget.dgspec.json
+
