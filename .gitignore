@@ -28,7 +28,7 @@ obj/*
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
-obj/project.nuget.cache
-obj/project.assets.json
-obj/GameEngine.csproj.nuget.dgspec.json
+obj/project.nuget.*
+obj/project.assets.*
+obj/GameEngine.csproj.nuget.dgspec.*
 
