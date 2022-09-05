@@ -33,13 +33,20 @@ public class MyGame
      */
     private class Canvas : Form, ICanvasEngine {
         
-        private Bitmap buffer;
         private Graphics bmG;
         private System.ComponentModel.IContainer components;
-        private IGame? game;
+        private IGame game;
         private GameEngine gameEngine;
         private bool goFullscreen = false;
+        BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
+        BufferedGraphics myBuffer;
 
+        /**
+         * Canvas constructor
+         * Author: Joao Paulo B Faria
+         * Date:   04/sept/2022
+         *
+         */
         public Canvas(int targetFPS) {
             
             //define as double buffered canvas
@@ -52,8 +59,8 @@ public class MyGame
             this.Text           = "My C# Modern GameEngine";
 
             //create the backbuffer image
-            this.buffer         = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
-            this.bmG            = Graphics.FromImage(buffer);
+            this.myBuffer = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
+            this.bmG = myBuffer.Graphics;
 
             //go fullscreen
             this.GoFullscreen(goFullscreen);
@@ -62,6 +69,7 @@ public class MyGame
             this.fowardKeyboard();
 
             //init the game class
+            this.game = new Game();
             this.init();
 
             //starts the game engine, the empty canvas & engine init method.
@@ -106,7 +114,6 @@ public class MyGame
             Rectangle resolution = Screen.PrimaryScreen.Bounds;
 
             // Initialize Game
-            this.game = new Game();
             this.game.Resolution = new Size(resolution.Width, resolution.Height);
         }
 
@@ -114,12 +121,7 @@ public class MyGame
         {
             this.game.Draw(this.bmG);
             this.RenderFPS(frametime);
-            this.Invalidate();
-        }
-
-        protected override void OnPaint(PaintEventArgs e) 
-        {
-            e.Graphics.DrawImage(buffer, 0, 0);
+            this.myBuffer.Render();
         }
 
         public void update(long frametime)
@@ -140,7 +142,7 @@ public class MyGame
      */
     private class GameEngine {
 
-        private Thread? thread = null;
+        //private Thread? thread = null;
         private Task? task = null;
         private bool isEngineRunning    = true;
         private static long FPS240      = (long)(10_000_000 / 240);
