@@ -12,6 +12,9 @@ public class Game : IGame
 
     public Size Resolution { get; set; }
 
+    private bool KEY_LEFT = false;
+    private bool KEY_RIGHT = false;
+
     /**
         Game-class constructor
     */
@@ -25,7 +28,7 @@ public class Game : IGame
         playerSprite = new GameSprite();
         // Load sprite image
         string filepath = "img\\bomber-sprite.png";
-        Console.WriteLine(filepath);
+        //Console.WriteLine(filepath);
         playerSprite.SpriteImage = new Bitmap(@filepath);
         // Set sprite height & width in pixels
         playerSprite.Width = playerSprite.SpriteImage.Width;
@@ -52,24 +55,14 @@ public class Game : IGame
         // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
         //int moveDistance = (int)(playerSprite.Velocity * gameTimeElapsed);
 
-        /*
-        // Move player sprite, when Arrow Keys are pressed on Keyboard
-        if ((Keyboard.GetKeyStates(Key.Right) & KeyStates.Down) > 0)
-        {
-            playerSprite.X += moveDistance;
+        if (KEY_LEFT) {
+            playerSprite.X -= 1;
         }
-        else if ((Keyboard.GetKeyStates(Key.Left) & KeyStates.Down) > 0)
-        {
-            playerSprite.X -= moveDistance;
+
+        if (KEY_RIGHT) {
+            playerSprite.X += 1;
         }
-        else if ((Keyboard.GetKeyStates(Key.Up) & KeyStates.Down) > 0)
-        {
-            playerSprite.Y -= moveDistance;
-        }
-        else if ((Keyboard.GetKeyStates(Key.Down) & KeyStates.Down) > 0)
-        {
-            playerSprite.Y += moveDistance;
-        }*/
+
     }
 
     public void Draw(Graphics gfx)
@@ -83,16 +76,21 @@ public class Game : IGame
 
     public void KeyDown(object sender, KeyEventArgs e)
     {
-        Console.WriteLine( $"KeyDown code: {e.KeyCode}, value: {e.KeyValue}, modifiers: {e.Modifiers}" + "\r\n");
+        if (e.KeyValue == 37) {
+            KEY_LEFT = true;
+        } else if (e.KeyValue == 39) {
+            KEY_RIGHT = true;
+        }
     }
 
-    public void KeyPress(object sender, KeyPressEventArgs e)
-    {
-        Console.WriteLine($"KeyPress keychar: {e.KeyChar}" + "\r\n");
-    }
+    public void KeyPress(object sender, KeyPressEventArgs e) {}
 
     public void KeyUp(object sender, KeyEventArgs e)
     {
-        Console.WriteLine( $"KeyUp code: {e.KeyCode}, value: {e.KeyValue}, modifiers: {e.Modifiers}" + "\r\n");
+        if (e.KeyValue == 37) {
+            KEY_LEFT = false;
+        } else if (e.KeyValue == 39) {
+            KEY_RIGHT = false;
+        }
     }
 }
