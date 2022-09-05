@@ -178,7 +178,8 @@ public class MyGame
         public void Init() 
         {
             this.thread = new Thread(new ThreadStart(Run));    
-            this.thread.Priority = ThreadPriority.Normal;
+            this.thread.Priority = ThreadPriority.Highest;
+            this.thread.IsBackground = true;
             this.thread.Start();
         }
 
