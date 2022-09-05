@@ -1,6 +1,7 @@
 namespace engine;
 
 using System;
+using System.Windows;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -12,7 +13,7 @@ using game;
  * Author: Joao Paulo B Faria
  * Date:   setp/2022
  */
-public class MyGame : ApplicationContext
+public class MyGame
 {
     /**
      * Game engine constructor.
@@ -38,6 +39,7 @@ public class MyGame : ApplicationContext
         private Graphics bmG;
         private System.ComponentModel.IContainer components;
         private IGame game;
+        private GameEngine gameEngine;
 
         public Canvas(int targetFPS) {
             
@@ -61,7 +63,8 @@ public class MyGame : ApplicationContext
             this.init();
 
             //starts the game engine, the empty canvas & engine init method.
-            new GameEngine(targetFPS, this).Init();
+            this.gameEngine = new GameEngine(targetFPS, this);
+            this.gameEngine.Init();
         }
 
         private void fowardKeyboard()
@@ -70,8 +73,10 @@ public class MyGame : ApplicationContext
             this.KeyPress   += Canvas_KeyPress;
             this.KeyDown    += Canvas_KeyDown;
             this.KeyUp      += Canvas_KeyUp;
+            this.Closing    += Canvas_Closing;
         }
 
+        void Canvas_Closing(object sender, System.ComponentModel.CancelEventArgs e) {   this.gameEngine.Stop(); Application.Exit(); }
         void Canvas_KeyPress(object sender, KeyPressEventArgs e)    {   this.game.KeyPress(sender, e);  }
         void Canvas_KeyUp(object sender, KeyEventArgs e)            {   this.game.KeyUp(sender, e);     }
         void Canvas_KeyDown(object sender, KeyEventArgs e)          {   this.game.KeyDown(sender, e);   }
@@ -88,6 +93,7 @@ public class MyGame : ApplicationContext
         public void draw(long frametime)
         {
             this.game.Draw(this.bmG);
+            this.RenderFPS(frametime);
             this.Invalidate();
         }
 
@@ -99,6 +105,10 @@ public class MyGame : ApplicationContext
         public void update(long frametime)
         {
             this.game.Update(frametime);
+        }
+
+        private void RenderFPS(long frametime) {
+            this.bmG.DrawString(("FPS: " + (10_000_000 / frametime)), this.Font, Brushes.Black, 0, 0);
         }
     }
 
@@ -172,22 +182,54 @@ public class MyGame : ApplicationContext
             this.thread.Start();
         }
 
+        public void Stop() {
+            this.isEngineRunning = false;
+        }
+
+        private void Run2() {
+            long beforeUpdate       = 0;
+            long afterUpdate        = 0;
+            long beforeDraw         = 0;
+            long afterDraw          = 0;
+
+            beforeUpdate = Stopwatch.GetTimestamp();
+
+            this.update(TARGET_FRAMETIME);
+
+            afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
+
+            //only draw if there is some (any) enough time
+            if ((TARGET_FRAMETIME - afterUpdate) > 0) {
+                
+                beforeDraw = Stopwatch.GetTimestamp();
+
+                //draw
+                this.draw(TARGET_FRAMETIME);
+                
+                //and than, store the time spent
+                afterDraw = Stopwatch.GetTimestamp() - beforeDraw;
+            }           
+        }
+
         /**
          * Gameloop method
          * Author: Joao Paulo B Faria
          * Date:   sept/2022
          */
-        public void Run() 
+        private void Run() 
         {
             long timeReference      = Stopwatch.GetTimestamp();
             long beforeUpdate       = 0;
             long afterUpdate        = 0;
             long beforeDraw         = 0;
             long afterDraw          = 0;
+            long beforeSleep        = 0;
+            long afterSleep         = 0;
             long accumulator        = 0;
             long timeElapsed        = 0;
             long timeStamp          = 0;
             long lastframetime      = TARGET_FRAMETIME;
+            long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
 
             //gameloop
             if (UNLIMITED_FPS) {
@@ -237,11 +279,19 @@ public class MyGame : ApplicationContext
                         afterDraw = Stopwatch.GetTimestamp() - beforeDraw;
                     }
 
-                    //reset the accumulator
-                    accumulator = TARGET_FRAMETIME - (afterUpdate + afterDraw);
+                    //correct the timing by the stopwatch frequency (and using the same variable "afterdraw")
+                    afterDraw = ((afterUpdate + afterDraw) * frequencyCalc);
+                    accumulator = TARGET_FRAMETIME - afterDraw;
 
                     if (accumulator > 0) {
+                        
+                        beforeSleep = Stopwatch.GetTimestamp();
+
+                        //This method is unprecise... Have to found another way...
                         Thread.Sleep((int)(accumulator * 0.0001));
+
+                        afterSleep = Stopwatch.GetTimestamp() - beforeSleep;
+
                     } else {
                         /*  
                         Explanation:
@@ -253,12 +303,11 @@ public class MyGame : ApplicationContext
                         */
                         //System.out.println("Skip 1 frame... " + ++counter + " time(s)");
                         if (accumulator < 0) {
-                            Console.WriteLine("Jump...");
                             this.update(TARGET_FRAMETIME);
                         }
                     }
 
-                    lastframetime = accumulator + afterUpdate + afterDraw;
+                    lastframetime = afterDraw + (afterSleep * frequencyCalc);
                 }
             }
         }
