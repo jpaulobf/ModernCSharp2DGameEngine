@@ -1,7 +1,5 @@
 namespace engine;
 
-using System;
-using System.Windows;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
@@ -38,7 +36,7 @@ public class MyGame
         private Bitmap buffer;
         private Graphics bmG;
         private System.ComponentModel.IContainer components;
-        private IGame game;
+        private IGame? game;
         private GameEngine gameEngine;
 
         public Canvas(int targetFPS) {
@@ -120,7 +118,8 @@ public class MyGame
      */
     private class GameEngine {
 
-        private Thread? thread          = null;
+        private Thread? thread = null;
+        private Task? task = null;
         private bool isEngineRunning    = true;
         private static long FPS240      = (long)(10_000_000 / 240);
         private static long FPS120      = (long)(10_000_000 / 120);
@@ -177,39 +176,22 @@ public class MyGame
          */
         public void Init() 
         {
+            /*
             this.thread = new Thread(new ThreadStart(Run));    
             this.thread.Priority = ThreadPriority.Highest;
             this.thread.IsBackground = true;
             this.thread.Start();
+            */
+
+            /*
+            alternative:
+            */
+            this.task = new Task(Run, TaskCreationOptions.LongRunning);
+            this.task.Start();
         }
 
         public void Stop() {
             this.isEngineRunning = false;
-        }
-
-        private void Run2() {
-            long beforeUpdate       = 0;
-            long afterUpdate        = 0;
-            long beforeDraw         = 0;
-            long afterDraw          = 0;
-
-            beforeUpdate = Stopwatch.GetTimestamp();
-
-            this.update(TARGET_FRAMETIME);
-
-            afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
-
-            //only draw if there is some (any) enough time
-            if ((TARGET_FRAMETIME - afterUpdate) > 0) {
-                
-                beforeDraw = Stopwatch.GetTimestamp();
-
-                //draw
-                this.draw(TARGET_FRAMETIME);
-                
-                //and than, store the time spent
-                afterDraw = Stopwatch.GetTimestamp() - beforeDraw;
-            }           
         }
 
         /**
@@ -251,6 +233,9 @@ public class MyGame
                     //draw
                     this.draw(timeElapsed);
 
+                    Thread.Sleep(0);
+                    Thread.Yield();
+
                     //update the referencial time with the initial time
                     timeReference = timeStamp;
                 }
@@ -290,6 +275,7 @@ public class MyGame
 
                         //This method is unprecise... Have to found another way...
                         Thread.Sleep((int)(accumulator * 0.0001));
+                        Thread.Yield();
 
                         afterSleep = Stopwatch.GetTimestamp() - beforeSleep;
 
