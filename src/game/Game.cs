@@ -39,7 +39,7 @@ public class Game : IGame
         playerSprite.Y = 300;
         
         // Set sprite Velocity
-        playerSprite.Velocity = 300;
+        playerSprite.Velocity = 100;
     }
 
     public void Unload()
@@ -50,19 +50,22 @@ public class Game : IGame
 
     public void Update(long frametime)
     {
-        // Gametime elapsed
-        double gameTimeElapsed = frametime / 1000;
         // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
-        //int moveDistance = (int)(playerSprite.Velocity * gameTimeElapsed);
+        float moveDistance = (float)(playerSprite.Velocity * ((double)frametime / 10_000_000));
 
         if (KEY_LEFT) {
-            playerSprite.X -= 1;
+            playerSprite.X -= moveDistance;
         }
 
         if (KEY_RIGHT) {
-            playerSprite.X += 1;
+            playerSprite.X += moveDistance;
         }
 
+        if (playerSprite.X > 800) {
+            playerSprite.X = 0;
+        } else if (playerSprite.X < 0) {
+            playerSprite.X = 800;
+        }
     }
 
     public void Draw(Graphics gfx)
