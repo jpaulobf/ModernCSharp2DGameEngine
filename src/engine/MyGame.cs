@@ -128,7 +128,7 @@ public class MyGame
         }
 
         private void RenderFPS(long frametime) {
-            this.bmG.DrawString(("FPS: " + (10_000_000 / frametime)), this.Font, Brushes.Black, 0, 0);
+            this.bmG.DrawString(("FPS: " + (10_000_000 / frametime)), this.Font, Brushes.Black, -100, -100);
         }
     }
 
@@ -255,7 +255,7 @@ public class MyGame
                     //draw
                     this.draw(timeElapsed);
 
-                    Thread.Sleep(0);
+                    //Yield
                     Thread.Yield();
 
                     //update the referencial time with the initial time
