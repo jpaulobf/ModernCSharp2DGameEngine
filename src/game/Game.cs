@@ -8,7 +8,7 @@ using engine;
 
 public class Game : IGame
 {
-    private GameSprite playerSprite;
+    private GameSprite? playerSprite;
 
     public Size Resolution { get; set; }
 
@@ -71,7 +71,7 @@ public class Game : IGame
     public void Draw(Graphics gfx)
     {
         // Draw Background Color
-        gfx.Clear(Color.CornflowerBlue);
+        gfx.FillRectangle(Brushes.CornflowerBlue, 0, 0, 800, 450);
 
         // Draw Player Sprite
         playerSprite.Draw(gfx);
