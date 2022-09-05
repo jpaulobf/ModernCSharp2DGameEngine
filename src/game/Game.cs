@@ -39,7 +39,7 @@ public class Game : IGame
         playerSprite.Y = 300;
         
         // Set sprite Velocity
-        playerSprite.Velocity = 100;
+        playerSprite.Velocity = 200;
     }
 
     public void Unload()
