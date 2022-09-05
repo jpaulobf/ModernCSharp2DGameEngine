@@ -38,6 +38,7 @@ public class MyGame
         private System.ComponentModel.IContainer components;
         private IGame? game;
         private GameEngine gameEngine;
+        private bool goFullscreen = false;
 
         public Canvas(int targetFPS) {
             
@@ -53,6 +54,9 @@ public class MyGame
             //create the backbuffer image
             this.buffer         = new Bitmap(this.ClientSize.Width, this.ClientSize.Height);
             this.bmG            = Graphics.FromImage(buffer);
+
+            //go fullscreen
+            this.GoFullscreen(goFullscreen);
 
             //foward the keyboard methods
             this.fowardKeyboard();
@@ -74,11 +78,29 @@ public class MyGame
             this.Closing    += Canvas_Closing;
         }
 
+        private void GoFullscreen(bool fullscreen)
+        {
+            if (fullscreen) {
+                this.WindowState = FormWindowState.Normal;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+                this.Bounds = Screen.PrimaryScreen.Bounds;
+            } else {
+                this.WindowState = FormWindowState.Normal;
+                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            }
+        }
+
         void Canvas_Closing(object sender, System.ComponentModel.CancelEventArgs e) {   this.gameEngine.Stop(); Application.Exit(); }
         void Canvas_KeyPress(object sender, KeyPressEventArgs e)    {   this.game.KeyPress(sender, e);  }
-        void Canvas_KeyUp(object sender, KeyEventArgs e)            {   this.game.KeyUp(sender, e);     }
         void Canvas_KeyDown(object sender, KeyEventArgs e)          {   this.game.KeyDown(sender, e);   }
-
+        void Canvas_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyValue == 113) {
+                this.goFullscreen = !this.goFullscreen;
+                this.GoFullscreen(this.goFullscreen);
+            }
+            this.game.KeyUp(sender, e);     
+        }
+        
         private void init()
         {
             Rectangle resolution = Screen.PrimaryScreen.Bounds;
