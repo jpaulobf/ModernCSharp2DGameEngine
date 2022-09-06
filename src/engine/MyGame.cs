@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
 using game;
+using HighResolutionTimer;
 
 /**
  * This is the MyGame class
@@ -19,9 +20,9 @@ public class MyGame
      * Author: Joao Paulo B Faria
      * Date:   04/sept/2022
      */
-    public MyGame(int targetFPS) {
+    public MyGame(int targetFPS, bool useThread = true) {
         
-        Application.Run(new Canvas(targetFPS));
+        Application.Run(new Canvas(targetFPS, useThread));
 
     }
 
@@ -47,7 +48,7 @@ public class MyGame
          * Date:   04/sept/2022
          *
          */
-        public Canvas(int targetFPS) {
+        public Canvas(int targetFPS, bool useThread = true) {
             
             //define as double buffered canvas
             this.DoubleBuffered = true;
@@ -73,7 +74,7 @@ public class MyGame
             this.init();
 
             //starts the game engine, the empty canvas & engine init method.
-            this.gameEngine = new GameEngine(targetFPS, this);
+            this.gameEngine = new GameEngine(targetFPS, this, useThread);
             this.gameEngine.Init();
         }
 
@@ -130,7 +131,7 @@ public class MyGame
         }
 
         private void RenderFPS(long frametime) {
-            this.bmG.DrawString(("FPS: " + (10_000_000 / frametime)), this.Font, Brushes.Black, -100, -100);
+            this.bmG.DrawString(("FPS: " + (10_000_000 / frametime)), this.Font, Brushes.Black, 0, 0);
         }
     }
 
@@ -144,6 +145,10 @@ public class MyGame
 
         //private Thread? thread = null;
         private Task? task = null;
+        private Timer? stateTimer;
+        private long beforeTimer = 0;
+        private long lastframetimer = 0;
+        private bool useThread = true;
         private bool isEngineRunning    = true;
         private static long FPS240      = (long)(10_000_000 / 240);
         private static long FPS120      = (long)(10_000_000 / 120);
@@ -159,9 +164,10 @@ public class MyGame
          * Author: Joao Paulo B Faria
          * Date:   04/sept/2022
          */
-        public GameEngine(int targetFPS, ICanvasEngine canvas) 
+        public GameEngine(int targetFPS, ICanvasEngine canvas, bool useThread = true) 
         {
             this.UNLIMITED_FPS = false;
+            this.useThread = useThread;
             switch(targetFPS) {
                 case 30:
                     this.TARGET_FRAMETIME = FPS30;
@@ -180,9 +186,10 @@ public class MyGame
                     break;
                 case 0:
                     this.UNLIMITED_FPS = true;
+                    this.useThread = true;
                     break;
                 default:
-                    this.TARGET_FRAMETIME = FPS30;
+                    this.TARGET_FRAMETIME = (long)(10_000_000 / targetFPS);
                     break;
             }
             
@@ -191,6 +198,8 @@ public class MyGame
             } else {
                 this.game = canvas;
             }
+
+            this.lastframetimer = this.TARGET_FRAMETIME;
         }
 
         /**
@@ -200,22 +209,74 @@ public class MyGame
          */
         public void Init() 
         {
-            /*
-            this.thread = new Thread(new ThreadStart(Run));    
-            this.thread.Priority = ThreadPriority.Highest;
-            this.thread.IsBackground = true;
-            this.thread.Start();
-            */
-
-            /*
-            alternative:
-            */
-            this.task = new Task(Run, TaskCreationOptions.LongRunning);
-            this.task.Start();
+            if (this.useThread) {
+                /*
+                alternative:
+                */
+                /*
+                this.thread = new Thread(new ThreadStart(Run));    
+                this.thread.Priority = ThreadPriority.Highest;
+                this.thread.IsBackground = true;
+                this.thread.Start();
+                */
+                this.task = new Task(Run, TaskCreationOptions.LongRunning);
+                this.task.Start();
+            } else {
+                
+                /*
+                alternative:
+                */
+                /*
+                this.stateTimer             = new Timer();
+                this.stateTimer.Interval    = (int)(this.TARGET_FRAMETIME*0.0001);
+                this.stateTimer.Tick        += RunTimer;
+                this.stateTimer.Start();
+                */
+                /*
+                Still have serious problems, but its the better i could found...
+                */
+                HighResolutionTimer timer = new HighResolutionTimer((int)(this.TARGET_FRAMETIME*0.0001));
+                timer.Elapsed += RunTimer;
+                timer.Start();
+                
+                //test the performance
+                this.beforeTimer = Stopwatch.GetTimestamp();
+            }
         }
 
         public void Stop() {
             this.isEngineRunning = false;
+            if (this.stateTimer != null) {
+                this.stateTimer.Dispose();
+            }
+        }
+
+        public void RunTimer(object? sender, EventArgs e) {
+            long beforeUpdate       = 0;
+            long afterUpdate        = 0;
+            long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
+
+            if (this.isEngineRunning) {
+
+                //calc the update time
+                beforeUpdate = Stopwatch.GetTimestamp();
+
+                //update the game (gathering input from user, and processing the necessary games updates)
+                this.update(lastframetimer);
+
+                //get the timestamp after the update
+                afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
+                afterUpdate *= frequencyCalc;
+
+                //only draw if there is some (any) enough time
+                if ((TARGET_FRAMETIME - afterUpdate) > 0) {
+                    //draw
+                    this.draw(lastframetimer);
+                }
+
+                this.lastframetimer = (Stopwatch.GetTimestamp() - beforeTimer) * frequencyCalc;
+                this.beforeTimer = Stopwatch.GetTimestamp();
+            }
         }
 
         /**
@@ -247,9 +308,7 @@ public class MyGame
     
                     //compute the time from previous iteration and the current
                     timeElapsed = (timeStamp - timeReference);
-    
-                    //save the difference in an accumulator to control the pacing
-                    accumulator += timeElapsed;
+                    timeElapsed *= frequencyCalc;
     
                     //update the game (gathering input from user, and processing the necessary games updates)
                     this.update(timeElapsed);
@@ -297,9 +356,15 @@ public class MyGame
                         
                         beforeSleep = Stopwatch.GetTimestamp();
 
-                        //This method is unprecise... Have to found another way...
+                        //This method is imprecise... Have to found another way...
                         Thread.Sleep((int)(accumulator * 0.0001));
                         Thread.Yield();
+                                                
+                        //new System.Threading.ManualResetEvent(false).WaitOne((int)(accumulator * 0.0001));
+
+                        //this is another option, also imprecise
+                        //Task.Delay((int)(accumulator * 0.0001)).Wait();
+                        //await Task.Delay((int)(accumulator * 0.0001));
 
                         afterSleep = Stopwatch.GetTimestamp() - beforeSleep;
 
