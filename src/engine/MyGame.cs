@@ -32,16 +32,16 @@ public class MyGame
      * Author: Joao Paulo B Faria
      * Date:   04/sept/2022
      */
-    private class Canvas : Form, ICanvasEngine {
+    private class Canvas : Form, CanvasEngineInterface {
         
-        private Graphics bmG;
-        private System.ComponentModel.IContainer components;
-        private IGame game;
+        private GameInterface game;
         private GameEngine gameEngine;
+        private Graphics graphics;
+        private System.ComponentModel.IContainer components;
         private bool goFullscreen = false;
-        BufferedGraphicsContext currentContext = BufferedGraphicsManager.Current;
-        BufferedGraphics myBuffer;
-
+        private int ExternalResolutionWidth = 1366;
+        private int ExternalResolutionHeight = 768;
+        
         /**
          * Canvas constructor
          * Author: Joao Paulo B Faria
@@ -56,13 +56,17 @@ public class MyGame
             //start the components
             this.components     = new System.ComponentModel.Container();
             this.AutoScaleMode  = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize     = new System.Drawing.Size(800, 450);
+            this.ClientSize     = new Size(ExternalResolutionWidth, ExternalResolutionHeight);
             this.Text           = "My C# Modern GameEngine";
 
-            //create the backbuffer image
-            this.myBuffer = currentContext.Allocate(this.CreateGraphics(), this.DisplayRectangle);
-            this.bmG = myBuffer.Graphics;
+            this.StartPosition      = FormStartPosition.CenterScreen;
 
+            //create the backbuffer image
+            this.graphics           = this.CreateGraphics();
+
+            //no resizible
+            this.FormBorderStyle    = FormBorderStyle.FixedSingle;
+            
             //go fullscreen
             this.GoFullscreen(goFullscreen);
 
@@ -70,8 +74,10 @@ public class MyGame
             this.fowardKeyboard();
 
             //init the game class
-            this.game = new Game();
-            this.init();
+            this.game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                                 new Size(ExternalResolutionWidth, ExternalResolutionHeight));
+
+            this.Resize += this.game.Resize;
 
             //starts the game engine, the empty canvas & engine init method.
             this.gameEngine = new GameEngine(targetFPS, this, useThread);
@@ -90,12 +96,15 @@ public class MyGame
         private void GoFullscreen(bool fullscreen)
         {
             if (fullscreen) {
-                this.WindowState = FormWindowState.Normal;
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                this.Bounds = Screen.PrimaryScreen.Bounds;
+                this.WindowState        = FormWindowState.Normal;
+                this.FormBorderStyle    = System.Windows.Forms.FormBorderStyle.None;
+                this.Bounds             = Screen.PrimaryScreen.Bounds;
             } else {
-                this.WindowState = FormWindowState.Normal;
-                this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+                this.WindowState        = FormWindowState.Normal;
+                this.FormBorderStyle    = System.Windows.Forms.FormBorderStyle.Sizable;
+                this.ClientSize         = new Size(ExternalResolutionWidth, ExternalResolutionHeight);
+                this.Location           = new Point((Screen.PrimaryScreen.Bounds.Width / 2) - (ExternalResolutionWidth / 2), 
+                                                    (Screen.PrimaryScreen.Bounds.Height / 2) - (ExternalResolutionHeight / 2));
             }
         }
 
@@ -109,29 +118,25 @@ public class MyGame
             }
             this.game.KeyUp(sender, e);     
         }
-        
-        private void init()
-        {
-            Rectangle resolution = Screen.PrimaryScreen.Bounds;
-
-            // Initialize Game
-            this.game.Resolution = new Size(resolution.Width, resolution.Height);
-        }
 
         public void draw(long frametime)
         {
-            this.game.Draw(this.bmG);
-            this.RenderFPS(frametime);
-            this.myBuffer.Render();
-        }
+            this.game.Draw();
+            this.RenderFPS(this.game.GetGraphics(), frametime);
+            this.Render();
+        }      
 
         public void update(long frametime)
         {
             this.game.Update(frametime);
         }
 
-        private void RenderFPS(long frametime) {
-            this.bmG.DrawString(("FPS: " + (10_000_000 / frametime)), this.Font, Brushes.Black, 0, 0);
+        private void Render() {
+            this.game.Render(this.graphics);
+        }
+
+        private void RenderFPS(Graphics graphics, long frametime) {
+            graphics.DrawString(("FPS: " + (10_000_000 / frametime)), this.Font, Brushes.Black, 0, 0);
         }
     }
 
@@ -157,14 +162,14 @@ public class MyGame
         private static long FPS30       = (long)(10_000_000 / 30);
         private long TARGET_FRAMETIME   = FPS60;
         private bool UNLIMITED_FPS      = false;
-        private ICanvasEngine game;
+        private CanvasEngineInterface canvas;
 
         /**
          * Constructor. Handle with target FPS & foward actions to the empty canvas
          * Author: Joao Paulo B Faria
          * Date:   04/sept/2022
          */
-        public GameEngine(int targetFPS, ICanvasEngine canvas, bool useThread = true) 
+        public GameEngine(int targetFPS, CanvasEngineInterface canvas, bool useThread = true) 
         {
             this.UNLIMITED_FPS = false;
             this.useThread = useThread;
@@ -194,9 +199,9 @@ public class MyGame
             }
             
             if (canvas == null) {
-                this.game = new Canvas(targetFPS);
+                this.canvas = new Canvas(targetFPS);
             } else {
-                this.game = canvas;
+                this.canvas = canvas;
             }
 
             this.lastframetimer = this.TARGET_FRAMETIME;
@@ -391,13 +396,13 @@ public class MyGame
         /* Método de update, só executa quando a flag permite */
         public void update(long frametime) 
         {
-            this.game.update(frametime);
+            this.canvas.update(frametime);
         }
     
         /* Método de desenho, só executa quando a flag permite */
         public void draw(long frametime) 
         {
-            this.game.draw(frametime);
+            this.canvas.draw(frametime);
         }
     }
 }
