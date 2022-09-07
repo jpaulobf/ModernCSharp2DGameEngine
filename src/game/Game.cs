@@ -3,29 +3,50 @@ namespace game;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Windows.Input;
-using engine;
 
-public class Game : IGame
+public class Game : GameInterface
 {
-    private GameSprite? playerSprite;
-
+    private BufferedGraphics bufferedGraphics;
+    private Bitmap bufferedImage;
+    private Graphics internalGraphics;
+    private GameSprite playerSprite;
     public Size Resolution { get; set; }
-
     private bool KEY_LEFT = false;
     private bool KEY_RIGHT = false;
+    private int InternalResolutionWidth = 800;
+    private int InternalResolutionHeight = 450;
+    private float scaleW = 1.0F;
+    private float scaleH = 1.0F;
 
     /**
         Game-class constructor
     */
-    public Game() {
+    public Game(Size resolution, Size windowSize) {
+
+        //store the window resolution
+        this.Resolution         = resolution;
+
+        //create the imagebuffer
+        this.bufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
+        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, resolution.Width, resolution.Height));
+        this.internalGraphics   = bufferedGraphics.Graphics;
+
+        //define the interpolation mode
+        this.internalGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+
+        //calc the scale
+        this.scaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
+        this.scaleH = (float)((float)windowSize.Height/(float)this.InternalResolutionHeight);
+
+        this.internalGraphics.ScaleTransform(scaleW, scaleH);
+
         this.Load();
     }
 
     public void Load()
     {
         // Load new sprite class
-        playerSprite = new GameSprite();
+        this.playerSprite = new GameSprite();
         // Load sprite image
         string filepath = "img\\bomber-sprite.png";
         //Console.WriteLine(filepath);
@@ -61,20 +82,20 @@ public class Game : IGame
             playerSprite.X += moveDistance;
         }
 
-        if (playerSprite.X > 800) {
+        if (playerSprite.X > this.InternalResolutionWidth) {
             playerSprite.X = 0;
         } else if (playerSprite.X < 0) {
-            playerSprite.X = 800;
+            playerSprite.X = this.InternalResolutionWidth;
         }
     }
 
-    public void Draw(Graphics gfx)
+    public void Draw()
     {
         // Draw Background Color
-        gfx.FillRectangle(Brushes.CornflowerBlue, 0, 0, 800, 450);
+        this.internalGraphics.FillRectangle(Brushes.CornflowerBlue, 0, 0, this.InternalResolutionWidth, this.InternalResolutionHeight);
 
         // Draw Player Sprite
-        playerSprite.Draw(gfx);
+        this.playerSprite.Draw(this.internalGraphics);
     }
 
     public void KeyDown(object sender, KeyEventArgs e)
@@ -95,5 +116,27 @@ public class Game : IGame
         } else if (e.KeyValue == 39) {
             KEY_RIGHT = false;
         }
+    }
+
+    public Graphics GetGraphics() {
+        return (this.internalGraphics);
+    }
+
+    public void Render(Graphics targetGraphics) {
+        this.bufferedGraphics.Render(targetGraphics);
+    }
+
+    public void Resize(object sender, System.EventArgs e)
+    {
+        //calc new scale
+        int width = ((Form)sender).Width;
+        int height = ((Form)sender).Height;
+        this.scaleW = (float)((float)width/(float)this.InternalResolutionWidth);
+        this.scaleH = (float)((float)height/(float)this.InternalResolutionHeight);
+
+        //apply new scale
+        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, this.Resolution.Width, this.Resolution.Height));        
+        this.internalGraphics   = bufferedGraphics.Graphics;
+        this.internalGraphics.ScaleTransform(scaleW, scaleH);
     }
 }
