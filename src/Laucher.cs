@@ -9,6 +9,6 @@ static class Laucher
     /// </summary>
     static void Main()
     {
-        new MyGame(200, false);
+        new MyGame(120);
     } 
 }
