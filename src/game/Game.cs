@@ -14,8 +14,8 @@ public class Game : GameInterface
     public Size Resolution { get; set; }
     private bool KEY_LEFT = false;
     private bool KEY_RIGHT = false;
-    private int InternalResolutionWidth = 800;
-    private int InternalResolutionHeight = 450;
+    private int InternalResolutionWidth = 1000;
+    private int InternalResolutionHeight = 800;
     private float scaleW = 1.0F;
     private float scaleH = 1.0F;
     private InterpolationMode interpolationMode;
