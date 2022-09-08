@@ -40,8 +40,8 @@ public class MyGame
         private Graphics graphics;
         private System.ComponentModel.IContainer components;
         private bool goFullscreen = false;
-        private int ExternalResolutionWidth = 800;
-        private int ExternalResolutionHeight = 450;
+        private int ExternalResolutionWidth = 1000;
+        private int ExternalResolutionHeight = 800;
         private const int FPS_MAX_ARRAY = 10;
         private int[] FPS_AVERAGE = new int[FPS_MAX_ARRAY];
         private byte fps_aux_counter = 0;
@@ -373,14 +373,16 @@ public class MyGame
                         
                         beforeSleep = Stopwatch.GetTimestamp();
 
-                        //This method is imprecise... Have to found another way...
-                        Thread.Sleep((int)(accumulator * 0.0001));
+                        //This method is imprecise... Timer Resolution in .Net Takes 12~14 ms to tick 
+                        //Use, if possible, max power (target-fps: 0)
+                        Thread.Sleep(Math.Abs((short)(accumulator * 0.0001) - 12));
                         Thread.Yield();
-                                                
-                        //new System.Threading.ManualResetEvent(false).WaitOne((int)(accumulator * 0.0001));
+
+                        //this is another option, also imprecise                        
+                        //new System.Threading.ManualResetEvent(false).WaitOne(sleep);
 
                         //this is another option, also imprecise
-                        //Task.Delay((int)(accumulator * 0.0001)).Wait();
+                        //Task.Delay(sleep).Wait();
                         //await Task.Delay((int)(accumulator * 0.0001));
 
                         afterSleep = Stopwatch.GetTimestamp() - beforeSleep;
