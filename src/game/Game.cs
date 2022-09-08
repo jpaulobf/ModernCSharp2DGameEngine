@@ -28,7 +28,7 @@ public class Game : GameInterface
 
         //create the imagebuffer
         this.bufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
-        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, resolution.Width, resolution.Height));
+        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, windowSize.Width + 1, windowSize.Height + 1));
         this.internalGraphics   = bufferedGraphics.Graphics;
 
         //define the interpolation mode
@@ -128,15 +128,19 @@ public class Game : GameInterface
 
     public void Resize(object sender, System.EventArgs e)
     {
-        //calc new scale
-        int width = ((Form)sender).Width;
-        int height = ((Form)sender).Height;
-        this.scaleW = (float)((float)width/(float)this.InternalResolutionWidth);
-        this.scaleH = (float)((float)height/(float)this.InternalResolutionHeight);
+        try {
+            //calc new scale
+            int width = ((Form)sender).Width;
+            int height = ((Form)sender).Height;
+            this.scaleW = (float)((float)width/(float)this.InternalResolutionWidth);
+            this.scaleH = (float)((float)height/(float)this.InternalResolutionHeight);
 
-        //apply new scale
-        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, this.Resolution.Width, this.Resolution.Height));        
-        this.internalGraphics   = bufferedGraphics.Graphics;
-        this.internalGraphics.ScaleTransform(scaleW, scaleH);
+            //apply new scale
+            this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width + 1, height + 1));        
+            this.internalGraphics   = bufferedGraphics.Graphics;
+            this.internalGraphics.ScaleTransform(scaleW, scaleH);
+        } catch {
+            Console.WriteLine("Fail to resize...");
+        }
     }
 }
