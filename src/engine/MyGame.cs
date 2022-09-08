@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using game;
 using HighResolutionTimer;
+using System.Drawing.Drawing2D;
 
 /**
  * This is the MyGame class
@@ -41,6 +42,10 @@ public class MyGame
         private bool goFullscreen = false;
         private int ExternalResolutionWidth = 1366;
         private int ExternalResolutionHeight = 768;
+        private const int FPS_MAX_ARRAY = 10;
+        private int[] FPS_AVERAGE = new int[FPS_MAX_ARRAY];
+        private byte fps_aux_counter = 0;
+        private InterpolationMode interpolationMode = InterpolationMode.HighQualityBicubic;
         
         /**
          * Canvas constructor
@@ -62,7 +67,8 @@ public class MyGame
             this.StartPosition      = FormStartPosition.CenterScreen;
 
             //create the backbuffer image
-            this.graphics           = this.CreateGraphics();
+            this.graphics                   = this.CreateGraphics();
+            this.graphics.InterpolationMode = interpolationMode;
 
             //no resizible
             this.FormBorderStyle    = FormBorderStyle.FixedSingle;
@@ -75,13 +81,18 @@ public class MyGame
 
             //init the game class
             this.game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                 new Size(ExternalResolutionWidth, ExternalResolutionHeight));
+                                 new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
+                                 interpolationMode);
 
             this.Resize += this.game.Resize;
 
             //starts the game engine, the empty canvas & engine init method.
             this.gameEngine = new GameEngine(targetFPS, this, useThread);
             this.gameEngine.Init();
+
+            for (int i = 0; i < FPS_AVERAGE.Length; i++) {
+                FPS_AVERAGE[i] = targetFPS;
+            }
         }
 
         private void fowardKeyboard()
@@ -136,7 +147,8 @@ public class MyGame
         }
 
         private void RenderFPS(Graphics graphics, long frametime) {
-            graphics.DrawString(("FPS: " + (10_000_000 / frametime)), this.Font, Brushes.Black, 0, 0);
+            FPS_AVERAGE[fps_aux_counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
+            graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.Black, 0, 0);
         }
     }
 
