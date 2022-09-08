@@ -367,15 +367,9 @@ public class MyGame
 
                         //This method is imprecise... Timer Resolution in .Net Takes 12~14 ms to tick 
                         //Use, if possible, max power (target-fps: 0)
-                        Thread.Sleep(Math.Abs((short)(accumulator * 0.0001) - 12));
+                        //Or utilize the Timer Resolution mode (useThread = false [default])
+                        Thread.Sleep((short)(accumulator * 0.0001));
                         Thread.Yield();
-
-                        //this is another option, also imprecise                        
-                        //new System.Threading.ManualResetEvent(false).WaitOne(sleep);
-
-                        //this is another option, also imprecise
-                        //Task.Delay(sleep).Wait();
-                        //await Task.Delay((int)(accumulator * 0.0001));
 
                         afterSleep = Stopwatch.GetTimestamp() - beforeSleep;
 
