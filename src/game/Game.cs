@@ -3,6 +3,7 @@ namespace game;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Drawing.Drawing2D;
 
 public class Game : GameInterface
 {
@@ -17,14 +18,17 @@ public class Game : GameInterface
     private int InternalResolutionHeight = 450;
     private float scaleW = 1.0F;
     private float scaleH = 1.0F;
+    private InterpolationMode interpolationMode;
 
     /**
         Game-class constructor
     */
-    public Game(Size resolution, Size windowSize) {
+    public Game(Size resolution, Size windowSize, InterpolationMode interpolationMode) {
 
         //store the window resolution
         this.Resolution         = resolution;
+
+        this.interpolationMode = interpolationMode;
 
         //create the imagebuffer
         this.bufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
@@ -32,7 +36,7 @@ public class Game : GameInterface
         this.internalGraphics   = bufferedGraphics.Graphics;
 
         //define the interpolation mode
-        this.internalGraphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+        this.internalGraphics.InterpolationMode = this.interpolationMode;
 
         //calc the scale
         this.scaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
@@ -139,6 +143,7 @@ public class Game : GameInterface
             this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width + 1, height + 1));        
             this.internalGraphics   = bufferedGraphics.Graphics;
             this.internalGraphics.ScaleTransform(scaleW, scaleH);
+            this.internalGraphics.InterpolationMode = this.interpolationMode;
         } catch {
             Console.WriteLine("Fail to resize...");
         }
