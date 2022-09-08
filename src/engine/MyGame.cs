@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
 using game;
-using HighResolutionTimer;
 using System.Drawing.Drawing2D;
 
 /**
@@ -21,7 +20,7 @@ public class MyGame
      * Author: Joao Paulo B Faria
      * Date:   04/sept/2022
      */
-    public MyGame(int targetFPS, bool useThread = true) {
+    public MyGame(int targetFPS, bool useThread = false) {
         
         Application.Run(new Canvas(targetFPS, useThread));
 
@@ -53,7 +52,7 @@ public class MyGame
          * Date:   04/sept/2022
          *
          */
-        public Canvas(int targetFPS, bool useThread = true) {
+        public Canvas(int targetFPS, bool useThread = false) {
             
             //define as double buffered canvas
             this.DoubleBuffered = true;
@@ -181,7 +180,7 @@ public class MyGame
          * Author: Joao Paulo B Faria
          * Date:   04/sept/2022
          */
-        public GameEngine(int targetFPS, CanvasEngineInterface canvas, bool useThread = true) 
+        public GameEngine(int targetFPS, CanvasEngineInterface canvas, bool useThread = false) 
         {
             this.UNLIMITED_FPS = false;
             this.useThread = useThread;
@@ -240,21 +239,14 @@ public class MyGame
                 this.task.Start();
             } else {
                 
-                /*
-                alternative:
-                */
-                /*
-                this.stateTimer             = new Timer();
-                this.stateTimer.Interval    = (int)(this.TARGET_FRAMETIME*0.0001);
-                this.stateTimer.Tick        += RunTimer;
-                this.stateTimer.Start();
-                */
-                /*
-                Still have serious problems, but its the better i could found...
-                */
-                HighResolutionTimer timer = new HighResolutionTimer((int)(this.TARGET_FRAMETIME*0.0001));
-                timer.Elapsed += RunTimer;
-                timer.Start();
+                /**
+                 * Thanks to Mike Zboray - https://github.com/mzboray/HighPrecisionTimer
+                 */
+                var timer = new HighResolutionTimer.WinMMWrapper((int)(this.TARGET_FRAMETIME*0.0001), 0, HighResolutionTimer.WinMMWrapper.TimerEventType.Repeating, () =>
+                {
+                    RunTimer();
+                });
+                timer.StartElapsedTimer();
                 
                 //test the performance
                 this.beforeTimer = Stopwatch.GetTimestamp();
@@ -268,7 +260,7 @@ public class MyGame
             }
         }
 
-        public void RunTimer(object? sender, EventArgs e) {
+        public void RunTimer() {
             long beforeUpdate       = 0;
             long afterUpdate        = 0;
             long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
