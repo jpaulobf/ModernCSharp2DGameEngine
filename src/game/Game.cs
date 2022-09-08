@@ -32,7 +32,7 @@ public class Game : GameInterface
 
         //create the imagebuffer
         this.bufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
-        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, windowSize.Width + 1, windowSize.Height + 1));
+        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, windowSize.Width, windowSize.Height));
         this.internalGraphics   = bufferedGraphics.Graphics;
 
         //define the interpolation mode
@@ -140,7 +140,7 @@ public class Game : GameInterface
             this.scaleH = (float)((float)height/(float)this.InternalResolutionHeight);
 
             //apply new scale
-            this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width + 1, height + 1));        
+            this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
             this.internalGraphics   = bufferedGraphics.Graphics;
             this.internalGraphics.ScaleTransform(scaleW, scaleH);
             this.internalGraphics.InterpolationMode = this.interpolationMode;
