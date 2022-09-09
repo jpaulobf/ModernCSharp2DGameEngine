@@ -11,6 +11,7 @@ public class Game : GameInterface
     private Bitmap bufferedImage;
     private Graphics internalGraphics;
     private GameSprite playerSprite;
+    private GameSprite enemySprite;
     public Size Resolution { get; set; }
     private bool KEY_LEFT = false;
     private bool KEY_RIGHT = false;
@@ -28,6 +29,7 @@ public class Game : GameInterface
         //store the window resolution
         this.Resolution         = resolution;
 
+        //set the iterpolation mode
         this.interpolationMode = interpolationMode;
 
         //create the imagebuffer
@@ -42,48 +44,42 @@ public class Game : GameInterface
         this.scaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
         this.scaleH = (float)((float)windowSize.Height/(float)this.InternalResolutionHeight);
 
+        //transform the image based on calc scale
         this.internalGraphics.ScaleTransform(scaleW, scaleH);
 
+        //load the resources
         this.Load();
     }
 
     public void Load()
     {
         // Load new sprite class
-        this.playerSprite = new GameSprite();
-        // Load sprite image
-        string filepath = "img\\bomber-sprite.png";
-        //Console.WriteLine(filepath);
-        playerSprite.SpriteImage = new Bitmap(@filepath);
-        // Set sprite height & width in pixels
-        playerSprite.Width = playerSprite.SpriteImage.Width;
-        playerSprite.Height = playerSprite.SpriteImage.Height;
-
-        // Set sprite coodinates
-        playerSprite.X = 300;
-        playerSprite.Y = 300;
-        
-        // Set sprite Velocity
-        playerSprite.Velocity = 200;
+        this.playerSprite = new GameSprite("img\\airplanetile.png", 32, 32, 300, 300, 100);
+        this.enemySprite = new GameSprite("img\\helitile.png", 36, 23, 100, 150, 100, 2, 50);
     }
 
     public void Unload()
     {
         // Unload graphics
         // Turn off game music
+        
     }
 
     public void Update(long frametime)
     {
         // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
         float moveDistance = (float)(playerSprite.Velocity * ((double)frametime / 10_000_000));
+        playerSprite.Righting = false;
+        playerSprite.Lefting = false;
 
         if (KEY_LEFT) {
             playerSprite.X -= moveDistance;
+            playerSprite.Lefting = true;
         }
 
         if (KEY_RIGHT) {
             playerSprite.X += moveDistance;
+            playerSprite.Righting = true;
         }
 
         if (playerSprite.X > this.InternalResolutionWidth) {
@@ -91,6 +87,9 @@ public class Game : GameInterface
         } else if (playerSprite.X < 0) {
             playerSprite.X = this.InternalResolutionWidth;
         }
+
+        this.playerSprite.Update(frametime);
+        this.enemySprite.UpdateE(frametime);
     }
 
     public void Draw()
@@ -100,6 +99,8 @@ public class Game : GameInterface
 
         // Draw Player Sprite
         this.playerSprite.Draw(this.internalGraphics);
+
+        this.enemySprite.Draw(this.internalGraphics);
     }
 
     public void KeyDown(object sender, KeyEventArgs e)
