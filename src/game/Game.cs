@@ -10,8 +10,8 @@ public class Game : GameInterface
     private BufferedGraphics bufferedGraphics;
     private Bitmap bufferedImage;
     private Graphics internalGraphics;
-    private GameSprite playerSprite;
-    private GameSprite enemySprite;
+    private PlayerSprite playerSprite;
+    private EnemySprite enemySprite;
     public Size Resolution { get; set; }
     private bool KEY_LEFT = false;
     private bool KEY_RIGHT = false;
@@ -54,8 +54,8 @@ public class Game : GameInterface
     public void Load()
     {
         // Load new sprite class
-        this.playerSprite = new GameSprite("img\\airplanetile.png", 32, 32, 300, 300, 100);
-        this.enemySprite = new GameSprite("img\\helitile.png", 36, 23, 100, 150, 100, 2, 50);
+        this.playerSprite = new PlayerSprite("img\\airplanetile.png", 32, 32, 300, 300, 100);
+        this.enemySprite = new EnemySprite("img\\helitile.png", 36, 23, 100, 150, 100, 2, 50);
     }
 
     public void Unload()
@@ -89,7 +89,7 @@ public class Game : GameInterface
         }
 
         this.playerSprite.Update(frametime);
-        this.enemySprite.UpdateE(frametime);
+        this.enemySprite.Update(frametime);
     }
 
     public void Draw()
