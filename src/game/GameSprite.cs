@@ -19,6 +19,7 @@ public abstract class GameSprite
     protected byte TilesNumber = 1;
     protected int MillisecondsPerFrame = 0;
     protected long framecounter = 0;
+    protected Boolean RenderReversed = false;
 
     /**
      * GameSprite constructor
