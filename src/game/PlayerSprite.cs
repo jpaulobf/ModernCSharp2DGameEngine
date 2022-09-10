@@ -22,11 +22,7 @@ public class PlayerSprite : GameSprite {
             this.StartX = (short)(Width * 2);
         }
 
-        this.SourceRect = new Rectangle(StartX, StartY, (short)Width, (short)Height);
+        this.SourceRect = new Rectangle(StartX, StartY, (short)Width - 1, (short)Height);
         this.DestineRect = new Rectangle((short)X, (short)Y, (short)Width, (short)Height);
     }
-
-    
-
-
 }
