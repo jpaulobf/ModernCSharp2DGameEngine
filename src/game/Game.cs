@@ -10,13 +10,19 @@ public class Game : GameInterface
     private BufferedGraphics bufferedGraphics;
     private Bitmap bufferedImage;
     private Graphics internalGraphics;
+    private HUD hud;
+    private Stages stages;
     private PlayerSprite playerSprite;
-    private EnemySprite enemySprite;
+    private EnemySprite heliSprite;
+    private EnemySprite shipSprite;
+    private EnemySprite airplaneSprite;
+    private StaticSprite fuelSprite;
+    private StaticSprite houseSprite;
     public Size Resolution { get; set; }
     private bool KEY_LEFT = false;
     private bool KEY_RIGHT = false;
-    private int InternalResolutionWidth = 1000;
-    private int InternalResolutionHeight = 800;
+    private int InternalResolutionWidth = 738;
+    private int InternalResolutionHeight = 516;
     private float scaleW = 1.0F;
     private float scaleH = 1.0F;
     private InterpolationMode interpolationMode;
@@ -54,8 +60,14 @@ public class Game : GameInterface
     public void Load()
     {
         // Load new sprite class
-        this.playerSprite = new PlayerSprite("img\\airplanetile.png", 32, 32, 300, 300, 100);
-        this.enemySprite = new EnemySprite("img\\helitile.png", 36, 23, 100, 150, 100, 2, 50);
+        this.hud = new HUD();
+        this.stages = new Stages();
+        this.playerSprite = new PlayerSprite("img\\airplanetile.png", 32, 32, 350, 387, 100);
+        this.heliSprite = new EnemySprite("img\\helitile.png", 36, 23, 302, 96, 100, 2, 50);
+        this.shipSprite = new EnemySprite("img\\ship.png", 73, 18, 225, 241, 100);
+        this.fuelSprite = new StaticSprite("img\\fuel.png", 32, 55, 417, 145);
+        this.houseSprite = new StaticSprite("img\\house.png", 73, 44, 77, 298);
+        this.airplaneSprite = new EnemySprite("img\\enemyairplane.png", 37, 14, 200, 50, 400);
     }
 
     public void Unload()
@@ -88,19 +100,37 @@ public class Game : GameInterface
             playerSprite.X = this.InternalResolutionWidth;
         }
 
+        this.hud.Update(frametime);
+        this.stages.Update(frametime);
         this.playerSprite.Update(frametime);
-        this.enemySprite.Update(frametime);
+        this.heliSprite.Update(frametime);
+        this.shipSprite.Update(frametime);
+        this.fuelSprite.Update(frametime);
+        this.houseSprite.Update(frametime);
+        this.airplaneSprite.Update(frametime);
     }
 
     public void Draw()
     {
         // Draw Background Color
-        this.internalGraphics.FillRectangle(Brushes.CornflowerBlue, 0, 0, this.InternalResolutionWidth, this.InternalResolutionHeight);
+        this.internalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(255, 45, 50, 184)), 0, 0, this.InternalResolutionWidth, this.InternalResolutionHeight);
+
+        this.hud.Draw(this.internalGraphics);
+
+        this.stages.Draw(this.internalGraphics);
 
         // Draw Player Sprite
         this.playerSprite.Draw(this.internalGraphics);
 
-        this.enemySprite.Draw(this.internalGraphics);
+        this.heliSprite.Draw(this.internalGraphics);
+
+        this.shipSprite.Draw(this.internalGraphics);
+
+        this.fuelSprite.Draw(this.internalGraphics);
+
+        this.houseSprite.Draw(this.internalGraphics);
+
+        this.airplaneSprite.Draw(this.internalGraphics);
     }
 
     public void KeyDown(object sender, KeyEventArgs e)
