@@ -21,11 +21,19 @@ public class Game : GameInterface
     public Size Resolution { get; set; }
     private bool KEY_LEFT = false;
     private bool KEY_RIGHT = false;
-    private int InternalResolutionWidth = 738;
-    private int InternalResolutionHeight = 516;
+    protected int InternalResolutionWidth = 738;
+    protected int InternalResolutionHeight = 516;
     private float scaleW = 1.0F;
     private float scaleH = 1.0F;
     private InterpolationMode interpolationMode;
+
+    public int GetInternalResolutionWidth() {
+        return (this.InternalResolutionWidth);
+    }
+
+    public int GetInternalResolutionHeight() {
+        return (this.InternalResolutionHeight);
+    }
 
     /**
         Game-class constructor
@@ -60,14 +68,14 @@ public class Game : GameInterface
     public void Load()
     {
         // Load new sprite class
-        this.hud = new HUD();
-        this.stages = new Stages();
-        this.playerSprite = new PlayerSprite("img\\airplanetile.png", 32, 32, 350, 387, 100);
-        this.heliSprite = new EnemySprite("img\\helitile.png", 36, 23, 302, 96, 100, 2, 50);
-        this.shipSprite = new EnemySprite("img\\ship.png", 73, 18, 225, 241, 100);
-        this.fuelSprite = new StaticSprite("img\\fuel.png", 32, 55, 417, 145);
-        this.houseSprite = new StaticSprite("img\\house.png", 73, 44, 77, 298);
-        this.airplaneSprite = new EnemySprite("img\\enemyairplane.png", 37, 14, 200, 50, 400);
+        this.hud = new HUD(this);
+        this.stages = new Stages(this);
+        this.playerSprite = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
+        this.heliSprite = new EnemySprite(this, "img\\helitile.png", 36, 23, 302, 96, 100, 2, 50);
+        this.shipSprite = new EnemySprite(this, "img\\ship.png", 73, 18, 225, 241, 100);
+        this.fuelSprite = new StaticSprite(this, "img\\fuel.png", 32, 55, 417, 145);
+        this.houseSprite = new StaticSprite(this, "img\\house.png", 73, 44, 77, 298);
+        this.airplaneSprite = new EnemySprite(this, "img\\enemyairplane.png", 37, 14, 200, 50, 400);
     }
 
     public void Unload()
@@ -115,9 +123,9 @@ public class Game : GameInterface
         // Draw Background Color
         this.internalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(255, 45, 50, 184)), 0, 0, this.InternalResolutionWidth, this.InternalResolutionHeight);
 
-        this.hud.Draw(this.internalGraphics);
-
         this.stages.Draw(this.internalGraphics);
+
+        this.hud.Draw(this.internalGraphics);
 
         // Draw Player Sprite
         this.playerSprite.Draw(this.internalGraphics);
