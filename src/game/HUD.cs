@@ -4,8 +4,10 @@ public class HUD {
 
     private Rectangle rectSep;
     private Rectangle rect;
+    private GameInterface gameref;
 
-    public HUD() {
+    public HUD(GameInterface game) {
+        this.gameref = game;
         this.rectSep = new Rectangle(0, 428, 738, 3);
         this.rect = new Rectangle(0, 431, 738, 85);
     }
