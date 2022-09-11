@@ -2,6 +2,10 @@ namespace game;
 
 public class Stages {
 
+    private BufferedGraphics bufferedGraphics;
+    private Bitmap bufferedImage;
+    private Graphics internalGraphics;
+
     protected short currentLine = 576;
     private SolidBrush green1 = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
     private SolidBrush gray1 = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
@@ -10,6 +14,7 @@ public class Stages {
     private SolidBrush currentBrush;
     private byte currentValue = 0;
     private Rectangle drawRect = new Rectangle(0, 0, 18, 4);
+    private GameInterface gameref;
 
     protected byte[,] stage1 = new byte[,] {{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5},
                                           {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -612,36 +617,49 @@ public class Stages {
                                          };
     //protected int[,] stage2 = new int[41,587];
 
-    public Stages() {
-        Console.WriteLine(this.stage1.GetLength(0));
+    public Stages(GameInterface game) {
+        this.gameref = game;
+
+        //create the imagebuffer
+        this.bufferedImage      = new Bitmap(gameref.GetInternalResolutionWidth(), gameref.GetInternalResolutionHeight());
+        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, gameref.GetInternalResolutionWidth(), gameref.GetInternalResolutionHeight()));
+        this.internalGraphics   = bufferedGraphics.Graphics;
+        this.Render();
     }
 
     public void Update(long frametime) {
         
     }
 
-    public void Draw(Graphics gfx) {
+    private void Render() {
+
+        this.internalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(255, 45, 50, 184)), 0, 0, gameref.GetInternalResolutionWidth(), gameref.GetInternalResolutionHeight());
+
         for (short i = (short)(currentLine - 96), c = 0; i < (currentLine + 11); i++, c++) {
             for (short j = 0; j < this.stage1.GetLength(1); j++) {
                 this.currentValue = this.stage1[i, j];
                 if (this.currentValue == 1) {
                     this.drawRect.X = j * 18;
                     this.drawRect.Y = c * 4;
-                    gfx.FillRectangle(this.green1, this.drawRect);
+                    this.internalGraphics.FillRectangle(this.green1, this.drawRect);
                 } else if (this.currentValue == 5) {
                     this.drawRect.X = j * 18;
                     this.drawRect.Y = c * 4;
-                    gfx.FillRectangle(this.gray1, this.drawRect);
+                    this.internalGraphics.FillRectangle(this.gray1, this.drawRect);
                 } else if (this.currentValue == 6) {
                     this.drawRect.X = j * 18;
                     this.drawRect.Y = c * 4;
-                    gfx.FillRectangle(this.gray2, this.drawRect);
+                    this.internalGraphics.FillRectangle(this.gray2, this.drawRect);
                 } else if (this.currentValue == 7) {
                     this.drawRect.X = j * 18;
                     this.drawRect.Y = c * 4;
-                    gfx.FillRectangle(this.yellow, this.drawRect);
+                    this.internalGraphics.FillRectangle(this.yellow, this.drawRect);
                 }
             }
         }
+    }
+
+    public void Draw(Graphics gfx) {
+        this.bufferedGraphics.Render(gfx);
     }
 }
