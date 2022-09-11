@@ -2,11 +2,13 @@ namespace game;
 
 public class PlayerSprite : GameSprite {
 
+    private GameInterface gameref;
+
     /**
      * Player Sprite constructor
      */
-    public PlayerSprite(string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity) {
-        //todo...
+    public PlayerSprite(GameInterface game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity) {
+        this.gameref = game;
     }
 
     /**
