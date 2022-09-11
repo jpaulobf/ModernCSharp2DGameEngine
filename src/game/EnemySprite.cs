@@ -2,12 +2,15 @@ namespace game;
 
 public class EnemySprite : GameSprite {
 
+    private GameInterface gameref;
+
     /**
      * Enemy Sprite class
      */
-    public EnemySprite(string imageFilePath, int width, int height, int X, int Y, int velocity, byte tilesNumber = 1, int millisecondsPerFrame = 0) : base(imageFilePath, width, height, X, Y, velocity) {
+    public EnemySprite(GameInterface game, string imageFilePath, int width, int height, int X, int Y, int velocity, byte tilesNumber = 1, int millisecondsPerFrame = 0) : base(imageFilePath, width, height, X, Y, velocity) {
         this.TilesNumber = tilesNumber;
         this.MillisecondsPerFrame = millisecondsPerFrame;
+        this.gameref = game;
         //this.RenderReversed = true;
     }
 
