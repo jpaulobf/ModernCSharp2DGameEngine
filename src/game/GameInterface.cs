@@ -22,4 +22,8 @@ public interface GameInterface {
     public void KeyUp(object sender, System.Windows.Forms.KeyEventArgs e);
     
     public void Resize(object sender, System.EventArgs e);
+
+    public int GetInternalResolutionWidth();
+
+    public int GetInternalResolutionHeight();
 }
