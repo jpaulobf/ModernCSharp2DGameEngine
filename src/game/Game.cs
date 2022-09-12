@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using game.stages;
 
 public class Game : GameInterface
 {
@@ -17,23 +18,16 @@ public class Game : GameInterface
     private EnemySprite shipSprite;
     private EnemySprite airplaneSprite;
     private StaticSprite fuelSprite;
-    private StaticSprite houseSprite;
+    
     public Size Resolution { get; set; }
+    public Size WindowSize { get; }
     private bool KEY_LEFT = false;
     private bool KEY_RIGHT = false;
     protected int InternalResolutionWidth = 738;
     protected int InternalResolutionHeight = 516;
     private float scaleW = 1.0F;
     private float scaleH = 1.0F;
-    private InterpolationMode interpolationMode;
-
-    public int GetInternalResolutionWidth() {
-        return (this.InternalResolutionWidth);
-    }
-
-    public int GetInternalResolutionHeight() {
-        return (this.InternalResolutionHeight);
-    }
+    public InterpolationMode interpolationMode { get; }
 
     /**
         Game-class constructor
@@ -42,6 +36,7 @@ public class Game : GameInterface
 
         //store the window resolution
         this.Resolution         = resolution;
+        this.WindowSize         = windowSize;
 
         //set the iterpolation mode
         this.interpolationMode = interpolationMode;
@@ -74,7 +69,6 @@ public class Game : GameInterface
         this.heliSprite = new EnemySprite(this, "img\\helitile.png", 36, 23, 302, 96, 100, 2, 50);
         this.shipSprite = new EnemySprite(this, "img\\ship.png", 73, 18, 225, 241, 100);
         this.fuelSprite = new StaticSprite(this, "img\\fuel.png", 32, 55, 417, 145);
-        this.houseSprite = new StaticSprite(this, "img\\house.png", 73, 44, 77, 298);
         this.airplaneSprite = new EnemySprite(this, "img\\enemyairplane.png", 37, 14, 200, 50, 400);
     }
 
@@ -82,7 +76,6 @@ public class Game : GameInterface
     {
         // Unload graphics
         // Turn off game music
-        
     }
 
     public void Update(long frametime)
@@ -114,15 +107,11 @@ public class Game : GameInterface
         this.heliSprite.Update(frametime);
         this.shipSprite.Update(frametime);
         this.fuelSprite.Update(frametime);
-        this.houseSprite.Update(frametime);
         this.airplaneSprite.Update(frametime);
     }
 
     public void Draw()
     {
-        // Draw Background Color
-        this.internalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(255, 45, 50, 184)), 0, 0, this.InternalResolutionWidth, this.InternalResolutionHeight);
-
         this.stages.Draw(this.internalGraphics);
 
         this.hud.Draw(this.internalGraphics);
@@ -135,8 +124,6 @@ public class Game : GameInterface
         this.shipSprite.Draw(this.internalGraphics);
 
         this.fuelSprite.Draw(this.internalGraphics);
-
-        this.houseSprite.Draw(this.internalGraphics);
 
         this.airplaneSprite.Draw(this.internalGraphics);
     }
@@ -161,10 +148,6 @@ public class Game : GameInterface
         }
     }
 
-    public Graphics GetGraphics() {
-        return (this.internalGraphics);
-    }
-
     public void Render(Graphics targetGraphics) {
         this.bufferedGraphics.Render(targetGraphics);
     }
@@ -183,8 +166,18 @@ public class Game : GameInterface
             this.internalGraphics   = bufferedGraphics.Graphics;
             this.internalGraphics.ScaleTransform(scaleW, scaleH);
             this.internalGraphics.InterpolationMode = this.interpolationMode;
+
+            this.stages.Resize(sender, e);
+
         } catch {
             Console.WriteLine("Fail to resize...");
         }
     }
+
+    //Accessors
+    public Graphics GetGraphics()               {   return (this.internalGraphics);         }
+    public int GetInternalResolutionWidth()     {   return (this.InternalResolutionWidth);  }
+    public int GetInternalResolutionHeight()    {   return (this.InternalResolutionHeight); }
+    public float getScaleW()                    {  return (this.scaleW);                    }
+    public float getScaleH()                    {   return (this.scaleH);                   }
 }
