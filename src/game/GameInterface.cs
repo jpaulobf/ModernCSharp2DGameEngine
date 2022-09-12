@@ -23,7 +23,15 @@ public interface GameInterface {
     
     public void Resize(object sender, System.EventArgs e);
 
+    public System.Drawing.Drawing2D.InterpolationMode interpolationMode { get; }
+
     public int GetInternalResolutionWidth();
 
     public int GetInternalResolutionHeight();
+
+    public float getScaleW();
+    
+    public float getScaleH();
+
+    public Size WindowSize { get; }
 }
