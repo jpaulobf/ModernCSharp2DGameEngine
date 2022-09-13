@@ -78,10 +78,17 @@ public class MyGame
             //foward the keyboard methods
             this.fowardKeyboard();
 
-            //init the game class
-            this.game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                 new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
-                                 interpolationMode);
+            if (this.goFullscreen) {
+                //init the game class
+                this.game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                                     new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                                     interpolationMode);
+            } else {
+                //init the game class
+                this.game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                                     new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
+                                     interpolationMode);
+            }
 
             this.Resize += this.game.Resize;
 
