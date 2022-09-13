@@ -11,6 +11,7 @@ public class Game : GameInterface
     private BufferedGraphics bufferedGraphics;
     private Bitmap bufferedImage;
     private Graphics internalGraphics;
+    private bool WindowActionInProgress = false;
     private HUD hud;
     private Stages stages;
     private PlayerSprite playerSprite;
@@ -112,20 +113,22 @@ public class Game : GameInterface
 
     public void Draw()
     {
-        this.stages.Draw(this.internalGraphics);
+        if (!this.WindowActionInProgress) {
+            this.stages.Draw(this.internalGraphics);
 
-        this.hud.Draw(this.internalGraphics);
+            this.hud.Draw(this.internalGraphics);
 
-        // Draw Player Sprite
-        this.playerSprite.Draw(this.internalGraphics);
+            // Draw Player Sprite
+            this.playerSprite.Draw(this.internalGraphics);
 
-        this.heliSprite.Draw(this.internalGraphics);
+            this.heliSprite.Draw(this.internalGraphics);
 
-        this.shipSprite.Draw(this.internalGraphics);
+            this.shipSprite.Draw(this.internalGraphics);
 
-        this.fuelSprite.Draw(this.internalGraphics);
+            this.fuelSprite.Draw(this.internalGraphics);
 
-        this.airplaneSprite.Draw(this.internalGraphics);
+            this.airplaneSprite.Draw(this.internalGraphics);
+        }
     }
 
     public void KeyDown(object sender, KeyEventArgs e)
@@ -154,6 +157,9 @@ public class Game : GameInterface
 
     public void Resize(object sender, System.EventArgs e)
     {
+        //stop the render method
+        this.WindowActionInProgress = true;
+        
         try {
             //calc new scale
             int width = ((Form)sender).Width;
@@ -161,16 +167,21 @@ public class Game : GameInterface
             this.scaleW = (float)((float)width/(float)this.InternalResolutionWidth);
             this.scaleH = (float)((float)height/(float)this.InternalResolutionHeight);
 
+            //Dispose the buffer
+            BufferedGraphicsManager.Current.Dispose();
+
             //apply new scale
-            this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
+            this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));
             this.internalGraphics   = bufferedGraphics.Graphics;
             this.internalGraphics.ScaleTransform(scaleW, scaleH);
             this.internalGraphics.InterpolationMode = this.interpolationMode;
 
             this.stages.Resize(sender, e);
 
-        } catch {
-            Console.WriteLine("Fail to resize...");
+        } catch (Exception ex) {
+            Console.WriteLine(ex);
+        } finally {
+            this.WindowActionInProgress = false;
         }
     }
 
