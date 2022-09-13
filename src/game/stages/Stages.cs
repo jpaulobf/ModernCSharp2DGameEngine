@@ -19,6 +19,9 @@ public class Stages : StagesDef {
     protected short currentLine = 574;
     private short CURRENT_STAGE = 1;
     private StaticSprite houseSprite;
+    private StaticSprite house2Sprite;
+
+    private byte offset = 0;
     
     //protected int[,] stage2 = new int[41,587];
 
@@ -42,6 +45,7 @@ public class Stages : StagesDef {
 
         //load the house sprite
         this.houseSprite = new StaticSprite(game, "img\\house.png", 73, 44, 85);
+        this.house2Sprite = new StaticSprite(game, "img\\house2.png", 73, 44, 81);
 
         //render the current stage at the current frame
         this.RenderBackground();
@@ -50,34 +54,69 @@ public class Stages : StagesDef {
     public void Update(long frametime) {
         this.framecount += frametime;
 
-        if (this.framecount == frametime) {
-        }
-
-        if (this.framecount >= 1_000_000 && this.currentLine > 0) {
-            this.currentLine--;
-            this.framecount = 0;
-            
+        if (this.framecount >= 100_000) {
             this.RenderBackground();
             this.CheckSprites();
+            this.framecount = 0;
+            this.offset++;
+            if (this.offset >= 4) {
+                this.currentLine--;
+                this.offset = 0;
+            }
         }
     }
 
     private void CheckSprites() {
-        //2216
-        //479 até 587
+
         if ( ((currentLine - 115) * 4) < 2216 && ((currentLine + 13) * 4) > 2216) {
-            RenderSprites(2216);
+            RenderHouse(85, 2216, 1);
+        }
+
+        if ( ((currentLine - 115) * 4) < 1783 && ((currentLine + 13) * 4) > 1783) {
+            RenderHouse(557, 1783, 1);
         }
 
         if ( ((currentLine - 115) * 4) < 1710 && ((currentLine + 13) * 4) > 1710) {
-            RenderSprites(1710);
+            RenderHouse(81, 1710, 2);
+        }
+
+        if ( ((currentLine - 115) * 4) < 1637 && ((currentLine + 13) * 4) > 1637) {
+            RenderHouse(545, 1637, 2);
+        }
+
+        if ( ((currentLine - 115) * 4) < 1197 && ((currentLine + 13) * 4) > 1197) {
+            RenderHouse(581, 1197, 1);
+        }
+
+        if ( ((currentLine - 115) * 4) < 757 && ((currentLine + 13) * 4) > 757) {
+            RenderHouse(564, 757, 2);
+        }
+
+        if ( ((currentLine - 115) * 4) < 464 && ((currentLine + 13) * 4) > 464) {
+            RenderHouse(586, 464, 1);
+        }
+
+        if ( ((currentLine - 115) * 4) < 464 && ((currentLine + 13) * 4) > 464) {
+            RenderHouse(549, 245, 2);
+        }
+
+        if ( ((currentLine - 115) * 4) < 684 && ((currentLine + 13) * 4) > 684) {
+            RenderHouse(94, 684, 1);
         }
     }
 
-    private void RenderSprites(int height) {
-        this.houseSprite.Y = height - ((currentLine - 95) * 4);
-        this.houseSprite.Update(0);
-        this.houseSprite.Draw(this.internalGraphics);
+    private void RenderHouse(int X, int Y, int type) {
+        if (type == 1) {
+            this.houseSprite.X = X;
+            this.houseSprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
+            this.houseSprite.Update(0);
+            this.houseSprite.Draw(this.internalGraphics);
+        } else if (type == 2) {
+            this.house2Sprite.X = X;
+            this.house2Sprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
+            this.house2Sprite.Update(0);
+            this.house2Sprite.Draw(this.internalGraphics);
+        }
     }
 
     /**
@@ -90,19 +129,19 @@ public class Stages : StagesDef {
                 this.renderBlock = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (this.renderBlock == 1) {
                     this.drawRect.X = j * 18;
-                    this.drawRect.Y = c * 4;
+                    this.drawRect.Y = (c * 4) + offset;
                     this.internalGraphics.FillRectangle(this.green1, this.drawRect);
                 } else if (this.renderBlock == 5) {
                     this.drawRect.X = j * 18;
-                    this.drawRect.Y = c * 4;
+                    this.drawRect.Y = (c * 4) + offset;
                     this.internalGraphics.FillRectangle(this.gray1, this.drawRect);
                 } else if (this.renderBlock == 6) {
                     this.drawRect.X = j * 18;
-                    this.drawRect.Y = c * 4;
+                    this.drawRect.Y = (c * 4) + offset;
                     this.internalGraphics.FillRectangle(this.gray2, this.drawRect);
                 } else if (this.renderBlock == 7) {
                     this.drawRect.X = j * 18;
-                    this.drawRect.Y = c * 4;
+                    this.drawRect.Y = (c * 4) + offset;
                     this.internalGraphics.FillRectangle(this.yellow, this.drawRect);
                 }
             }
@@ -121,9 +160,12 @@ public class Stages : StagesDef {
         this.scaleW = (float)((float)width/(float)this.gameref.GetInternalResolutionWidth());
         this.scaleH = (float)((float)height/(float)this.gameref.GetInternalResolutionHeight());
 
+        //Dispose the buffer
+        BufferedGraphicsManager.Current.Dispose();
+
         //apply new scale
-        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
-        this.internalGraphics   = bufferedGraphics.Graphics;
+        this.bufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
+        this.internalGraphics = bufferedGraphics.Graphics;
         this.internalGraphics.ScaleTransform(scaleW, scaleH);
         this.internalGraphics.InterpolationMode = this.gameref.interpolationMode;
     }
