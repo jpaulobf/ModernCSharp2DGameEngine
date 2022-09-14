@@ -160,9 +160,6 @@ public class Stages : StagesDef {
         this.scaleW = (float)((float)width/(float)this.gameref.GetInternalResolutionWidth());
         this.scaleH = (float)((float)height/(float)this.gameref.GetInternalResolutionHeight());
 
-        //Dispose the buffer
-        BufferedGraphicsManager.Current.Dispose();
-
         //apply new scale
         this.bufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
         this.internalGraphics = bufferedGraphics.Graphics;
