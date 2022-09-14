@@ -158,6 +158,16 @@ public class MyGame
             FPS_AVERAGE[fps_aux_counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
             graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.Black, 0, 0);
         }
+
+        public void ReleaseHdc()
+        {
+            this.graphics.ReleaseHdc(this.hDC);
+        }
+
+        public void GraphicDispose()
+        {
+            this.graphics.Dispose();
+        }
     }
 
     /**
@@ -400,6 +410,8 @@ public class MyGame
                     lastframetime = afterDraw + (afterSleep * frequencyCalc);
                 }
             }
+
+            this.Dispose();
         }
     
         /* Método de update, só executa quando a flag permite */
@@ -412,6 +424,11 @@ public class MyGame
         public void draw(long frametime) 
         {
             this.canvas.draw(frametime);
+        }
+
+        private void Dispose() {
+            this.canvas.ReleaseHdc();
+            this.canvas.GraphicDispose();
         }
     }
 }
