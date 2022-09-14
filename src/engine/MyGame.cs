@@ -37,6 +37,7 @@ public class MyGame
         private GameInterface game;
         private GameEngine gameEngine;
         private Graphics graphics;
+        private IntPtr hDC;
         private System.ComponentModel.IContainer components;
         private bool goFullscreen = false;
         private int ExternalResolutionWidth = 738;
@@ -55,22 +56,23 @@ public class MyGame
         public Canvas(int targetFPS, bool useThread = false) {
             
             //define as double buffered canvas
-            this.DoubleBuffered = true;
+            //this.DoubleBuffered = true;
 
             //start the components
-            this.components     = new System.ComponentModel.Container();
-            this.AutoScaleMode  = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize     = new Size(ExternalResolutionWidth, ExternalResolutionHeight);
-            this.Text           = "My C# Modern GameEngine";
+            this.components                 = new System.ComponentModel.Container();
+            this.AutoScaleMode              = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize                 = new Size(ExternalResolutionWidth, ExternalResolutionHeight);
+            this.Text                       = "My C# Modern GameEngine";
 
-            this.StartPosition      = FormStartPosition.CenterScreen;
+            this.StartPosition              = FormStartPosition.CenterScreen;
 
             //create the backbuffer image
-            this.graphics                   = this.CreateGraphics();
+            this.hDC                        = this.CreateGraphics().GetHdc();
+            this.graphics                   = Graphics.FromHdc(this.hDC);
             this.graphics.InterpolationMode = interpolationMode;
 
             //no resizible
-            this.FormBorderStyle    = FormBorderStyle.FixedSingle;
+            this.FormBorderStyle            = FormBorderStyle.FixedSingle;
             
             //go fullscreen
             this.GoFullscreen(goFullscreen);
