@@ -18,8 +18,6 @@ public class Game : GameInterface
     private EnemySprite heliSprite;
     private EnemySprite shipSprite;
     private EnemySprite airplaneSprite;
-    private StaticSprite fuelSprite;
-    
     public Size Resolution { get; set; }
     public Size WindowSize { get; }
     private bool KEY_LEFT = false;
@@ -69,7 +67,6 @@ public class Game : GameInterface
         this.playerSprite = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
         this.heliSprite = new EnemySprite(this, "img\\helitile.png", 36, 23, 302, 96, 100, 2, 50);
         this.shipSprite = new EnemySprite(this, "img\\ship.png", 73, 18, 225, 241, 100);
-        this.fuelSprite = new StaticSprite(this, "img\\fuel.png", 32, 55, 417, 145);
         this.airplaneSprite = new EnemySprite(this, "img\\enemyairplane.png", 37, 14, 200, 50, 400);
     }
 
@@ -107,7 +104,6 @@ public class Game : GameInterface
         this.playerSprite.Update(frametime);
         this.heliSprite.Update(frametime);
         this.shipSprite.Update(frametime);
-        this.fuelSprite.Update(frametime);
         this.airplaneSprite.Update(frametime);
     }
 
@@ -124,8 +120,6 @@ public class Game : GameInterface
             this.heliSprite.Draw(this.internalGraphics);
 
             this.shipSprite.Draw(this.internalGraphics);
-
-            this.fuelSprite.Draw(this.internalGraphics);
 
             this.airplaneSprite.Draw(this.internalGraphics);
         }
@@ -159,6 +153,7 @@ public class Game : GameInterface
     {
         //stop the render method
         this.WindowActionInProgress = true;
+        System.Threading.Thread.Sleep(1);
         
         try {
             //calc new scale
@@ -167,9 +162,14 @@ public class Game : GameInterface
             this.scaleW = (float)((float)width/(float)this.InternalResolutionWidth);
             this.scaleH = (float)((float)height/(float)this.InternalResolutionHeight);
 
+            //Invalidate the current buffer
+            BufferedGraphicsManager.Current.Invalidate();
+            BufferedGraphicsManager.Current.Dispose();
+
             //apply new scale
             this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));
             this.internalGraphics   = bufferedGraphics.Graphics;
+            
             this.internalGraphics.ScaleTransform(scaleW, scaleH);
             this.internalGraphics.InterpolationMode = this.interpolationMode;
 
