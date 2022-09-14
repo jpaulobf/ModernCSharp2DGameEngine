@@ -20,6 +20,7 @@ public class Stages : StagesDef {
     private short CURRENT_STAGE = 1;
     private StaticSprite houseSprite;
     private StaticSprite house2Sprite;
+    private StaticSprite fuelSprite;
 
     private byte offset = 0;
     
@@ -46,6 +47,7 @@ public class Stages : StagesDef {
         //load the house sprite
         this.houseSprite = new StaticSprite(game, "img\\house.png", 73, 44, 85);
         this.house2Sprite = new StaticSprite(game, "img\\house2.png", 73, 44, 81);
+        this.fuelSprite = new StaticSprite(game, "img\\fuel.png", 32, 55);
 
         //render the current stage at the current frame
         this.RenderBackground();
@@ -72,6 +74,18 @@ public class Stages : StagesDef {
             RenderHouse(85, 2216, 1);
         }
 
+        if ( ((currentLine - 115) * 4) < 2063 && ((currentLine + 13) * 4) > 2063) {
+            RenderFuel(417, 2063);
+        }
+
+        if ( ((currentLine - 115) * 4) < 1923 && ((currentLine + 13) * 4) > 1923) {
+            RenderFuel(372, 1923);
+        }
+
+        if ( ((currentLine - 115) * 4) < 1850 && ((currentLine + 13) * 4) > 1850) {
+            RenderFuel(458, 1850);
+        }
+
         if ( ((currentLine - 115) * 4) < 1783 && ((currentLine + 13) * 4) > 1783) {
             RenderHouse(557, 1783, 1);
         }
@@ -84,8 +98,24 @@ public class Stages : StagesDef {
             RenderHouse(545, 1637, 2);
         }
 
+        if ( ((currentLine - 115) * 4) < 1557 && ((currentLine + 13) * 4) > 1557) {
+            RenderFuel(394, 1557);
+        }
+
+        if ( ((currentLine - 115) * 4) < 1410 && ((currentLine + 13) * 4) > 1410) {
+            RenderFuel(288, 1410);
+        }
+
+        if ( ((currentLine - 115) * 4) < 1263 && ((currentLine + 13) * 4) > 1263) {
+            RenderFuel(439, 1263);
+        }
+
         if ( ((currentLine - 115) * 4) < 1197 && ((currentLine + 13) * 4) > 1197) {
             RenderHouse(581, 1197, 1);
+        }
+
+        if ( ((currentLine - 115) * 4) < 897 && ((currentLine + 13) * 4) > 897) {
+            RenderFuel(371, 897);
         }
 
         if ( ((currentLine - 115) * 4) < 757 && ((currentLine + 13) * 4) > 757) {
@@ -103,6 +133,13 @@ public class Stages : StagesDef {
         if ( ((currentLine - 115) * 4) < 684 && ((currentLine + 13) * 4) > 684) {
             RenderHouse(94, 684, 1);
         }
+    }
+
+    private void RenderFuel(int X, int Y) {
+        this.fuelSprite.X = X;
+        this.fuelSprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
+        this.fuelSprite.Update(0);
+        this.fuelSprite.Draw(this.internalGraphics);
     }
 
     private void RenderHouse(int X, int Y, int type) {
@@ -159,6 +196,9 @@ public class Stages : StagesDef {
         int height = ((Form)sender).Height;
         this.scaleW = (float)((float)width/(float)this.gameref.GetInternalResolutionWidth());
         this.scaleH = (float)((float)height/(float)this.gameref.GetInternalResolutionHeight());
+
+        //Invalidate the current buffer
+        BufferedGraphicsManager.Current.Invalidate();
 
         //apply new scale
         this.bufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
