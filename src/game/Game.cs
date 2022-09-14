@@ -167,9 +167,6 @@ public class Game : GameInterface
             this.scaleW = (float)((float)width/(float)this.InternalResolutionWidth);
             this.scaleH = (float)((float)height/(float)this.InternalResolutionHeight);
 
-            //Dispose the buffer
-            BufferedGraphicsManager.Current.Dispose();
-
             //apply new scale
             this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));
             this.internalGraphics   = bufferedGraphics.Graphics;
