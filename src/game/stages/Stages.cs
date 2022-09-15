@@ -21,10 +21,9 @@ public class Stages : StagesDef {
     private StaticSprite houseSprite;
     private StaticSprite house2Sprite;
     private StaticSprite fuelSprite;
-
+    private EnemySprite shipSprite;
     private byte offset = 0;
-    
-    //protected int[,] stage2 = new int[41,587];
+    private Dictionary<int, Conf> stage1_sprites = new Dictionary<int, Conf>();
 
     public Stages(GameInterface game) {
         this.gameref = game;
@@ -44,34 +43,40 @@ public class Stages : StagesDef {
         //transform the image based on calc scale
         this.internalGraphics.ScaleTransform(scaleW, scaleH);
 
-        //load the house sprite
-        this.houseSprite = new StaticSprite(game, "img\\house.png", 73, 44, 85);
-        this.house2Sprite = new StaticSprite(game, "img\\house2.png", 73, 44, 81);
-        this.fuelSprite = new StaticSprite(game, "img\\fuel.png", 32, 55);
+        //load the sprites
+        this.houseSprite    = new StaticSprite(game, "img\\house.png", 73, 44, 85);
+        this.house2Sprite   = new StaticSprite(game, "img\\house2.png", 73, 44, 81);
+        this.fuelSprite     = new StaticSprite(game, "img\\fuel.png", 32, 55);
+        this.shipSprite     = new EnemySprite(game, "img\\ship.png", 73, 18);
 
-        //render the current stage at the current frame
-        this.RenderBackground();
+
+        //add stage 1 sprites
+        this.stage1_sprites.Add(2216, new Conf(1, 85, 1));
     }
 
     public void Update(long frametime) {
         this.framecount += frametime;
 
-        if (this.framecount >= 100_000) {
+        if (this.framecount >= 80_000) {
             this.RenderBackground();
-            this.CheckSprites();
+            this.CheckSprites(frametime);
             this.framecount = 0;
             this.offset++;
-            if (this.offset >= 4) {
+            if (this.offset > 3) {
                 this.currentLine--;
                 this.offset = 0;
             }
         }
     }
 
-    private void CheckSprites() {
+    private void CheckSprites(long frametime) {
 
         if ( ((currentLine - 115) * 4) < 2216 && ((currentLine + 13) * 4) > 2216) {
             RenderHouse(85, 2216, 1);
+        }
+
+        if ( ((currentLine - 115) * 4) < 2159 && ((currentLine + 13) * 4) > 2159) {
+            RenderShip(325, 2159, true);
         }
 
         if ( ((currentLine - 115) * 4) < 2063 && ((currentLine + 13) * 4) > 2063) {
@@ -114,25 +119,57 @@ public class Stages : StagesDef {
             RenderHouse(581, 1197, 1);
         }
 
+        if ( ((currentLine - 115) * 4) < 1140 && ((currentLine + 13) * 4) > 1140) {
+            RenderShip(417, 1140);
+        }
+
+        if ( ((currentLine - 115) * 4) < 993 && ((currentLine + 13) * 4) > 993) {
+            RenderShip(302, 993);
+        }
+
         if ( ((currentLine - 115) * 4) < 897 && ((currentLine + 13) * 4) > 897) {
             RenderFuel(371, 897);
         }
 
         if ( ((currentLine - 115) * 4) < 757 && ((currentLine + 13) * 4) > 757) {
-            RenderHouse(564, 757, 2);
+            RenderHouse(564, 757, 1);
+        }
+
+        if ( ((currentLine - 115) * 4) < 684 && ((currentLine + 13) * 4) > 684) {
+            RenderHouse(94, 684, 2);
+        }
+
+        if ( ((currentLine - 115) * 4) < 611 && ((currentLine + 13) * 4) > 611) {
+            RenderHouse(568, 611, 2);
         }
 
         if ( ((currentLine - 115) * 4) < 464 && ((currentLine + 13) * 4) > 464) {
             RenderHouse(586, 464, 1);
         }
 
-        if ( ((currentLine - 115) * 4) < 464 && ((currentLine + 13) * 4) > 464) {
+        if ( ((currentLine - 115) * 4) < 407 && ((currentLine + 13) * 4) > 407) {
+            RenderShip(417, 407);
+        }
+
+        if ( ((currentLine - 115) * 4) < 245 && ((currentLine + 13) * 4) > 245) {
             RenderHouse(549, 245, 2);
         }
 
-        if ( ((currentLine - 115) * 4) < 684 && ((currentLine + 13) * 4) > 684) {
-            RenderHouse(94, 684, 1);
+        if ( ((currentLine - 115) * 4) < 164 && ((currentLine + 13) * 4) > 164) {
+            RenderFuel(407, 164);
         }
+
+        if ( ((currentLine - 115) * 4) < 41 && ((currentLine + 13) * 4) > 41) {
+            RenderShip(320, 41);
+        }
+    }
+
+    private void RenderShip(int X, int Y, bool reversed = false) {
+        this.shipSprite.X = X;
+        this.shipSprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
+        this.shipSprite.RenderReversed = reversed;
+        this.shipSprite.Update(0);
+        this.shipSprite.Draw(this.internalGraphics);
     }
 
     private void RenderFuel(int X, int Y) {
