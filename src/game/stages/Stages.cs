@@ -22,6 +22,7 @@ public class Stages : StagesDef {
     private StaticSprite house2Sprite;
     private StaticSprite fuelSprite;
     private EnemySprite shipSprite;
+    private EnemySprite heliSprite;
     private byte offset = 0;
     private Dictionary<int, Conf> stage1_sprites = new Dictionary<int, Conf>();
 
@@ -48,7 +49,7 @@ public class Stages : StagesDef {
         this.house2Sprite   = new StaticSprite(game, "img\\house2.png", 73, 44, 81);
         this.fuelSprite     = new StaticSprite(game, "img\\fuel.png", 32, 55);
         this.shipSprite     = new EnemySprite(game, "img\\ship.png", 73, 18);
-
+        this.heliSprite     = new EnemySprite(game, "img\\helitile.png", 36, 23);
 
         //add stage 1 sprites
         this.stage1_sprites.Add(2216, new Conf(1, 85, 1));
@@ -57,12 +58,12 @@ public class Stages : StagesDef {
     public void Update(long frametime) {
         this.framecount += frametime;
 
-        if (this.framecount >= 80_000) {
+        if (this.framecount >= 150_000) {
             this.RenderBackground();
             this.CheckSprites(frametime);
             this.framecount = 0;
             this.offset++;
-            if (this.offset > 3) {
+            if (this.offset == 4) {
                 this.currentLine--;
                 this.offset = 0;
             }
@@ -81,6 +82,10 @@ public class Stages : StagesDef {
 
         if ( ((currentLine - 115) * 4) < 2063 && ((currentLine + 13) * 4) > 2063) {
             RenderFuel(417, 2063);
+        }
+
+        if ( ((currentLine - 115) * 4) < 2012 && ((currentLine + 13) * 4) > 2012) {
+            RenderHeli(frametime, 302, 2012);
         }
 
         if ( ((currentLine - 115) * 4) < 1923 && ((currentLine + 13) * 4) > 1923) {
@@ -107,8 +112,16 @@ public class Stages : StagesDef {
             RenderFuel(394, 1557);
         }
 
+        if ( ((currentLine - 115) * 4) < 1499 && ((currentLine + 13) * 4) > 1499) {
+            RenderHeli(frametime, 261, 1499);
+        }
+
         if ( ((currentLine - 115) * 4) < 1410 && ((currentLine + 13) * 4) > 1410) {
             RenderFuel(288, 1410);
+        }
+
+        if ( ((currentLine - 115) * 4) < 1353 && ((currentLine + 13) * 4) > 1353) {
+            RenderHeli(frametime, 339, 1353);
         }
 
         if ( ((currentLine - 115) * 4) < 1263 && ((currentLine + 13) * 4) > 1263) {
@@ -123,12 +136,20 @@ public class Stages : StagesDef {
             RenderShip(417, 1140);
         }
 
+        if ( ((currentLine - 115) * 4) < 1060 && ((currentLine + 13) * 4) > 1060) {
+            RenderHeli(frametime, 417, 1060);
+        }
+
         if ( ((currentLine - 115) * 4) < 993 && ((currentLine + 13) * 4) > 993) {
             RenderShip(302, 993);
         }
 
         if ( ((currentLine - 115) * 4) < 897 && ((currentLine + 13) * 4) > 897) {
             RenderFuel(371, 897);
+        }
+
+        if ( ((currentLine - 115) * 4) < 840 && ((currentLine + 13) * 4) > 840) {
+            RenderHeli(frametime, 458, 840);
         }
 
         if ( ((currentLine - 115) * 4) < 757 && ((currentLine + 13) * 4) > 757) {
@@ -143,12 +164,20 @@ public class Stages : StagesDef {
             RenderHouse(568, 611, 2);
         }
 
+        if ( ((currentLine - 115) * 4) < 547 && ((currentLine + 13) * 4) > 547) {
+            RenderHeli(frametime, 444, 547, true);
+        }
+
         if ( ((currentLine - 115) * 4) < 464 && ((currentLine + 13) * 4) > 464) {
             RenderHouse(586, 464, 1);
         }
-
+        
         if ( ((currentLine - 115) * 4) < 407 && ((currentLine + 13) * 4) > 407) {
             RenderShip(417, 407);
+        }
+
+        if ( ((currentLine - 115) * 4) < 327 && ((currentLine + 13) * 4) > 327) {
+            RenderHeli(frametime, 426, 327);
         }
 
         if ( ((currentLine - 115) * 4) < 245 && ((currentLine + 13) * 4) > 245) {
@@ -159,9 +188,21 @@ public class Stages : StagesDef {
             RenderFuel(407, 164);
         }
 
+        if ( ((currentLine - 115) * 4) < 107 && ((currentLine + 13) * 4) > 107) {
+            RenderHeli(frametime, 288, 107);
+        }
+
         if ( ((currentLine - 115) * 4) < 41 && ((currentLine + 13) * 4) > 41) {
             RenderShip(320, 41);
         }
+    }
+
+    private void RenderHeli(long frametime, int X, int Y, bool reversed = false) {
+        this.heliSprite.X = X;
+        this.heliSprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
+        this.heliSprite.RenderReversed = reversed;
+        this.heliSprite.Update(frametime);
+        this.heliSprite.Draw(this.internalGraphics);
     }
 
     private void RenderShip(int X, int Y, bool reversed = false) {
