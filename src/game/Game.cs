@@ -16,7 +16,6 @@ public class Game : GameInterface
     private Stages stages;
     private PlayerSprite playerSprite;
     private EnemySprite heliSprite;
-    private EnemySprite shipSprite;
     private EnemySprite airplaneSprite;
     public Size Resolution { get; set; }
     public Size WindowSize { get; }
@@ -66,7 +65,6 @@ public class Game : GameInterface
         this.stages = new Stages(this);
         this.playerSprite = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
         this.heliSprite = new EnemySprite(this, "img\\helitile.png", 36, 23, 302, 96, 100, 2, 50);
-        this.shipSprite = new EnemySprite(this, "img\\ship.png", 73, 18, 225, 241, 100);
         this.airplaneSprite = new EnemySprite(this, "img\\enemyairplane.png", 37, 14, 200, 50, 400);
     }
 
@@ -103,7 +101,6 @@ public class Game : GameInterface
         this.stages.Update(frametime);
         this.playerSprite.Update(frametime);
         this.heliSprite.Update(frametime);
-        this.shipSprite.Update(frametime);
         this.airplaneSprite.Update(frametime);
     }
 
@@ -118,8 +115,6 @@ public class Game : GameInterface
             this.playerSprite.Draw(this.internalGraphics);
 
             this.heliSprite.Draw(this.internalGraphics);
-
-            this.shipSprite.Draw(this.internalGraphics);
 
             this.airplaneSprite.Draw(this.internalGraphics);
         }
