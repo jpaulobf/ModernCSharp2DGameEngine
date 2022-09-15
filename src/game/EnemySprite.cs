@@ -7,11 +7,11 @@ public class EnemySprite : GameSprite {
     /**
      * Enemy Sprite class
      */
-    public EnemySprite(GameInterface game, string imageFilePath, int width, int height, int X, int Y, int velocity, byte tilesNumber = 1, int millisecondsPerFrame = 0) : base(imageFilePath, width, height, X, Y, velocity) {
+    public EnemySprite(GameInterface game, string imageFilePath, int width, int height, int X = 0, int Y = 0, int velocity = 0, byte tilesNumber = 1, int millisecondsPerFrame = 0, bool reversed = false) : base(imageFilePath, width, height, X, Y, velocity) {
         this.TilesNumber = tilesNumber;
         this.MillisecondsPerFrame = millisecondsPerFrame;
         this.gameref = game;
-        //this.RenderReversed = true;
+        this.RenderReversed = reversed;
     }
 
     /**
@@ -36,10 +36,5 @@ public class EnemySprite : GameSprite {
         
         this.SourceRect = new Rectangle(this.StartX, this.StartY, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
-
-        if (this.RenderReversed) {
-            this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
-            this.RenderReversed = false;
-        }
     }
 }
