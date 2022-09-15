@@ -4,6 +4,10 @@ using System.Drawing;
 
 public abstract class GameSprite
 {
+    protected const bool NORMAL   = true;
+    protected const bool REVERSED = false;
+    protected bool status         = NORMAL;
+    public bool RenderReversed { get; set; }
     public Bitmap SpriteImage { get; set; }
     public float X { get; set; }
     public float Y { get; set; }
@@ -19,7 +23,6 @@ public abstract class GameSprite
     protected byte TilesNumber = 1;
     protected int MillisecondsPerFrame = 0;
     protected long framecounter = 0;
-    protected Boolean RenderReversed = false;
 
     /**
      * GameSprite constructor
@@ -43,8 +46,12 @@ public abstract class GameSprite
 
     public void Draw(Graphics gfx)
     {
+        if (this.RenderReversed && this.status == NORMAL) {
+            this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            this.status = REVERSED;
+        }
+
         // Draw sprite image on screen
-        //public void DrawImage(Image image, Rectangle destRect, Rectangle srcRect, GraphicsUnit srcUnit);
         gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
     }
 }
