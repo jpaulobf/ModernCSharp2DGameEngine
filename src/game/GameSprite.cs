@@ -22,7 +22,6 @@ public abstract class GameSprite
     protected Rectangle DestineRect;
     protected byte TilesNumber = 1;
     protected int MillisecondsPerFrame = 0;
-    protected long framecounter = 0;
 
     /**
      * GameSprite constructor
