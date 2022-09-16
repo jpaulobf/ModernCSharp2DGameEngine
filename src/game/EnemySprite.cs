@@ -3,6 +3,7 @@ namespace game;
 public class EnemySprite : GameSprite {
 
     private GameInterface gameref;
+    protected long framecounter = 0;
 
     /**
      * Enemy Sprite class
@@ -12,6 +13,7 @@ public class EnemySprite : GameSprite {
         this.MillisecondsPerFrame = millisecondsPerFrame;
         this.gameref = game;
         this.RenderReversed = reversed;
+        this.framecounter = 0;
     }
 
     /**
@@ -19,14 +21,14 @@ public class EnemySprite : GameSprite {
      */
     public override void Update(long timeframe)
     {
-        this.framecounter += timeframe;
+        if (this.TilesNumber > 1) {            
+            this.framecounter += timeframe;
 
-        if (this.TilesNumber > 1) {
-            if (this.framecounter < this.MillisecondsPerFrame * 10_000) {
+            if (this.framecounter < this.MillisecondsPerFrame * 1_000) {
                 this.StartX = 0;
             } else {
                 this.StartX = (short)Width;
-                if (this.framecounter > this.MillisecondsPerFrame * 10_000 * 2) {
+                if (this.framecounter > this.MillisecondsPerFrame * 1_000 * 2) {
                     this.framecounter = 0;
                 }
             }
