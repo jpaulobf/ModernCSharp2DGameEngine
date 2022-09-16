@@ -59,39 +59,16 @@ public class Stages : StagesDef {
         this.stage1_sprites.Add(1060, new Conf(game, Conf.HELI, 417));
         this.stage1_sprites.Add(993,  new Conf(game, Conf.SHIP, 302));
         this.stage1_sprites.Add(897,  new Conf(game, Conf.FUEL, 371));
-
-        
+        this.stage1_sprites.Add(840,  new Conf(game, Conf.HELI, 458));
+        this.stage1_sprites.Add(757,  new Conf(game, Conf.HOUSE, 564));
+        this.stage1_sprites.Add(684,  new Conf(game, Conf.HOUSE2, 94));
+        this.stage1_sprites.Add(611,  new Conf(game, Conf.HOUSE2, 568));
+        this.stage1_sprites.Add(547,  new Conf(game, Conf.HELI, 444, 1, true));
+        this.stage1_sprites.Add(464,  new Conf(game, Conf.HOUSE, 586));
+        this.stage1_sprites.Add(407,  new Conf(game, Conf.SHIP, 417));
+        this.stage1_sprites.Add(327,  new Conf(game, Conf.HELI, 426));
     }
         /*
-
-
-        if ( ((currentLine - 115) * 4) < 840 && ((currentLine + 13) * 4) > 840) {
-            RenderHeli(frametime, 458, 840);
-        }
-
-        if ( ((currentLine - 115) * 4) < 757 && ((currentLine + 13) * 4) > 757) {
-            RenderHouse(564, 757, 1);
-        }
-
-        if ( ((currentLine - 115) * 4) < 684 && ((currentLine + 13) * 4) > 684) {
-            RenderHouse(94, 684, 2);
-        }
-
-        if ( ((currentLine - 115) * 4) < 611 && ((currentLine + 13) * 4) > 611) {
-            RenderHouse(568, 611, 2);
-        }
-
-        if ( ((currentLine - 115) * 4) < 547 && ((currentLine + 13) * 4) > 547) {
-            RenderHeli(frametime, 444, 547, true);
-        }
-
-        if ( ((currentLine - 115) * 4) < 464 && ((currentLine + 13) * 4) > 464) {
-            RenderHouse(586, 464, 1);
-        }
-        
-        if ( ((currentLine - 115) * 4) < 407 && ((currentLine + 13) * 4) > 407) {
-            RenderShip(417, 407);
-        }
 
         if ( ((currentLine - 115) * 4) < 327 && ((currentLine + 13) * 4) > 327) {
             RenderHeli(frametime, 426, 327);
@@ -116,7 +93,7 @@ public class Stages : StagesDef {
     public void Update(long frametime) {
         this.framecount += frametime;
 
-        if (this.framecount >= 150_000) {
+        if (this.framecount >= 250_000) {
             this.RenderBackground();
             this.CheckSprites(frametime);
             this.framecount = 0;
@@ -129,7 +106,6 @@ public class Stages : StagesDef {
     }
 
     private void CheckSprites(long frametime) {
-
         int startScreenFrame        = (this.currentLine - 115) * 4;
         int endScreenFrame          = (this.currentLine + 13) * 4;
         int currentLineYPosition    = (this.currentLine - 95) * 4;
@@ -143,44 +119,6 @@ public class Stages : StagesDef {
         }
     }
 
-    /*
-    private void RenderHeli(long frametime, int X, int Y, bool reversed = false) {
-        this.heliSprite.X = X;
-        this.heliSprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
-        this.heliSprite.RenderReversed = reversed;
-        this.heliSprite.Update(frametime);
-        this.heliSprite.Draw(this.internalGraphics);
-    }
-
-    private void RenderShip(int X, int Y, bool reversed = false) {
-        this.shipSprite.X = X;
-        this.shipSprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
-        this.shipSprite.RenderReversed = reversed;
-        this.shipSprite.Update(0);
-        this.shipSprite.Draw(this.internalGraphics);
-    }
-
-    private void RenderFuel(int X, int Y) {
-        this.fuelSprite.X = X;
-        this.fuelSprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
-        this.fuelSprite.Update(0);
-        this.fuelSprite.Draw(this.internalGraphics);
-    }
-
-    private void RenderHouse(int X, int Y, int type) {
-        if (type == 1) {
-            this.houseSprite.X = X;
-            this.houseSprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
-            this.houseSprite.Update(0);
-            this.houseSprite.Draw(this.internalGraphics);
-        } else if (type == 2) {
-            this.house2Sprite.X = X;
-            this.house2Sprite.Y = Y - ((currentLine - 95) * 4) + this.offset;
-            this.house2Sprite.Update(0);
-            this.house2Sprite.Draw(this.internalGraphics);
-        }
-    } */
-
     /**
      * Render the current stage at the current frame
      */
@@ -191,19 +129,19 @@ public class Stages : StagesDef {
                 this.renderBlock = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (this.renderBlock == 1) {
                     this.drawRect.X = j * 18;
-                    this.drawRect.Y = (c * 4) + offset;
+                    this.drawRect.Y = (c * 4) + this.offset;
                     this.internalGraphics.FillRectangle(this.green1, this.drawRect);
                 } else if (this.renderBlock == 5) {
                     this.drawRect.X = j * 18;
-                    this.drawRect.Y = (c * 4) + offset;
+                    this.drawRect.Y = (c * 4) + this.offset;
                     this.internalGraphics.FillRectangle(this.gray1, this.drawRect);
                 } else if (this.renderBlock == 6) {
                     this.drawRect.X = j * 18;
-                    this.drawRect.Y = (c * 4) + offset;
+                    this.drawRect.Y = (c * 4) + this.offset;
                     this.internalGraphics.FillRectangle(this.gray2, this.drawRect);
                 } else if (this.renderBlock == 7) {
                     this.drawRect.X = j * 18;
-                    this.drawRect.Y = (c * 4) + offset;
+                    this.drawRect.Y = (c * 4) + this.offset;
                     this.internalGraphics.FillRectangle(this.yellow, this.drawRect);
                 }
             }
