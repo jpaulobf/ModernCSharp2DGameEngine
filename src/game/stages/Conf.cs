@@ -28,7 +28,7 @@ public class Conf {
         } else if (type == SHIP) {
             this.gamesprite = new EnemySprite(game, "img\\ship.png", 73, 18);
         } else {
-            this.gamesprite = new EnemySprite(game, "img\\helitile.png", 36, 23);
+            this.gamesprite = new EnemySprite(game, "img\\helitile.png", 36, 23, 0, 0, 100, 2, 25);
         }
     }
 
