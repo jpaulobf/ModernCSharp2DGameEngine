@@ -33,7 +33,7 @@ public class Stages : StagesDef {
         this.internalGraphics   = bufferedGraphics.Graphics;
 
         //define the interpolation mode
-        this.internalGraphics.InterpolationMode = this.gameref.interpolationMode;
+        this.internalGraphics.InterpolationMode = this.gameref.InterpolationMode;
 
         //calc the scale
         this.scaleW = (float)((float)this.gameref.WindowSize.Width/(float)this.gameref.GetInternalResolutionWidth());
@@ -164,6 +164,6 @@ public class Stages : StagesDef {
         this.bufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
         this.internalGraphics = bufferedGraphics.Graphics;
         this.internalGraphics.ScaleTransform(scaleW, scaleH);
-        this.internalGraphics.InterpolationMode = this.gameref.interpolationMode;
+        this.internalGraphics.InterpolationMode = this.gameref.InterpolationMode;
     }
 }
