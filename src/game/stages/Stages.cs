@@ -15,10 +15,10 @@ public class Stages : StagesDef {
     private byte renderBlock = 0;
     private Rectangle drawRect = new Rectangle(0, 0, 18, 4);
     private GameInterface gameref;
-    private long framecount = 0;
     protected short currentLine = 574;
     private short CURRENT_STAGE = 1;
     private byte offset = 0;
+    private long framecount = 0;
     private Dictionary<int, SpriteFactory> stage1_sprites = new Dictionary<int, SpriteFactory>();
 
     /**
@@ -82,7 +82,7 @@ public class Stages : StagesDef {
     public void Update(long frametime) {
         this.framecount += frametime;
 
-        if (this.framecount >= 75_000) {
+        if (this.framecount >= 90_000) {
             this.RenderBackground();
             this.CheckSprites(frametime);
             this.framecount = 0;
@@ -103,11 +103,10 @@ public class Stages : StagesDef {
         int currentLineYPosition    = (this.currentLine - 95) * 4;
 
         foreach (var item in this.stage1_sprites) {
-
+            //if exist an sprite in the current screen frame, render it
             if (startScreenFrame < item.Key && endScreenFrame > item.Key) {
                 item.Value.Render(frametime, this.internalGraphics, currentLineYPosition, this.offset, item.Key);
             }
-            
         }
     }
 
