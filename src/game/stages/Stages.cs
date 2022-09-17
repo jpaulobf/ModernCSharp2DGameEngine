@@ -19,8 +19,11 @@ public class Stages : StagesDef {
     protected short currentLine = 574;
     private short CURRENT_STAGE = 1;
     private byte offset = 0;
-    private Dictionary<int, Conf> stage1_sprites = new Dictionary<int, Conf>();
+    private Dictionary<int, SpriteFactory> stage1_sprites = new Dictionary<int, SpriteFactory>();
 
+    /**
+     * Constructor
+     */
     public Stages(GameInterface game) {
         this.gameref = game;
 
@@ -40,60 +43,46 @@ public class Stages : StagesDef {
         this.internalGraphics.ScaleTransform(scaleW, scaleH);
 
         //add stage 1 sprites
-        this.stage1_sprites.Add(2216, new Conf(game, Conf.HOUSE, 85));
-        this.stage1_sprites.Add(2159, new Conf(game, Conf.SHIP, 325, 1, true));
-        this.stage1_sprites.Add(2063, new Conf(game, Conf.FUEL, 417));
-        this.stage1_sprites.Add(2012, new Conf(game, Conf.HELI, 302));
-        this.stage1_sprites.Add(1923, new Conf(game, Conf.FUEL, 372));
-        this.stage1_sprites.Add(1850, new Conf(game, Conf.FUEL, 458));
-        this.stage1_sprites.Add(1783, new Conf(game, Conf.HOUSE, 557));
-        this.stage1_sprites.Add(1710, new Conf(game, Conf.HOUSE2, 81));
-        this.stage1_sprites.Add(1637, new Conf(game, Conf.HOUSE2, 545));
-        this.stage1_sprites.Add(1557, new Conf(game, Conf.FUEL, 394));
-        this.stage1_sprites.Add(1499, new Conf(game, Conf.HELI, 261));
-        this.stage1_sprites.Add(1410, new Conf(game, Conf.FUEL, 288));
-        this.stage1_sprites.Add(1353, new Conf(game, Conf.HELI, 339));
-        this.stage1_sprites.Add(1263, new Conf(game, Conf.FUEL, 439));
-        this.stage1_sprites.Add(1197, new Conf(game, Conf.HOUSE, 581));
-        this.stage1_sprites.Add(1140, new Conf(game, Conf.SHIP, 417));
-        this.stage1_sprites.Add(1060, new Conf(game, Conf.HELI, 417));
-        this.stage1_sprites.Add(993,  new Conf(game, Conf.SHIP, 302));
-        this.stage1_sprites.Add(897,  new Conf(game, Conf.FUEL, 371));
-        this.stage1_sprites.Add(840,  new Conf(game, Conf.HELI, 458));
-        this.stage1_sprites.Add(757,  new Conf(game, Conf.HOUSE, 564));
-        this.stage1_sprites.Add(684,  new Conf(game, Conf.HOUSE2, 94));
-        this.stage1_sprites.Add(611,  new Conf(game, Conf.HOUSE2, 568));
-        this.stage1_sprites.Add(547,  new Conf(game, Conf.HELI, 444, 1, true));
-        this.stage1_sprites.Add(464,  new Conf(game, Conf.HOUSE, 586));
-        this.stage1_sprites.Add(407,  new Conf(game, Conf.SHIP, 417));
-        this.stage1_sprites.Add(327,  new Conf(game, Conf.HELI, 426));
+        this.stage1_sprites.Add(2216, new SpriteFactory(game, SpriteFactory.HOUSE, 85));
+        this.stage1_sprites.Add(2159, new SpriteFactory(game, SpriteFactory.SHIP, 325, 1, true));
+        this.stage1_sprites.Add(2063, new SpriteFactory(game, SpriteFactory.FUEL, 417));
+        this.stage1_sprites.Add(2012, new SpriteFactory(game, SpriteFactory.HELI, 302));
+        this.stage1_sprites.Add(1923, new SpriteFactory(game, SpriteFactory.FUEL, 372));
+        this.stage1_sprites.Add(1850, new SpriteFactory(game, SpriteFactory.FUEL, 458));
+        this.stage1_sprites.Add(1783, new SpriteFactory(game, SpriteFactory.HOUSE, 557));
+        this.stage1_sprites.Add(1710, new SpriteFactory(game, SpriteFactory.HOUSE2, 81));
+        this.stage1_sprites.Add(1637, new SpriteFactory(game, SpriteFactory.HOUSE2, 545));
+        this.stage1_sprites.Add(1557, new SpriteFactory(game, SpriteFactory.FUEL, 394));
+        this.stage1_sprites.Add(1499, new SpriteFactory(game, SpriteFactory.HELI, 261));
+        this.stage1_sprites.Add(1410, new SpriteFactory(game, SpriteFactory.FUEL, 288));
+        this.stage1_sprites.Add(1353, new SpriteFactory(game, SpriteFactory.HELI, 339));
+        this.stage1_sprites.Add(1263, new SpriteFactory(game, SpriteFactory.FUEL, 439));
+        this.stage1_sprites.Add(1197, new SpriteFactory(game, SpriteFactory.HOUSE, 581));
+        this.stage1_sprites.Add(1140, new SpriteFactory(game, SpriteFactory.SHIP, 417));
+        this.stage1_sprites.Add(1060, new SpriteFactory(game, SpriteFactory.HELI, 417));
+        this.stage1_sprites.Add(993,  new SpriteFactory(game, SpriteFactory.SHIP, 302));
+        this.stage1_sprites.Add(897,  new SpriteFactory(game, SpriteFactory.FUEL, 371));
+        this.stage1_sprites.Add(840,  new SpriteFactory(game, SpriteFactory.HELI, 458));
+        this.stage1_sprites.Add(757,  new SpriteFactory(game, SpriteFactory.HOUSE, 564));
+        this.stage1_sprites.Add(684,  new SpriteFactory(game, SpriteFactory.HOUSE2, 94));
+        this.stage1_sprites.Add(611,  new SpriteFactory(game, SpriteFactory.HOUSE2, 568));
+        this.stage1_sprites.Add(547,  new SpriteFactory(game, SpriteFactory.HELI, 444, 1, true));
+        this.stage1_sprites.Add(464,  new SpriteFactory(game, SpriteFactory.HOUSE, 586));
+        this.stage1_sprites.Add(407,  new SpriteFactory(game, SpriteFactory.SHIP, 417));
+        this.stage1_sprites.Add(327,  new SpriteFactory(game, SpriteFactory.HELI, 426));
+        this.stage1_sprites.Add(245,  new SpriteFactory(game, SpriteFactory.HOUSE2, 549));
+        this.stage1_sprites.Add(164,  new SpriteFactory(game, SpriteFactory.FUEL, 407));
+        this.stage1_sprites.Add(107,  new SpriteFactory(game, SpriteFactory.HELI, 288));
+        this.stage1_sprites.Add(41,   new SpriteFactory(game, SpriteFactory.SHIP, 320));
     }
-        /*
 
-        if ( ((currentLine - 115) * 4) < 327 && ((currentLine + 13) * 4) > 327) {
-            RenderHeli(frametime, 426, 327);
-        }
-
-        if ( ((currentLine - 115) * 4) < 245 && ((currentLine + 13) * 4) > 245) {
-            RenderHouse(549, 245, 2);
-        }
-
-        if ( ((currentLine - 115) * 4) < 164 && ((currentLine + 13) * 4) > 164) {
-            RenderFuel(407, 164);
-        }
-
-        if ( ((currentLine - 115) * 4) < 107 && ((currentLine + 13) * 4) > 107) {
-            RenderHeli(frametime, 288, 107);
-        }
-
-        if ( ((currentLine - 115) * 4) < 41 && ((currentLine + 13) * 4) > 41) {
-            RenderShip(320, 41);
-        } */
-
+    /**
+     * Upgrade method
+     */
     public void Update(long frametime) {
         this.framecount += frametime;
 
-        if (this.framecount >= 250_000) {
+        if (this.framecount >= 75_000) {
             this.RenderBackground();
             this.CheckSprites(frametime);
             this.framecount = 0;
@@ -105,6 +94,9 @@ public class Stages : StagesDef {
         }
     }
 
+    /**
+     * Checksprites method.
+     */
     private void CheckSprites(long frametime) {
         int startScreenFrame        = (this.currentLine - 115) * 4;
         int endScreenFrame          = (this.currentLine + 13) * 4;
@@ -148,10 +140,16 @@ public class Stages : StagesDef {
         }
     }
 
+    /**
+     * Draw method
+     */
     public void Draw(Graphics gfx) {
         this.bufferedGraphics.Render(gfx);
     }
 
+    /**
+     * Resize the background graphics, when the window resize.
+     */
     internal void Resize(object sender, System.EventArgs e)
     {
         //calc new scale
