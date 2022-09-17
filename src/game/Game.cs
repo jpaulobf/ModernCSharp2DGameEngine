@@ -15,7 +15,6 @@ public class Game : GameInterface
     private HUD hud;
     private Stages stages;
     private PlayerSprite playerSprite;
-    private EnemySprite airplaneSprite;
     public Size Resolution { get; set; }
     public Size WindowSize { get; }
     private bool KEY_LEFT = false;
@@ -60,10 +59,9 @@ public class Game : GameInterface
     public void Load()
     {
         // Load new sprite class
-        this.hud = new HUD(this);
-        this.stages = new Stages(this);
-        this.playerSprite = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
-        this.airplaneSprite = new EnemySprite(this, "img\\enemyairplane.png", 37, 14, 200, 50, 400);
+        this.hud            = new HUD(this);
+        this.stages         = new Stages(this);
+        this.playerSprite   = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
     }
 
     public void Unload()
@@ -98,7 +96,6 @@ public class Game : GameInterface
         this.hud.Update(frametime);
         this.stages.Update(frametime);
         this.playerSprite.Update(frametime);
-        this.airplaneSprite.Update(frametime);
     }
 
     public void Draw()
@@ -110,8 +107,6 @@ public class Game : GameInterface
 
             // Draw Player Sprite
             this.playerSprite.Draw(this.internalGraphics);
-
-            this.airplaneSprite.Draw(this.internalGraphics);
         }
     }
 
