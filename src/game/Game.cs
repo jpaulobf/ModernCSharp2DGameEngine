@@ -8,26 +8,29 @@ using game.stages;
 
 public class Game : GameInterface
 {
-    private BufferedGraphics bufferedGraphics;
-    private Bitmap bufferedImage;
-    private Graphics internalGraphics;
+    private BufferedGraphics BufferedGraphics;
+    private Bitmap BufferedImage;
+    private Graphics InternalGraphics;
     private bool WindowActionInProgress = false;
-    private HUD hud;
-    private Stages stages;
-    private PlayerSprite playerSprite;
+    private HUD Hud;
+    private Stages Stages;
+    private PlayerSprite PlayerSprite;
     public Size Resolution { get; set; }
     public Size WindowSize { get; }
-    private bool KEY_LEFT = false;
-    private bool KEY_RIGHT = false;
+    private bool KEY_LEFT   = false;
+    private bool KEY_RIGHT  = false;
+    private bool Paused     = false;
     protected int InternalResolutionWidth = 738;
     protected int InternalResolutionHeight = 516;
-    private float scaleW = 1.0F;
-    private float scaleH = 1.0F;
-    public InterpolationMode interpolationMode { get; }
+    private float ScaleW = 1.0F;
+    private float ScaleH = 1.0F;
+    private Font PauseFont = new Font("Arial", 16);
+    private Point PausePoint;
+    public InterpolationMode InterpolationMode { get; }
 
     /**
-        Game-class constructor
-    */
+     * Game-class constructor
+     */
     public Game(Size resolution, Size windowSize, InterpolationMode interpolationMode) {
 
         //store the window resolution
@@ -35,22 +38,25 @@ public class Game : GameInterface
         this.WindowSize         = windowSize;
 
         //set the iterpolation mode
-        this.interpolationMode = interpolationMode;
+        this.InterpolationMode = interpolationMode;
 
         //create the imagebuffer
-        this.bufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
-        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, windowSize.Width, windowSize.Height));
-        this.internalGraphics   = bufferedGraphics.Graphics;
+        this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
+        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, windowSize.Width, windowSize.Height));
+        this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //define the interpolation mode
-        this.internalGraphics.InterpolationMode = this.interpolationMode;
+        this.InternalGraphics.InterpolationMode = this.InterpolationMode;
 
         //calc the scale
-        this.scaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
-        this.scaleH = (float)((float)windowSize.Height/(float)this.InternalResolutionHeight);
+        this.ScaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
+        this.ScaleH = (float)((float)windowSize.Height/(float)this.InternalResolutionHeight);
 
         //transform the image based on calc scale
-        this.internalGraphics.ScaleTransform(scaleW, scaleH);
+        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+
+        //screen center
+        this.PausePoint = new Point((int)windowSize.Width/2 - 80, (int)windowSize.Height/2 - 50);
 
         //load the resources
         this.Load();
@@ -59,9 +65,9 @@ public class Game : GameInterface
     public void Load()
     {
         // Load new sprite class
-        this.hud            = new HUD(this);
-        this.stages         = new Stages(this);
-        this.playerSprite   = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
+        this.Hud            = new HUD(this);
+        this.Stages         = new Stages(this);
+        this.PlayerSprite   = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
     }
 
     public void Unload()
@@ -72,41 +78,50 @@ public class Game : GameInterface
 
     public void Update(long frametime)
     {
-        // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
-        float moveDistance = (float)(playerSprite.Velocity * ((double)frametime / 10_000_000));
-        playerSprite.Righting = false;
-        playerSprite.Lefting = false;
+        if (!Paused) {
+            // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
+            float moveDistance = (float)(PlayerSprite.Velocity * ((double)frametime / 10_000_000));
+            PlayerSprite.Righting = false;
+            PlayerSprite.Lefting = false;
 
-        if (KEY_LEFT) {
-            playerSprite.X -= moveDistance;
-            playerSprite.Lefting = true;
+            if (KEY_LEFT) {
+                PlayerSprite.X -= moveDistance;
+                PlayerSprite.Lefting = true;
+            }
+
+            if (KEY_RIGHT) {
+                PlayerSprite.X += moveDistance;
+                PlayerSprite.Righting = true;
+            }
+
+            if (PlayerSprite.X > this.InternalResolutionWidth) {
+                PlayerSprite.X = 0;
+            } else if (PlayerSprite.X < 0) {
+                PlayerSprite.X = this.InternalResolutionWidth;
+            }
+
+            this.Hud.Update(frametime);
+            this.Stages.Update(frametime);
+            this.PlayerSprite.Update(frametime);
         }
-
-        if (KEY_RIGHT) {
-            playerSprite.X += moveDistance;
-            playerSprite.Righting = true;
-        }
-
-        if (playerSprite.X > this.InternalResolutionWidth) {
-            playerSprite.X = 0;
-        } else if (playerSprite.X < 0) {
-            playerSprite.X = this.InternalResolutionWidth;
-        }
-
-        this.hud.Update(frametime);
-        this.stages.Update(frametime);
-        this.playerSprite.Update(frametime);
     }
 
     public void Draw()
     {
         if (!this.WindowActionInProgress) {
-            this.stages.Draw(this.internalGraphics);
+            this.Stages.Draw(this.InternalGraphics);
 
-            this.hud.Draw(this.internalGraphics);
+            this.Hud.Draw(this.InternalGraphics);
 
             // Draw Player Sprite
-            this.playerSprite.Draw(this.internalGraphics);
+            this.PlayerSprite.Draw(this.InternalGraphics);
+        }
+
+        if (Paused) {
+            this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(180, 255, 255, 255)), 0, PausePoint.Y - 20, this.WindowSize.Width, 60);
+            this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y - 20, this.WindowSize.Width, 2);
+            this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y + 40, this.WindowSize.Width, 2);
+            this.InternalGraphics.DrawString("Game Paused!", PauseFont, Brushes.Black, PausePoint);
         }
     }
 
@@ -128,10 +143,19 @@ public class Game : GameInterface
         } else if (e.KeyValue == 39) {
             KEY_RIGHT = false;
         }
+
+        if (e.KeyValue == 80 || e.KeyValue == 19) {
+            this.PauseGame();
+        }
+    }
+
+    private void PauseGame()
+    {
+        this.Paused = !this.Paused;
     }
 
     public void Render(Graphics targetGraphics) {
-        this.bufferedGraphics.Render(targetGraphics);
+        this.BufferedGraphics.Render(targetGraphics);
     }
 
     public void Resize(object sender, System.EventArgs e)
@@ -144,21 +168,21 @@ public class Game : GameInterface
             //calc new scale
             int width = ((Form)sender).Width;
             int height = ((Form)sender).Height;
-            this.scaleW = (float)((float)width/(float)this.InternalResolutionWidth);
-            this.scaleH = (float)((float)height/(float)this.InternalResolutionHeight);
+            this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
+            this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
 
             //Invalidate the current buffer
             BufferedGraphicsManager.Current.Invalidate();
             BufferedGraphicsManager.Current.Dispose();
 
             //apply new scale
-            this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));
-            this.internalGraphics   = bufferedGraphics.Graphics;
+            this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
+            this.InternalGraphics   = BufferedGraphics.Graphics;
             
-            this.internalGraphics.ScaleTransform(scaleW, scaleH);
-            this.internalGraphics.InterpolationMode = this.interpolationMode;
+            this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+            this.InternalGraphics.InterpolationMode = this.InterpolationMode;
 
-            this.stages.Resize(sender, e);
+            this.Stages.Resize(sender, e);
 
         } catch (Exception ex) {
             Console.WriteLine(ex);
@@ -168,9 +192,9 @@ public class Game : GameInterface
     }
 
     //Accessors
-    public Graphics GetGraphics()               {   return (this.internalGraphics);         }
+    public Graphics GetGraphics()               {   return (this.InternalGraphics);         }
     public int GetInternalResolutionWidth()     {   return (this.InternalResolutionWidth);  }
     public int GetInternalResolutionHeight()    {   return (this.InternalResolutionHeight); }
-    public float getScaleW()                    {  return (this.scaleW);                    }
-    public float getScaleH()                    {   return (this.scaleH);                   }
+    public float getScaleW()                    {  return (this.ScaleW);                    }
+    public float getScaleH()                    {   return (this.ScaleH);                   }
 }
