@@ -23,7 +23,7 @@ public interface GameInterface {
     
     public void Resize(object sender, System.EventArgs e);
 
-    public System.Drawing.Drawing2D.InterpolationMode interpolationMode { get; }
+    public System.Drawing.Drawing2D.InterpolationMode InterpolationMode { get; }
 
     public int GetInternalResolutionWidth();
 
