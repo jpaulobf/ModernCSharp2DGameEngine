@@ -36,7 +36,7 @@ public class EnemySprite : GameSprite {
             this.StartX = 0;
         }
         
-        this.SourceRect = new Rectangle(this.StartX, this.StartY, (short)this.Width, (short)this.Height);
+        this.SourceRect  = new Rectangle(this.StartX, this.StartY, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
     }
 }
