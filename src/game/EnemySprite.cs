@@ -44,18 +44,18 @@ public class EnemySprite : GameSprite {
             this.FrameCounter += timeframe;
 
             if (this.FrameCounter < this.MillisecondsPerTile * 1_000) {
-                this.StartX = 0;
+                this.SourceStartX = 0;
             } else {
-                this.StartX = (short)Width;
+                this.SourceStartX = (short)Width;
                 if (this.FrameCounter > this.MillisecondsPerTile * 1_000 * 2) {
                     this.FrameCounter = 0;
                 }
             }
         } else {
-            this.StartX = 0;
+            this.SourceStartX = 0;
         }
         
-        this.SourceRect  = new Rectangle(this.StartX, this.StartY, (short)this.Width, (short)this.Height);
+        this.SourceRect  = new Rectangle(this.SourceStartX, this.SourceStartY, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
     }
 }
