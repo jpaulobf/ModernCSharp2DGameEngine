@@ -11,8 +11,8 @@ public abstract class GameSprite
     public Bitmap SpriteImage { get; set; }
     public float X { get; set; }
     public float Y { get; set; }
-    protected short StartX = 0;
-    protected short StartY = 0;
+    protected short SourceStartX = 0;
+    protected short SourceStartY = 0;
     public float Width { get; set; }
     public float Height { get; set; }
     public int Velocity { get; set; }
