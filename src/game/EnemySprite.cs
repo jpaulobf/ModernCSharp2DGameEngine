@@ -2,18 +2,37 @@ namespace game;
 
 public class EnemySprite : GameSprite {
 
-    private GameInterface gameref;
-    protected long framecounter = 0;
+    private GameInterface GameRef;
+    protected long FrameCounter = 0;
+    protected short MaxLeft = 0;
+    protected short MaxRight = 0;
+    protected byte Direction = 0;
 
     /**
      * Enemy Sprite class
      */
-    public EnemySprite(GameInterface game, string imageFilePath, int width, int height, int X = 0, int Y = 0, int velocity = 0, byte tilesNumber = 1, int millisecondsPerFrame = 0, bool reversed = false) : base(imageFilePath, width, height, X, Y, velocity) {
+    public EnemySprite(GameInterface game, 
+                       string imageFilePath, 
+                       int width, 
+                       int height, 
+                       int X = 0, 
+                       int Y = 0, 
+                       int velocity = 0, 
+                       byte tilesNumber = 1, 
+                       int millisecondsPerTile = 0, 
+                       bool reversed = false, 
+                       short maxLeft = 0,
+                       short maxRight = 0, 
+                       byte direction = 0) : base(imageFilePath, width, height, X, Y, velocity) {
+        
         this.TilesNumber = tilesNumber;
-        this.MillisecondsPerFrame = millisecondsPerFrame;
-        this.gameref = game;
+        this.MillisecondsPerTile = millisecondsPerTile;
+        this.GameRef = game;
         this.RenderReversed = reversed;
-        this.framecounter = 0;
+        this.FrameCounter = 0;
+        this.MaxLeft = maxLeft;
+        this.MaxRight = maxRight;
+        this.Direction = direction;
     }
 
     /**
@@ -22,14 +41,14 @@ public class EnemySprite : GameSprite {
     public override void Update(long timeframe)
     {
         if (this.TilesNumber > 1) {            
-            this.framecounter += timeframe;
+            this.FrameCounter += timeframe;
 
-            if (this.framecounter < this.MillisecondsPerFrame * 1_000) {
+            if (this.FrameCounter < this.MillisecondsPerTile * 1_000) {
                 this.StartX = 0;
             } else {
                 this.StartX = (short)Width;
-                if (this.framecounter > this.MillisecondsPerFrame * 1_000 * 2) {
-                    this.framecounter = 0;
+                if (this.FrameCounter > this.MillisecondsPerTile * 1_000 * 2) {
+                    this.FrameCounter = 0;
                 }
             }
         } else {
