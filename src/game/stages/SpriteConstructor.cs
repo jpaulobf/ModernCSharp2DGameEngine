@@ -25,15 +25,15 @@ public class SpriteConstructor {
         this.parameter = parameter;
         this.flag = flag;
         if (type == HOUSE) {
-            this.gamesprite = new StaticSprite(game, "img\\house.png", 73, 44);
+            this.gamesprite = new StaticSprite(game, "img\\house.png", 73, 44, X);
         } else if (type == HOUSE2) {
-            this.gamesprite = new StaticSprite(game, "img\\house2.png", 73, 44);
+            this.gamesprite = new StaticSprite(game, "img\\house2.png", 73, 44, X);
         } else if (type == FUEL) {
-            this.gamesprite = new StaticSprite(game, "img\\fuel.png", 32, 55);
+            this.gamesprite = new StaticSprite(game, "img\\fuel.png", 32, 55, X);
         } else if (type == SHIP) {
-            this.gamesprite = new EnemySprite(game, "img\\ship.png", 73, 18);
+            this.gamesprite = new EnemySprite(game, "img\\ship.png", 73, 18, X);
         } else {
-            this.gamesprite = new EnemySprite(game, "img\\helitile.png", 36, 23, 0, 0, 100, parameter, 25);
+            this.gamesprite = new EnemySprite(game, "img\\helitile.png", 36, 23, X, 0, 100, parameter, 25, flag, maxLeft, maxRight, direction);
         }
     }
 
@@ -41,7 +41,6 @@ public class SpriteConstructor {
      * Render method
      */
     public void Render(long frametime, Graphics gfx, int currentLineYPosition, int offset, int Y) {
-        this.gamesprite.X = X;
         this.gamesprite.Y = Y - currentLineYPosition + offset;
         this.gamesprite.RenderReversed = this.flag;
         this.gamesprite.Update(frametime);
