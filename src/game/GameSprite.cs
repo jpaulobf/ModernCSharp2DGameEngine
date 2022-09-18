@@ -4,24 +4,24 @@ using System.Drawing;
 
 public abstract class GameSprite
 {
-    protected const bool NORMAL   = true;
-    protected const bool REVERSED = false;
-    protected bool Status         = NORMAL;
-    public bool RenderReversed { get; set; }
-    public Bitmap SpriteImage { get; set; }
-    public float X { get; set; }
-    public float Y { get; set; }
-    protected short SourceStartX = 0;
-    protected short SourceStartY = 0;
-    public float Width { get; set; }
-    public float Height { get; set; }
-    public int Velocity { get; set; }
-    public bool Lefting {get; set;}
-    public bool Righting {get; set;}
+    protected const bool NORMAL     = true;
+    protected const bool REVERSED   = false;
+    protected bool Status           = NORMAL;
+    protected short SourceStartX    = 0;
+    protected short SourceStartY    = 0;
+    protected byte TilesNumber      = 1;
+    protected int MillisecsPerTile  = 0;
+    public bool RenderReversed  { get; set; }
+    public Bitmap SpriteImage   { get; set; }
+    public float X              { get; set; }
+    public float Y              { get; set; }
+    public float Width          { get; set; }
+    public float Height         { get; set; }
+    public int Velocity         { get; set; }
+    public bool Lefting         { get; set; }
+    public bool Righting        { get; set; }
     protected Rectangle SourceRect;
     protected Rectangle DestineRect;
-    protected byte TilesNumber = 1;
-    protected int MillisecondsPerTile = 0;
 
     /**
      * GameSprite constructor
