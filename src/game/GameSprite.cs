@@ -6,7 +6,7 @@ public abstract class GameSprite
 {
     protected const bool NORMAL   = true;
     protected const bool REVERSED = false;
-    protected bool status         = NORMAL;
+    protected bool Status         = NORMAL;
     public bool RenderReversed { get; set; }
     public Bitmap SpriteImage { get; set; }
     public float X { get; set; }
@@ -21,7 +21,7 @@ public abstract class GameSprite
     protected Rectangle SourceRect;
     protected Rectangle DestineRect;
     protected byte TilesNumber = 1;
-    protected int MillisecondsPerFrame = 0;
+    protected int MillisecondsPerTile = 0;
 
     /**
      * GameSprite constructor
@@ -45,9 +45,9 @@ public abstract class GameSprite
 
     public void Draw(Graphics gfx)
     {
-        if (this.RenderReversed && this.status == NORMAL) {
+        if (this.RenderReversed && this.Status == NORMAL) {
             this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
-            this.status = REVERSED;
+            this.Status = REVERSED;
         }
 
         // Draw sprite image on screen
