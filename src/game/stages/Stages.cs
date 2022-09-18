@@ -82,7 +82,7 @@ public class Stages : StagesDef {
     public void Update(long frametime) {
         this.framecount += frametime;
 
-        if (this.framecount >= 90_000) {
+        if (this.framecount >= 166_000) {
             this.RenderBackground();
             this.CheckSprites(frametime);
             this.framecount = 0;
