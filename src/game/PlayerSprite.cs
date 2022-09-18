@@ -38,14 +38,14 @@ public class PlayerSprite : GameSprite {
     public override void Update(long timeframe) {
         if (!this.Lefting && !this.Righting) {
             //Default
-            this.StartX = (short)Width;
+            this.SourceStartX = (short)Width;
         } else if (this.Lefting) { //Lefting
-            this.StartX = 0;
+            this.SourceStartX = 0;
         } else if (this.Righting) { //Righting
-            this.StartX = (short)(Width * 2);
+            this.SourceStartX = (short)(Width * 2);
         }
 
-        this.SourceRect = new Rectangle(StartX, StartY, (short)Width - 1, (short)Height);
+        this.SourceRect = new Rectangle(SourceStartX, SourceStartY, (short)Width - 1, (short)Height);
         //this.SourceRect = new Rectangle(0, 0, (short)Width, (short)Height);
         this.DestineRect = new Rectangle((short)X, (short)Y, (short)Width, (short)Height);
     }
