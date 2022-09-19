@@ -140,7 +140,7 @@ public class MyGame
 
         public void draw(long frametime)
         {
-            this.game.Draw();
+            this.game.Draw(frametime);
             this.RenderFPS(this.game.GetGraphics(), frametime);
             this.Render();
         }      
