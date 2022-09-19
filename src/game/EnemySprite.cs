@@ -45,32 +45,35 @@ public class EnemySprite : GameSprite {
     {
         if (this.TilesNumber > 1) {            
             this.FrameCounter += frametime;
-
-            if (this.FrameCounter < this.MillisecsPerTile * 1_000) {
+            if (this.FrameCounter < this.MillisecsPerTile * 10_000) {
                 this.SourceStartX = 0;
             } else {
                 this.SourceStartX = (short)Width;
-                if (this.FrameCounter > this.MillisecsPerTile * 1_000 * 2) {
+                if (this.FrameCounter > this.MillisecsPerTile * 10_000 * 2) {
                     this.FrameCounter = 0;
                 }
             }
         } else {
+            this.FrameCounter = 0;
             this.SourceStartX = 0;
         }
-
-        if (this.Direction == SpriteConstructor.LEFT) {
-            if (this.X > this.MaxLeft) {
-                this.X -= (float)(this.Velocity * ((double)frametime / 10_000_000));
-            } else {
-                this.Direction = SpriteConstructor.RIGHT;
-                this.FlipX();
-            }
-        } else if (this.Direction == SpriteConstructor.RIGHT) {
-            if (this.X < (this.MaxRight - this.Width-1)) {
-                this.X += (float)(this.Velocity * ((double)frametime / 10_000_000));
-            } else {
-                this.Direction = SpriteConstructor.LEFT;
-                this.FlipX();
+        
+        if (this.Direction != 0) {
+            float step = (float)(this.Velocity * ((double)frametime / 10_000_000));
+            if (this.Direction == SpriteConstructor.LEFT) {
+                if (this.X > this.MaxLeft) {
+                    this.X -= step;
+                } else {
+                    this.Direction = SpriteConstructor.RIGHT;
+                    this.FlipX();
+                }
+            } else if (this.Direction == SpriteConstructor.RIGHT) {
+                if (this.X < (this.MaxRight - this.Width-1)) {
+                    this.X += step;
+                } else {
+                    this.Direction = SpriteConstructor.LEFT;
+                    this.FlipX();
+                }
             }
         }
         
