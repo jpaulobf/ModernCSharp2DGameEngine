@@ -2,24 +2,25 @@ namespace game.stages;
 
 public class Stages : StagesDef {
 
+    private GameInterface gameref;
     private BufferedGraphics bufferedGraphics;
     private Bitmap bufferedImage;
     private Graphics internalGraphics;
-    private float scaleW = 1.0F;
-    private float scaleH = 1.0F;
-    private SolidBrush green1 = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
-    private SolidBrush gray1 = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
-    private SolidBrush gray2 = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
-    private SolidBrush blue = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
-    private SolidBrush yellow = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
-    private byte renderBlock = 0;
-    private Rectangle drawRect = new Rectangle(0, 0, 18, 4);
-    private GameInterface gameref;
+    private float scaleW        = 1.0F;
+    private float scaleH        = 1.0F;
+    private SolidBrush green1   = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
+    private SolidBrush gray1    = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
+    private SolidBrush gray2    = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
+    private SolidBrush blue     = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
+    private SolidBrush yellow   = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
+    private Rectangle drawRect  = new Rectangle(0, 0, 18, 4);
+    private byte renderBlock    = 0;
     protected short currentLine = 574;
     private short CURRENT_STAGE = 1;
-    private byte offset = 0;
-    private long framecount = 0;
+    private byte offset         = 0;
+    private long framecount     = 0;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
+    public bool tick { get; private set; }
 
     /**
      * Constructor
@@ -80,11 +81,22 @@ public class Stages : StagesDef {
      * Upgrade method
      */
     public void Update(long frametime) {
-        this.framecount += frametime;
+        this.framecount             += frametime;
+        this.tick                   = false;
+        int startScreenFrame        = (this.currentLine - 115) * 4;
+        int endScreenFrame          = (this.currentLine + 13) * 4;
+        int currentLineYPosition    = (this.currentLine - 95) * 4;
+
+        //if exist an sprite in the current screen frame, update it
+        foreach (var item in this.stage1_sprites.Where(item => startScreenFrame < item.Key && endScreenFrame > item.Key)) {
+            item.Value.Update(frametime, currentLineYPosition, this.offset, item.Key);
+        }
 
         if (this.framecount >= 90_000) {
-            this.RenderBackground();
-            this.CheckSprites(frametime);
+            //render just from time to time
+            this.tick = true;
+
+            //calc the offset
             this.framecount = 0;
             this.offset++;
             if (this.offset == 4) {
@@ -95,25 +107,38 @@ public class Stages : StagesDef {
     }
 
     /**
+     * Draw method
+     */
+    public void Draw(Graphics gfx, long frametime) {
+        
+        if (this.tick) {
+            this.DrawBackground();
+            this.DrawSprites(frametime);
+        }
+
+        this.bufferedGraphics.Render(gfx);
+    }
+
+    /**
      * Checksprites method.
      */
-    private void CheckSprites(long frametime) {
+    private void DrawSprites(long frametime) {
         int startScreenFrame        = (this.currentLine - 115) * 4;
         int endScreenFrame          = (this.currentLine + 13) * 4;
         int currentLineYPosition    = (this.currentLine - 95) * 4;
 
-        foreach (var item in this.stage1_sprites) {
-            //if exist an sprite in the current screen frame, render it
-            if (startScreenFrame < item.Key && endScreenFrame > item.Key) {
-                item.Value.Render(frametime, this.internalGraphics, currentLineYPosition, this.offset, item.Key);
-            }
+        this.tick = true;
+
+        //if exist an sprite in the current screen frame, update it
+        foreach (var item in this.stage1_sprites.Where(item => startScreenFrame < item.Key && endScreenFrame > item.Key)) {
+            item.Value.Draw(this.internalGraphics);
         }
     }
 
     /**
      * Render the current stage at the current frame
      */
-    private void RenderBackground() {
+    private void DrawBackground() {
         this.internalGraphics.FillRectangle(blue, 0, 0, gameref.GetInternalResolutionWidth(), gameref.GetInternalResolutionHeight());
         for (short i = (short)(currentLine - 95), c = -1; i < (currentLine + 13); i++, c++) {
             for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
@@ -137,13 +162,6 @@ public class Stages : StagesDef {
                 }
             }
         }
-    }
-
-    /**
-     * Draw method
-     */
-    public void Draw(Graphics gfx) {
-        this.bufferedGraphics.Render(gfx);
     }
 
     /**
