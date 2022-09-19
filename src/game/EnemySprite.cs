@@ -1,5 +1,6 @@
 namespace game;
 
+using System;
 using game.stages;
 
 public class EnemySprite : GameSprite {
@@ -9,8 +10,6 @@ public class EnemySprite : GameSprite {
     protected short MaxLeft     = 0;
     protected short MaxRight    = 0;
     protected byte Direction    = 0;
-    protected float CurrentX    = 0;
-    protected float StartY      = 0;
 
     /**
      * Enemy Sprite class
@@ -37,16 +36,15 @@ public class EnemySprite : GameSprite {
         this.MaxLeft = maxLeft;
         this.MaxRight = maxRight;
         this.Direction = direction;
-        this.CurrentX = X;
     }
 
     /**
      * Enemy Sprite update class
      */
-    public override void Update(long timeframe)
+    public override void Update(long frametime)
     {
         if (this.TilesNumber > 1) {            
-            this.FrameCounter += timeframe;
+            this.FrameCounter += frametime;
 
             if (this.FrameCounter < this.MillisecsPerTile * 1_000) {
                 this.SourceStartX = 0;
@@ -62,15 +60,27 @@ public class EnemySprite : GameSprite {
 
         if (this.Direction == SpriteConstructor.LEFT) {
             if (this.X > this.MaxLeft) {
-                this.X -= 1;
+                this.X -= (float)(this.Velocity * ((double)frametime / 10_000_000));
+            } else {
+                this.Direction = SpriteConstructor.RIGHT;
+                this.FlipX();
             }
         } else if (this.Direction == SpriteConstructor.RIGHT) {
-            if (this.X < this.MaxRight) {
-                this.X += 1;
+            if (this.X < (this.MaxRight - this.Width-1)) {
+                this.X += (float)(this.Velocity * ((double)frametime / 10_000_000));
+            } else {
+                this.Direction = SpriteConstructor.LEFT;
+                this.FlipX();
             }
         }
         
         this.SourceRect  = new Rectangle(this.SourceStartX, this.SourceStartY, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
+    }
+
+    private void FlipX()
+    {
+       this.RenderReversed = true;
+       this.Status = NORMAL;
     }
 }
