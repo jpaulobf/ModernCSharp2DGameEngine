@@ -31,9 +31,9 @@ public class SpriteConstructor {
         } else if (type == FUEL) {
             this.gamesprite = new StaticSprite(game, "img\\fuel.png", 32, 55, X);
         } else if (type == SHIP) {
-            this.gamesprite = new EnemySprite(game, "img\\ship.png", 73, 18, X);
+            this.gamesprite = new EnemySprite(game, "img\\ship.png", 73, 18, X, 0, 800, parameter, 25, flag, maxLeft, maxRight, direction);
         } else {
-            this.gamesprite = new EnemySprite(game, "img\\helitile.png", 36, 23, X, 0, 100, parameter, 25, flag, maxLeft, maxRight, direction);
+            this.gamesprite = new EnemySprite(game, "img\\helitile.png", 36, 23, X, 0, 800, parameter, 25, flag, maxLeft, maxRight, direction);
         }
     }
 
