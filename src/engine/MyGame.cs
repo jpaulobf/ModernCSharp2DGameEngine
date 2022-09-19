@@ -345,6 +345,7 @@ public class MyGame
                     this.draw(timeElapsed);
 
                     //Yield
+                    Thread.Sleep(0);
                     Thread.Yield();
 
                     //update the referencial time with the initial time
@@ -427,8 +428,10 @@ public class MyGame
         }
 
         private void Dispose() {
-            this.canvas.ReleaseHdc();
-            this.canvas.GraphicDispose();
+            try {
+                this.canvas.ReleaseHdc();
+                this.canvas.GraphicDispose();
+            } catch {}
         }
     }
 }
