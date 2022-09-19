@@ -106,10 +106,10 @@ public class Game : GameInterface
         }
     }
 
-    public void Draw()
+    public void Draw(long frametime)
     {
         if (!this.WindowActionInProgress) {
-            this.Stages.Draw(this.InternalGraphics);
+            this.Stages.Draw(this.InternalGraphics, frametime);
 
             this.Hud.Draw(this.InternalGraphics);
 
