@@ -31,19 +31,22 @@ public class SpriteConstructor {
         } else if (type == FUEL) {
             this.gamesprite = new StaticSprite(game, "img\\fuel.png", 32, 55, X);
         } else if (type == SHIP) {
-            this.gamesprite = new EnemySprite(game, "img\\ship.png", 73, 18, X, 0, 800, parameter, 25, flag, maxLeft, maxRight, direction);
+            this.gamesprite = new EnemySprite(game, "img\\ship.png", 73, 18, X, 0, 100, parameter, 25, flag, maxLeft, maxRight, direction);
         } else {
-            this.gamesprite = new EnemySprite(game, "img\\helitile.png", 36, 23, X, 0, 800, parameter, 25, flag, maxLeft, maxRight, direction);
+            this.gamesprite = new EnemySprite(game, "img\\helitile.png", 36, 23, X, 0, 100, parameter, 25, flag, maxLeft, maxRight, direction);
         }
+    }
+
+    public void Update(long frametime, int currentLineYPosition, int offset, int Y) {
+        this.gamesprite.Y = Y - currentLineYPosition + offset;
+        this.gamesprite.RenderReversed = this.flag;
+        this.gamesprite.Update(frametime);
     }
 
     /**
      * Render method
      */
-    public void Render(long frametime, Graphics gfx, int currentLineYPosition, int offset, int Y) {
-        this.gamesprite.Y = Y - currentLineYPosition + offset;
-        this.gamesprite.RenderReversed = this.flag;
-        this.gamesprite.Update(frametime);
+    public void Draw(Graphics gfx) {
         this.gamesprite.Draw(gfx);
     }
 }
