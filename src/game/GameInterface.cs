@@ -7,7 +7,7 @@ public interface GameInterface {
 
     public void Update(long frametime);
 
-    public void Draw();
+    public void Draw(long frametime);
 
     public Graphics GetGraphics();
 
