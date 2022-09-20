@@ -345,7 +345,6 @@ public class MyGame
                     this.draw(timeElapsed);
 
                     //Yield
-                    Thread.Sleep(0);
                     Thread.Yield();
 
                     //update the referencial time with the initial time
