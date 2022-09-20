@@ -79,6 +79,11 @@ public class EnemySprite : GameSprite {
         
         this.SourceRect  = new Rectangle(this.SourceStartX, this.SourceStartY, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
+
+        if (this.ColisionDetection(this.GameRef.GetPlayerSprite())) {
+            Console.WriteLine("colision...");
+        }
+
     }
 
     private void FlipX()
