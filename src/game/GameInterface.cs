@@ -34,4 +34,6 @@ public interface GameInterface {
     public float getScaleH();
 
     public Size WindowSize { get; }
+
+    public GameSprite GetPlayerSprite();
 }
