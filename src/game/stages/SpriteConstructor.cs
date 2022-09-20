@@ -1,6 +1,7 @@
 namespace game.stages;
 
 public class SpriteConstructor {
+    private GameInterface gameRef;
     public int X { get; set; }
     public int Y { get; set; }
     public int type { get; set; }
@@ -19,6 +20,7 @@ public class SpriteConstructor {
      * Constructor
      */
     public SpriteConstructor(GameInterface game, int type, int X, byte parameter = 1, bool flag = false, short maxLeft = 0, short maxRight = 0, byte direction = 0) {
+        this.gameRef = game;
         this.X = X;
         this.Y = Y;
         this.type = type;
@@ -37,7 +39,13 @@ public class SpriteConstructor {
         }
     }
 
-    public void Update(long frametime, int currentLineYPosition, int offset, int Y) {
+    public void Render(Graphics gfx, long frametime, int currentLineYPosition, int offset, int Y) {
+        this.Update(frametime, currentLineYPosition, offset, Y);
+        this.Draw(gfx);
+
+    }
+
+    private void Update(long frametime, int currentLineYPosition, int offset, int Y) {
         this.gamesprite.Y = Y - currentLineYPosition + offset;
         this.gamesprite.RenderReversed = this.flag;
         this.gamesprite.Update(frametime);
@@ -46,7 +54,7 @@ public class SpriteConstructor {
     /**
      * Render method
      */
-    public void Draw(Graphics gfx) {
+    private void Draw(Graphics gfx) {
         this.gamesprite.Draw(gfx);
     }
 }
