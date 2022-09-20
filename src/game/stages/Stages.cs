@@ -20,7 +20,7 @@ public class Stages : StagesDef {
     private byte offset         = 0;
     private long framecount     = 0;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
-    public bool tick { get; private set; }
+    private volatile bool tick  = false;
 
     /**
      * Constructor
@@ -81,20 +81,13 @@ public class Stages : StagesDef {
      * Upgrade method
      */
     public void Update(long frametime) {
-        this.framecount             += frametime;
-        this.tick                   = false;
-        int startScreenFrame        = (this.currentLine - 115) * 4;
-        int endScreenFrame          = (this.currentLine + 13) * 4;
-        int currentLineYPosition    = (this.currentLine - 95) * 4;
-
-        //if exist an sprite in the current screen frame, update it
-        foreach (var item in this.stage1_sprites.Where(item => startScreenFrame < item.Key && endScreenFrame > item.Key)) {
-            item.Value.Update(frametime, currentLineYPosition, this.offset, item.Key);
-        }
+        //add the framecounter
+        this.framecount += frametime;
 
         if (this.framecount >= 90_000) {
             //render just from time to time
-            this.tick = true;
+            this.DrawBackground();
+            this.CheckSprites(frametime);
 
             //calc the offset
             this.framecount = 0;
@@ -107,32 +100,27 @@ public class Stages : StagesDef {
     }
 
     /**
-     * Draw method
-     */
-    public void Draw(Graphics gfx, long frametime) {
-        
-        if (this.tick) {
-            this.DrawBackground();
-            this.DrawSprites(frametime);
-        }
-
-        this.bufferedGraphics.Render(gfx);
-    }
-
-    /**
      * Checksprites method.
      */
-    private void DrawSprites(long frametime) {
+    private void CheckSprites(long frametime) {
         int startScreenFrame        = (this.currentLine - 115) * 4;
         int endScreenFrame          = (this.currentLine + 13) * 4;
         int currentLineYPosition    = (this.currentLine - 95) * 4;
 
-        this.tick = true;
-
-        //if exist an sprite in the current screen frame, update it
+        //if exist an sprite in the current screen frame, render it
         foreach (var item in this.stage1_sprites.Where(item => startScreenFrame < item.Key && endScreenFrame > item.Key)) {
-            item.Value.Draw(this.internalGraphics);
+            
+            //if (startScreenFrame < item.Key && endScreenFrame > item.Key) {
+            item.Value.Render(this.internalGraphics, frametime, currentLineYPosition, this.offset, item.Key);
+            //}
         }
+    }
+
+    /**
+     * Draw method
+     */
+    public void Draw(Graphics gfx, long frametime) {
+        this.bufferedGraphics.Render(gfx);
     }
 
     /**
