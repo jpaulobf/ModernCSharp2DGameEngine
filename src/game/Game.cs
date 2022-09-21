@@ -197,5 +197,5 @@ public class Game : GameInterface
     public int GetInternalResolutionHeight()    {   return (this.InternalResolutionHeight); }
     public float getScaleW()                    {  return (this.ScaleW);                    }
     public float getScaleH()                    {   return (this.ScaleH);                   }
-    public GameSprite GetPlayerSprite()         {   return (this.PlayerSprite);             }
+    public PlayerSprite GetPlayerSprite()       {   return (this.PlayerSprite);             }
 }
