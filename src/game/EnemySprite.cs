@@ -81,7 +81,7 @@ public class EnemySprite : GameSprite {
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
         if (this.ColisionDetection(this.GameRef.GetPlayerSprite())) {
-            Console.WriteLine("colision...");
+            this.GameRef.GetPlayerSprite().SetColision();
         }
 
     }
