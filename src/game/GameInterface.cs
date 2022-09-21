@@ -35,5 +35,5 @@ public interface GameInterface {
 
     public Size WindowSize { get; }
 
-    public GameSprite GetPlayerSprite();
+    public PlayerSprite GetPlayerSprite();
 }
