@@ -41,17 +41,18 @@ public class PlayerSprite : GameSprite {
      * Player Sprite update method
      */
     public override void Update(long timeframe) {
-        if (!this.Lefting && !this.Righting) {
-            //Default
-            this.SourceStartX = (short)Width;
-        } else if (this.Lefting) { //Lefting
-            this.SourceStartX = 0;
-        } else if (this.Righting) { //Righting
-            this.SourceStartX = (short)(Width * 2);
-        }
+        if (!this.Coliding) {
+            if (!this.Lefting && !this.Righting) {
+                //Default
+                this.SourceStartX = (short)Width;
+            } else if (this.Lefting) { //Lefting
+                this.SourceStartX = 0;
+            } else if (this.Righting) { //Righting
+                this.SourceStartX = (short)(Width * 2);
+            }
 
-        this.SourceRect = new Rectangle(SourceStartX, SourceStartY, (short)Width - 1, (short)Height);
-        //this.SourceRect = new Rectangle(0, 0, (short)Width, (short)Height);
-        this.DestineRect = new Rectangle((short)X, (short)Y, (short)Width, (short)Height);
+            this.SourceRect = new Rectangle(SourceStartX, SourceStartY, (short)Width - 1, (short)Height);
+            this.DestineRect = new Rectangle((short)X, (short)Y, (short)Width, (short)Height);
+        }
     }
 }
