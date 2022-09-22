@@ -34,7 +34,7 @@ public class Stages : StagesDef {
         this.internalGraphics   = bufferedGraphics.Graphics;
 
         //define the interpolation mode
-        this.internalGraphics.InterpolationMode = this.gameref.InterpolationMode;
+        this.internalGraphics.InterpolationMode = this.gameref.Interpolation;
 
         //calc the scale
         this.scaleW = (float)((float)this.gameref.WindowSize.Width/(float)this.gameref.GetInternalResolutionWidth());
@@ -155,21 +155,25 @@ public class Stages : StagesDef {
     /**
      * Resize the background graphics, when the window resize.
      */
-    internal void Resize(object sender, System.EventArgs e)
+    internal async void Resize(object sender, System.EventArgs e)
     {
-        //calc new scale
-        int width = ((Form)sender).Width;
-        int height = ((Form)sender).Height;
-        this.scaleW = (float)((float)width/(float)this.gameref.GetInternalResolutionWidth());
-        this.scaleH = (float)((float)height/(float)this.gameref.GetInternalResolutionHeight());
+        try {
+            //calc new scale
+            int width = ((Form)sender).Width;
+            int height = ((Form)sender).Height;
+            this.scaleW = (float)((float)width/(float)this.gameref.GetInternalResolutionWidth());
+            this.scaleH = (float)((float)height/(float)this.gameref.GetInternalResolutionHeight());
 
-        //Invalidate the current buffer
-        BufferedGraphicsManager.Current.Invalidate();
+            //Invalidate the current buffer
+            BufferedGraphicsManager.Current.Invalidate();
 
-        //apply new scale
-        this.bufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
-        this.internalGraphics = bufferedGraphics.Graphics;
-        this.internalGraphics.ScaleTransform(scaleW, scaleH);
-        this.internalGraphics.InterpolationMode = this.gameref.InterpolationMode;
+            await Task.Run(() => {
+                //apply new scale
+                this.bufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
+                this.internalGraphics = bufferedGraphics.Graphics;
+                this.internalGraphics.ScaleTransform(scaleW, scaleH);
+                this.internalGraphics.InterpolationMode = this.gameref.Interpolation;
+            });
+        } catch {}  
     }
 }
