@@ -81,9 +81,20 @@ public class EnemySprite : GameSprite {
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
         if (this.ColisionDetection(this.GameRef.GetPlayerSprite())) {
+            this.TilesNumber = 0;
+            this.Direction = 0;
             this.GameRef.GetPlayerSprite().SetColision();
+            this.AnimateExplosion();
+            this.GameRef.SetEnemyColision();
         }
 
+    }
+
+    /**
+     * Animate the current sprite colision
+     */
+    private void AnimateExplosion()
+    {
     }
 
     private void FlipX()
