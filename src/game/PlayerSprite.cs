@@ -18,6 +18,15 @@ public class PlayerSprite : GameSprite {
 
     public void SetColision() {
         this.Coliding = true;
+        this.AnimateExplosion();
+    }
+
+    /**
+     * Animate the sprite colision
+     */
+    private void AnimateExplosion()
+    {
+        
     }
 
     private void Render() {
