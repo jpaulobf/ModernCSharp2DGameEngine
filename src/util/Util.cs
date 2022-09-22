@@ -2,9 +2,11 @@ namespace util;
 
 public class Util {
     
-    // ParallelOptions options = new() { MaxDegreeOfParallelism = Environment.ProcessorCount };
-    // Util.ParallelWhile(options, () => this.isEngineRunning, body => { 
-    
+    /**
+     * Code from Microsoft.com
+     * How to use: ParallelOptions options = new() { MaxDegreeOfParallelism = Environment.ProcessorCount };
+     * Util.ParallelWhile(options, () => this.isEngineRunning, body => { 
+     */
     public static void ParallelWhile(ParallelOptions parallelOptions,
                                          Func<bool> condition,
                                          Action<ParallelLoopState> body)
