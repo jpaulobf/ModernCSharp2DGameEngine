@@ -1,9 +1,6 @@
 namespace game;
 
 public interface GameInterface {
-    public void Load();
-
-    public void Unload();
 
     public void Update(long frametime);
 
@@ -23,7 +20,7 @@ public interface GameInterface {
     
     public void Resize(object sender, System.EventArgs e);
 
-    public System.Drawing.Drawing2D.InterpolationMode InterpolationMode { get; }
+    public System.Drawing.Drawing2D.InterpolationMode Interpolation { get; }
 
     public int GetInternalResolutionWidth();
 
@@ -36,4 +33,6 @@ public interface GameInterface {
     public Size WindowSize { get; }
 
     public PlayerSprite GetPlayerSprite();
+
+    public void SetEnemyColision();
 }
