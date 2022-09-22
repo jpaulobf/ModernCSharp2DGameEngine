@@ -179,19 +179,19 @@ public class MyGame
     private class GameEngine {
 
         //private Thread? thread = null;
-        private Task? task = null;
-        private Timer? stateTimer;
-        private long beforeTimer = 0;
-        private long lastframetimer = 0;
-        private bool useThread = true;
-        private bool isEngineRunning    = true;
-        private static long FPS240      = (long)(10_000_000 / 240);
-        private static long FPS120      = (long)(10_000_000 / 120);
-        private static long FPS90       = (long)(10_000_000 / 90);
-        private static long FPS60       = (long)(10_000_000 / 60);
-        private static long FPS30       = (long)(10_000_000 / 30);
-        private long TARGET_FRAMETIME   = FPS60;
-        private bool UNLIMITED_FPS      = false;
+        private Task? task                      = null;
+        private Timer? stateTimer               = null;
+        private long beforeTimer                = 0;
+        private long lastframetimer             = 0;
+        private volatile bool useThread         = true;
+        private volatile bool isEngineRunning   = true;
+        private static long FPS240              = (long)(10_000_000 / 240);
+        private static long FPS120              = (long)(10_000_000 / 120);
+        private static long FPS90               = (long)(10_000_000 / 90);
+        private static long FPS60               = (long)(10_000_000 / 60);
+        private static long FPS30               = (long)(10_000_000 / 30);
+        private long TARGET_FRAMETIME           = FPS60;
+        private bool UNLIMITED_FPS              = false;
         private CanvasEngineInterface canvas;
 
         /**
@@ -329,7 +329,7 @@ public class MyGame
 
             //gameloop
             if (UNLIMITED_FPS) {
-                while (isEngineRunning) {
+                while (this.isEngineRunning) {
     
                     //mark the time before the iteration
                     timeStamp = Stopwatch.GetTimestamp();
@@ -345,7 +345,7 @@ public class MyGame
                     this.draw(timeElapsed);
 
                     //Yield
-                    Thread.Yield();
+                    //Thread.Yield();
 
                     //update the referencial time with the initial time
                     timeReference = timeStamp;
