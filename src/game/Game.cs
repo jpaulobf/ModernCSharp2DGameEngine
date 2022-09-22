@@ -11,22 +11,22 @@ public class Game : GameInterface
     private BufferedGraphics BufferedGraphics;
     private Bitmap BufferedImage;
     private Graphics InternalGraphics;
-    private bool WindowActionInProgress = false;
+    public Size Resolution                  { get; set; }
+    public Size WindowSize                  { get; }
+    public InterpolationMode Interpolation  { get; }
+    protected int InternalResolutionWidth   = 738;
+    protected int InternalResolutionHeight  = 516;
+    private float ScaleW                    = 1.0F;
+    private float ScaleH                    = 1.0F;
+    private bool WindowResizing             = false;
+    private bool IS_LEFT_KEY_DOWN           = false;
+    private bool IS_RIGHT_KEY_DOWN          = false;
+    private bool Paused                     = false;
+    private Font PauseFont                  = new Font("Arial", 16);
+    private Point PausePoint;
     private HUD Hud;
     private Stages Stages;
     private PlayerSprite PlayerSprite;
-    public Size Resolution { get; set; }
-    public Size WindowSize { get; }
-    private bool KEY_LEFT   = false;
-    private bool KEY_RIGHT  = false;
-    private bool Paused     = false;
-    protected int InternalResolutionWidth = 738;
-    protected int InternalResolutionHeight = 516;
-    private float ScaleW = 1.0F;
-    private float ScaleH = 1.0F;
-    private Font PauseFont = new Font("Arial", 16);
-    private Point PausePoint;
-    public InterpolationMode InterpolationMode { get; }
 
     /**
      * Game-class constructor
@@ -38,7 +38,7 @@ public class Game : GameInterface
         this.WindowSize         = windowSize;
 
         //set the iterpolation mode
-        this.InterpolationMode = interpolationMode;
+        this.Interpolation = interpolationMode;
 
         //create the imagebuffer
         this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
@@ -46,7 +46,7 @@ public class Game : GameInterface
         this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //define the interpolation mode
-        this.InternalGraphics.InterpolationMode = this.InterpolationMode;
+        this.InternalGraphics.InterpolationMode = this.Interpolation;
 
         //calc the scale
         this.ScaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
@@ -58,22 +58,10 @@ public class Game : GameInterface
         //screen center
         this.PausePoint = new Point((int)windowSize.Width/2 - 80, (int)windowSize.Height/2 - 50);
 
-        //load the resources
-        this.Load();
-    }
-
-    public void Load()
-    {
         // Load new sprite class
         this.Hud            = new HUD(this);
         this.Stages         = new Stages(this);
         this.PlayerSprite   = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
-    }
-
-    public void Unload()
-    {
-        // Unload graphics
-        // Turn off game music
     }
 
     public void Update(long frametime)
@@ -84,12 +72,12 @@ public class Game : GameInterface
             PlayerSprite.Righting = false;
             PlayerSprite.Lefting = false;
 
-            if (KEY_LEFT) {
+            if (IS_LEFT_KEY_DOWN) {
                 PlayerSprite.X -= moveDistance;
                 PlayerSprite.Lefting = true;
             }
 
-            if (KEY_RIGHT) {
+            if (IS_RIGHT_KEY_DOWN) {
                 PlayerSprite.X += moveDistance;
                 PlayerSprite.Righting = true;
             }
@@ -108,7 +96,7 @@ public class Game : GameInterface
 
     public void Draw(long frametime)
     {
-        if (!this.WindowActionInProgress) {
+        if (!this.WindowResizing) {
             this.Stages.Draw(this.InternalGraphics, frametime);
 
             this.Hud.Draw(this.InternalGraphics);
@@ -117,7 +105,7 @@ public class Game : GameInterface
             this.PlayerSprite.Draw(this.InternalGraphics);
         }
 
-        if (Paused) {
+        if (this.Paused) {
             this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(180, 255, 255, 255)), 0, PausePoint.Y - 20, this.WindowSize.Width, 60);
             this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y - 20, this.WindowSize.Width, 2);
             this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y + 40, this.WindowSize.Width, 2);
@@ -128,9 +116,9 @@ public class Game : GameInterface
     public void KeyDown(object sender, KeyEventArgs e)
     {
         if (e.KeyValue == 37) {
-            KEY_LEFT = true;
+            IS_LEFT_KEY_DOWN = true;
         } else if (e.KeyValue == 39) {
-            KEY_RIGHT = true;
+            IS_RIGHT_KEY_DOWN = true;
         }
     }
 
@@ -139,9 +127,9 @@ public class Game : GameInterface
     public void KeyUp(object sender, KeyEventArgs e)
     {
         if (e.KeyValue == 37) {
-            KEY_LEFT = false;
+            IS_LEFT_KEY_DOWN = false;
         } else if (e.KeyValue == 39) {
-            KEY_RIGHT = false;
+            IS_RIGHT_KEY_DOWN = false;
         }
 
         if (e.KeyValue == 80 || e.KeyValue == 19) {
@@ -158,10 +146,10 @@ public class Game : GameInterface
         this.BufferedGraphics.Render(targetGraphics);
     }
 
-    public void Resize(object sender, System.EventArgs e)
+    public async void Resize(object sender, System.EventArgs e)
     {
         //stop the render method
-        this.WindowActionInProgress = true;
+        this.WindowResizing = true;
         System.Threading.Thread.Sleep(1);
         
         try {
@@ -180,14 +168,14 @@ public class Game : GameInterface
             this.InternalGraphics   = BufferedGraphics.Graphics;
             
             this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
-            this.InternalGraphics.InterpolationMode = this.InterpolationMode;
+            this.InternalGraphics.InterpolationMode = this.Interpolation;
 
             this.Stages.Resize(sender, e);
 
         } catch (Exception ex) {
             Console.WriteLine(ex);
         } finally {
-            this.WindowActionInProgress = false;
+            await Task.Run(() => this.WindowResizing = false);
         }
     }
 
@@ -198,4 +186,19 @@ public class Game : GameInterface
     public float getScaleW()                    {  return (this.ScaleW);                    }
     public float getScaleH()                    {   return (this.ScaleH);                   }
     public PlayerSprite GetPlayerSprite()       {   return (this.PlayerSprite);             }
+
+    /**
+     * Control the game to show the colision and reset the level
+     */
+    public void SetEnemyColision()
+    {
+        //TODO:
+        //Pause the current scene
+        //Wait for the explosion animation
+        //Wait 3 seconds
+        //Dec 1 live
+        //Check for GameOver
+        //Restart the current stage
+        //Unpause the current scene
+    }
 }
