@@ -4,6 +4,7 @@ public class PlayerSprite : GameSprite {
 
     private GameInterface GameRef;
     private Bitmap LocalSpriteImage;
+    private Bitmap SpriteSplosion;
     private SolidBrush YellowBrush = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
     private bool Coliding = false;
 
@@ -12,6 +13,8 @@ public class PlayerSprite : GameSprite {
      */
     public PlayerSprite(GameInterface game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity) {
         this.GameRef = game;
+        string splosionPath = "img\\sprite_splosion.png";
+        this.SpriteSplosion = new Bitmap(@splosionPath);
         this.LocalSpriteImage = new Bitmap(width, height);
         // this.Render();
     }
@@ -59,9 +62,14 @@ public class PlayerSprite : GameSprite {
             } else if (this.Righting) { //Righting
                 this.SourceStartX = (short)(Width * 2);
             }
-
-            this.SourceRect = new Rectangle(SourceStartX, SourceStartY, (short)Width - 1, (short)Height);
-            this.DestineRect = new Rectangle((short)X, (short)Y, (short)Width, (short)Height);
+        } else {
+            this.SourceStartX = 0;
+            this.Width = 32;
+            this.Height = 25;
+            this.SpriteImage = this.SpriteSplosion;
         }
+
+        this.SourceRect = new Rectangle(SourceStartX, SourceStartY, (short)Width - 1, (short)Height);
+        this.DestineRect = new Rectangle((short)X, (short)Y, (short)Width, (short)Height);
     }
 }
