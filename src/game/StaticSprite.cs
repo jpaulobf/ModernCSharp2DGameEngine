@@ -18,7 +18,7 @@ public class StaticSprite : GameSprite
         this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
-        if (this.ColisionDetection(this.GameRef.GetPlayerSprite())) {
+        if (this.CollisionDetection(this.GameRef.GetPlayerSprite())) {
             Console.WriteLine("Fuel...");
         }
     }
