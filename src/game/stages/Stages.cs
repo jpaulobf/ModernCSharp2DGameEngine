@@ -77,14 +77,6 @@ public class Stages : StagesDef {
         this.stage1_sprites.Add(41,   new SpriteConstructor(game, SpriteConstructor.SHIP, 320, 1, false, 288, 450, SpriteConstructor.LEFT));
     }
 
-    internal void Reset()
-    {
-        this.currentLine    = 574;
-        this.offset         = 0;
-        this.framecount     = 0;
-        this.tick           = false;
-    }
-
     /**
      * Upgrade method
      */
@@ -183,5 +175,13 @@ public class Stages : StagesDef {
                 this.internalGraphics.InterpolationMode = this.gameref.Interpolation;
             });
         } catch {}  
+    }
+
+    public void Reset()
+    {
+        this.currentLine    = 574;
+        this.offset         = 0;
+        this.framecount     = 0;
+        this.tick           = false;
     }
 }
