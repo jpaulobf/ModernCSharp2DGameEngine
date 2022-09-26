@@ -8,7 +8,7 @@ public class PlayerSprite : GameSprite {
     private float OgWidth           = 0;
     private float OgHeight          = 0;
     private SolidBrush YellowBrush  = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
-    private bool Coliding           = false;
+    public bool Colliding { get; set; } = false;
 
     /**
      * Player Sprite constructor
@@ -21,15 +21,15 @@ public class PlayerSprite : GameSprite {
         this.OgHeight           = height;
     }
 
-    public void SetColision() {
-        this.Coliding = true;
-        this.AnimateExplosion();
+    public void SetCollision() {
+        this.Colliding = true;
+        this.Explode();
     }
 
     /**
      * Animate the sprite colision
      */
-    private void AnimateExplosion() {
+    private void Explode() {
         //TODO
     }   
 
@@ -37,7 +37,7 @@ public class PlayerSprite : GameSprite {
      * Player Sprite update method
      */
     public override void Update(long timeframe) {
-        if (!this.Coliding) {
+        if (!this.Colliding) {
             if (!this.Lefting && !this.Righting) {
                 this.SourceStartX = (short)Width; //Default
             } else if (this.Lefting) { //Lefting
@@ -62,7 +62,7 @@ public class PlayerSprite : GameSprite {
      */
     internal void Reset() {
         this.SpriteImage    = this.LocalSpriteImage;
-        this.Coliding       = false;
+        this.Colliding      = false;
         this.Width          = this.OgWidth;
         this.Height         = this.OgHeight;
     }
