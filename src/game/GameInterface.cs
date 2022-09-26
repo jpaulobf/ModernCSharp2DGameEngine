@@ -34,5 +34,5 @@ public interface GameInterface {
 
     public PlayerSprite GetPlayerSprite();
 
-    public void SetEnemyColision();
+    public void SetEnemyCollision();
 }
