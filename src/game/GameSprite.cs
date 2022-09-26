@@ -54,7 +54,7 @@ public abstract class GameSprite
         gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
     }
 
-    public bool ColisionDetection(GameSprite othersprite) {
+    public bool CollisionDetection(GameSprite othersprite) {
         return (new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height).IntersectsWith(
                 new Rectangle((short)othersprite.X, (short)othersprite.Y, (short)othersprite.Width, (short)othersprite.Height)));
     }
