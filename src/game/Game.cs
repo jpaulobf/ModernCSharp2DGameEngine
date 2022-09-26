@@ -66,7 +66,7 @@ public class Game : GameInterface
 
     public void Update(long frametime)
     {
-        if (!Paused) {
+        if (!Paused && !this.PlayerSprite.Colliding) {
             // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
             float moveDistance = (float)(PlayerSprite.Velocity * ((double)frametime / 10_000_000));
             PlayerSprite.Righting = false;
@@ -203,10 +203,10 @@ public class Game : GameInterface
     /**
      * Control the game to show the colision and reset the level
      */
-    public void SetEnemyColision()
+    public void SetEnemyCollision()
     {
         //TODO:
-        //Pause the current scene
+        //ok - Pause the current scene
         //Wait for the explosion animation
         //Wait 3 seconds
         //Dec 1 live
