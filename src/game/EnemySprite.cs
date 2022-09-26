@@ -77,17 +77,18 @@ public class EnemySprite : GameSprite {
             }
         }
         
+        //set the source & dest sprite rectangles
         this.SourceRect  = new Rectangle(this.SourceStartX, this.SourceStartY, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
-        if (this.ColisionDetection(this.GameRef.GetPlayerSprite())) {
+        //verify if the player sprite is coliding with this current
+        if (this.CollisionDetection(this.GameRef.GetPlayerSprite())) {
             this.TilesNumber = 0;
             this.Direction = 0;
-            this.GameRef.GetPlayerSprite().SetColision();
+            this.GameRef.GetPlayerSprite().SetCollision();
+            this.GameRef.SetEnemyCollision();
             this.AnimateExplosion();
-            this.GameRef.SetEnemyColision();
         }
-
     }
 
     /**
@@ -95,6 +96,7 @@ public class EnemySprite : GameSprite {
      */
     private void AnimateExplosion()
     {
+        //todo
     }
 
     private void FlipX()
