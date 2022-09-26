@@ -20,4 +20,9 @@ public class HUD {
         gfx.FillRectangle(Brushes.Black, this.rectSep);
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 144, 144, 144)), this.rect);
     }
+
+    internal void Reset()
+    {
+        //TODO
+    }
 }
