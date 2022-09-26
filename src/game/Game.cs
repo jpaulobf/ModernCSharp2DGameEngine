@@ -135,11 +135,24 @@ public class Game : GameInterface
         if (e.KeyValue == 80 || e.KeyValue == 19) {
             this.PauseGame();
         }
+
+        if (e.KeyValue == 82) {
+            this.Reset();
+        }
     }
 
     private void PauseGame()
     {
         this.Paused = !this.Paused;
+    }
+
+    private void Reset() {
+        this.IS_LEFT_KEY_DOWN   = false;
+        this.IS_RIGHT_KEY_DOWN  = false;
+        this.Paused             = false;
+        this.Hud.Reset();
+        this.Stages.Reset();
+        this.PlayerSprite.Reset();
     }
 
     public void Render(Graphics targetGraphics) {
