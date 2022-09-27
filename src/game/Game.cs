@@ -22,6 +22,8 @@ public class Game : GameInterface
     private bool IS_LEFT_KEY_DOWN           = false;
     private bool IS_RIGHT_KEY_DOWN          = false;
     private bool Paused                     = false;
+    private bool ResetAfterDead             = false;
+    private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
     private Point PausePoint;
     private HUD Hud;
@@ -66,7 +68,8 @@ public class Game : GameInterface
 
     public void Update(long frametime)
     {
-        if (!Paused && !this.PlayerSprite.Colliding) {
+        if (!Paused && !this.PlayerSprite.Colliding) 
+        {
             // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
             float moveDistance = (float)(PlayerSprite.Velocity * ((double)frametime / 10_000_000));
             PlayerSprite.Righting = false;
@@ -91,6 +94,17 @@ public class Game : GameInterface
             this.Hud.Update(frametime);
             this.Stages.Update(frametime);
             this.PlayerSprite.Update(frametime);
+        }
+
+        if (this.ResetAfterDead) 
+        {
+            this.ResetCounter += frametime;
+        }
+
+        if (this.ResetCounter >= 30_000_000) 
+        {
+            this.ResetCounter = 0;
+            this.ResetAfterCollision();
         }
     }
 
@@ -205,13 +219,28 @@ public class Game : GameInterface
      */
     public void SetEnemyCollision()
     {
+        if (this.Hud.PlayerIsAlive()) {
+            this.Hud.PlayerDecreaseLive();
+            this.ResetAfterDead = true;
+        } else {
+            //GAMEOVER
+        }
+            
         //TODO:
+        //ok - Check for GameOver
         //ok - Pause the current scene
-        //Wait for the explosion animation
-        //Wait 3 seconds
-        //Dec 1 live
-        //Check for GameOver
+        //ok - Wait for the explosion animation
+        //ok - Dec 1 live
+        //ok - Wait 3 seconds      
         //Restart the current stage
         //Unpause the current scene
+    }
+
+    private void ResetAfterCollision()
+    {
+        this.Stages.Reset();
+        this.PlayerSprite.Reset();
+        this.PlayerSprite.Colliding = false;
+        this.ResetAfterDead         = false;
     }
 }
