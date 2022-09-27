@@ -27,11 +27,17 @@ public class HUD {
         //TODO
     }
 
+    /**
+     * Verify if player is still alive
+     */
     internal bool PlayerIsAlive()
     {
         return (this.PlayerLives > 0);
     }
 
+    /**
+     * Decrease the current player live number
+     */
     internal void PlayerDecreaseLive()
     {
         this.PlayerLives--;
