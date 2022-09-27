@@ -225,15 +225,6 @@ public class Game : GameInterface
         } else {
             //GAMEOVER
         }
-            
-        //TODO:
-        //ok - Check for GameOver
-        //ok - Pause the current scene
-        //ok - Wait for the explosion animation
-        //ok - Dec 1 live
-        //ok - Wait 3 seconds      
-        //Restart the current stage
-        //Unpause the current scene
     }
 
     private void ResetAfterCollision()
