@@ -5,6 +5,7 @@ public class HUD {
     private Rectangle rectSep;
     private Rectangle rect;
     private GameInterface gameref;
+    public byte PlayerLives {get;set;} = 5;
 
     public HUD(GameInterface game) {
         this.gameref = game;
@@ -24,5 +25,15 @@ public class HUD {
     internal void Reset()
     {
         //TODO
+    }
+
+    internal bool PlayerIsAlive()
+    {
+        return (this.PlayerLives > 0);
+    }
+
+    internal void PlayerDecreaseLive()
+    {
+        this.PlayerLives--;
     }
 }
