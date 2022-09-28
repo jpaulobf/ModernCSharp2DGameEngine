@@ -66,6 +66,9 @@ public class Game : GameInterface
         this.PlayerSprite   = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
     }
 
+    /**
+     * Update the game
+     */
     public void Update(long frametime)
     {
         if (!Paused && !this.PlayerSprite.Colliding) 
@@ -108,73 +111,43 @@ public class Game : GameInterface
         }
     }
 
+    /**
+     * Draw the game
+     */
     public void Draw(long frametime)
     {
-        if (!this.WindowResizing) {
+        if (!this.WindowResizing) 
+        {
+            //draw the stage bg & enemies
             this.Stages.Draw(this.InternalGraphics, frametime);
 
+            //draw the HUD
             this.Hud.Draw(this.InternalGraphics);
 
             // Draw Player Sprite
             this.PlayerSprite.Draw(this.InternalGraphics);
-        }
 
-        if (this.Paused) {
-            this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(180, 255, 255, 255)), 0, PausePoint.Y - 20, this.WindowSize.Width, 60);
-            this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y - 20, this.WindowSize.Width, 2);
-            this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y + 40, this.WindowSize.Width, 2);
-            this.InternalGraphics.DrawString("Game Paused!", PauseFont, Brushes.Black, PausePoint);
-        }
-    }
-
-    public void KeyDown(object sender, KeyEventArgs e)
-    {
-        if (e.KeyValue == 37) {
-            IS_LEFT_KEY_DOWN = true;
-        } else if (e.KeyValue == 39) {
-            IS_RIGHT_KEY_DOWN = true;
+            //draw pause message
+            if (this.Paused) 
+            {
+                this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(180, 255, 255, 255)), 0, PausePoint.Y - 20, this.WindowSize.Width, 60);
+                this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y - 20, this.WindowSize.Width, 2);
+                this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y + 40, this.WindowSize.Width, 2);
+                this.InternalGraphics.DrawString("Game Paused!", PauseFont, Brushes.Black, PausePoint);
+            }
         }
     }
 
-    public void KeyPress(object sender, KeyPressEventArgs e) {}
-
-    public void KeyUp(object sender, KeyEventArgs e)
-    {
-        if (e.KeyValue == 37) {
-            IS_LEFT_KEY_DOWN = false;
-        } else if (e.KeyValue == 39) {
-            IS_RIGHT_KEY_DOWN = false;
-        }
-
-        if (e.KeyValue == 80 || e.KeyValue == 19) {
-            this.PauseGame();
-        }
-
-        if (e.KeyValue == 82) {
-            this.Reset();
-        }
-    }
-
-    private void PauseGame()
-    {
-        this.Paused = !this.Paused;
-    }
-
-    private void Reset() {
-        this.IS_LEFT_KEY_DOWN   = false;
-        this.IS_RIGHT_KEY_DOWN  = false;
-        this.Paused             = false;
-        this.ResetAfterDead     = false;
-        this.ResetCounter       = 0;
-        this.Hud.Reset();
-        this.Stages.Reset();
-        this.PlayerSprite.Reset();
-    }
-
+    /**
+     * Render the BackBuffer
+     */
     public void Render(Graphics targetGraphics) {
         this.BufferedGraphics.Render(targetGraphics);
     }
 
+    /**
+     * Resize screen (buggy...)
+     */
     public async void Resize(object sender, System.EventArgs e)
     {
         //stop the render method
@@ -208,13 +181,42 @@ public class Game : GameInterface
         }
     }
 
-    //Accessors
-    public Graphics GetGraphics()               {   return (this.InternalGraphics);         }
-    public int GetInternalResolutionWidth()     {   return (this.InternalResolutionWidth);  }
-    public int GetInternalResolutionHeight()    {   return (this.InternalResolutionHeight); }
-    public float getScaleW()                    {  return (this.ScaleW);                    }
-    public float getScaleH()                    {   return (this.ScaleH);                   }
-    public PlayerSprite GetPlayerSprite()       {   return (this.PlayerSprite);             }
+    /**
+     * Game key down
+     */
+    public void KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.KeyValue == 37) {
+            IS_LEFT_KEY_DOWN = true;
+        } else if (e.KeyValue == 39) {
+            IS_RIGHT_KEY_DOWN = true;
+        }
+    }
+
+    /**
+     * Game Key press
+     */
+    public void KeyPress(object sender, KeyPressEventArgs e) {}
+
+    /**
+     * Game Key up
+     */
+    public void KeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.KeyValue == 37) {
+            IS_LEFT_KEY_DOWN = false;
+        } else if (e.KeyValue == 39) {
+            IS_RIGHT_KEY_DOWN = false;
+        }
+
+        if (e.KeyValue == 80 || e.KeyValue == 19) {
+            this.PauseGame();
+        }
+
+        if (e.KeyValue == 82) {
+            this.Reset();
+        }
+    }
 
     /**
      * Control the game to show the colision and reset the level
@@ -229,6 +231,9 @@ public class Game : GameInterface
         }
     }
 
+    /**
+     * Reset the current stage after collision
+     */
     private void ResetAfterCollision()
     {
         this.Stages.Reset();
@@ -236,4 +241,34 @@ public class Game : GameInterface
         this.PlayerSprite.Colliding = false;
         this.ResetAfterDead         = false;
     }
+
+    /**
+     * Pause the game
+     */
+    private void PauseGame()
+    {
+        this.Paused = !this.Paused;
+    }
+
+    /**
+     * Reset the game
+     */
+    private void Reset() {
+        this.IS_LEFT_KEY_DOWN   = false;
+        this.IS_RIGHT_KEY_DOWN  = false;
+        this.Paused             = false;
+        this.ResetAfterDead     = false;
+        this.ResetCounter       = 0;
+        this.Hud.Reset();
+        this.Stages.Reset();
+        this.PlayerSprite.Reset();
+    }
+
+    //Accessors
+    public Graphics GetGraphics()               {   return (this.InternalGraphics);         }
+    public int GetInternalResolutionWidth()     {   return (this.InternalResolutionWidth);  }
+    public int GetInternalResolutionHeight()    {   return (this.InternalResolutionHeight); }
+    public float getScaleW()                    {  return (this.ScaleW);                    }
+    public float getScaleH()                    {   return (this.ScaleH);                   }
+    public PlayerSprite GetPlayerSprite()       {   return (this.PlayerSprite);             }
 }
