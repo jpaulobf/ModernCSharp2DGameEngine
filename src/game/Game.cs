@@ -6,8 +6,16 @@ using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using game.stages;
 
+/**
+ * This class is responsible for the game control 
+ *  (update, render & keyboard tracking)
+ */
 public class Game : GameInterface
 {
+
+    //-----------------------------------------------------//
+    //--- Window & Buffering control                    ---//
+    //-----------------------------------------------------//
     private BufferedGraphics BufferedGraphics;
     private Bitmap BufferedImage;
     private Graphics InternalGraphics;
@@ -19,6 +27,10 @@ public class Game : GameInterface
     private float ScaleW                    = 1.0F;
     private float ScaleH                    = 1.0F;
     private bool WindowResizing             = false;
+
+    //-----------------------------------------------------//
+    //--- Game Elements control                         ---//
+    //-----------------------------------------------------//
     private bool IS_LEFT_KEY_DOWN           = false;
     private bool IS_RIGHT_KEY_DOWN          = false;
     private bool Paused                     = false;
@@ -31,7 +43,7 @@ public class Game : GameInterface
     private PlayerSprite PlayerSprite;
 
     /**
-     * Game-class constructor
+     * Game constructor
      */
     public Game(Size resolution, Size windowSize, InterpolationMode interpolationMode) {
 
