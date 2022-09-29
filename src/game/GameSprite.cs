@@ -2,6 +2,9 @@ namespace game;
 
 using System.Drawing;
 
+/**
+ * Abstrac class for the game sprites
+ */
 public abstract class GameSprite
 {
     protected const bool NORMAL     = true;
@@ -41,8 +44,14 @@ public abstract class GameSprite
         this.Velocity = velocity;
     }
 
+    /**
+     * Abstract update method
+     */
     public abstract void Update(long timeframe);
 
+    /**
+     * Draw is common for all subclasses, if necessary override it
+     */
     public void Draw(Graphics gfx)
     {
         if (this.RenderReversed && this.Status == NORMAL) {
@@ -54,6 +63,9 @@ public abstract class GameSprite
         gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
     }
 
+    /**
+     * Default collision detection method
+     */
     public bool CollisionDetection(GameSprite othersprite) {
         return (new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height).IntersectsWith(
                 new Rectangle((short)othersprite.X, (short)othersprite.Y, (short)othersprite.Width, (short)othersprite.Height)));
