@@ -7,6 +7,8 @@ public class PlayerSprite : GameSprite {
     private Bitmap SpriteSplosion;
     private float OgWidth           = 0;
     private float OgHeight          = 0;
+    private int OgX                 = 0;
+    private int OgY                 = 0;
     private SolidBrush YellowBrush  = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
     public bool Colliding { get; set; } = false;
 
@@ -19,6 +21,8 @@ public class PlayerSprite : GameSprite {
         this.LocalSpriteImage   = new Bitmap(@imageFilePath);
         this.OgWidth            = width;
         this.OgHeight           = height;
+        this.OgX                = X;
+        this.OgY                = Y;
     }
 
     public void SetCollision() {
@@ -65,5 +69,7 @@ public class PlayerSprite : GameSprite {
         this.Colliding      = false;
         this.Width          = this.OgWidth;
         this.Height         = this.OgHeight;
+        this.X              = this.OgX;
+        this.Y              = this.OgY;
     }
 }
