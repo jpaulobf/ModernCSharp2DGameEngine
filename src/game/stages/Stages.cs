@@ -87,7 +87,6 @@ public class Stages : StagesDef {
         if (this.framecount >= 90_000) {
             //render just from time to time
             this.DrawBackground();
-            this.CheckSprites(frametime);
 
             //calc the offset
             this.framecount = 0;
@@ -97,6 +96,9 @@ public class Stages : StagesDef {
                 this.offset = 0;
             }
         }
+
+        //after render the background update the sprites
+        this.CheckSprites(frametime);
     }
 
     /**
