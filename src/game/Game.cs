@@ -111,11 +111,13 @@ public class Game : GameInterface
             this.PlayerSprite.Update(frametime);
         }
 
+        //if the player hit something, resetcounter will start
         if (this.ResetAfterDead) 
         {
             this.ResetCounter += frametime;
         }
 
+        //after 3 seconds, the game restart
         if (this.ResetCounter >= 30_000_000) 
         {
             this.ResetCounter = 0;
