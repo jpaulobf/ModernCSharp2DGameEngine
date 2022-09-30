@@ -109,6 +109,10 @@ public class Game : GameInterface
             this.Hud.Update(frametime);
             this.Stages.Update(frametime);
             this.PlayerSprite.Update(frametime);
+        } 
+        else if (this.PlayerSprite.Colliding)
+        {
+            this.Stages.Update(frametime, true);
         }
 
         //if the player hit something, resetcounter will start
@@ -237,10 +241,13 @@ public class Game : GameInterface
      */
     public void SetEnemyCollision()
     {
-        if (this.Hud.PlayerIsAlive()) {
+        if (this.Hud.PlayerIsAlive()) 
+        {
             this.Hud.PlayerDecreaseLive();
             this.ResetAfterDead = true;
-        } else {
+        } 
+        else 
+        {
             //GAMEOVER
         }
     }
