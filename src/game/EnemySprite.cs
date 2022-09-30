@@ -12,11 +12,16 @@ public class EnemySprite : GameSprite {
     protected short MaxLeft     = 0;
     protected short MaxRight    = 0;
     protected byte Direction    = 0;
+    protected byte Type         = 0;
+    public static byte HELI     = 4;
+    public static byte SHIP     = 5;
+    public static byte AIRPLANE = 6;
 
     /**
      * Enemy Sprite constructor
      */
-    public EnemySprite(GameInterface game, 
+    public EnemySprite(GameInterface game,
+                       byte type,
                        string imageFilePath, 
                        int width, 
                        int height, 
@@ -30,6 +35,7 @@ public class EnemySprite : GameSprite {
                        short maxRight = 0, 
                        byte direction = 0) : base(imageFilePath, width, height, X, Y, velocity) {
         //after base constructor
+        this.Type               = type;
         this.TilesNumber        = tilesNumber;
         this.MillisecsPerTile   = millisecondsPerTile;
         this.GameRef            = game;
@@ -43,7 +49,7 @@ public class EnemySprite : GameSprite {
     /**
      * Enemy Sprite update class
      */
-    public override void Update(long frametime)
+    public override void Update(long frametime, bool colliding = false)
     {
         //if the current sprite has more than 1 tile
         if (this.TilesNumber > 1)
@@ -102,7 +108,7 @@ public class EnemySprite : GameSprite {
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
         //verify if the player sprite is coliding with this current
-        if (this.CollisionDetection(this.GameRef.GetPlayerSprite())) 
+        if ((!colliding) && this.CollisionDetection(this.GameRef.GetPlayerSprite())) 
         {
             this.TilesNumber = 0;
             this.Direction = 0;
@@ -117,7 +123,7 @@ public class EnemySprite : GameSprite {
      */
     private void AnimateExplosion()
     {
-        //todo
+    //todo
     }
 
     private void FlipX()
