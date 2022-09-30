@@ -47,7 +47,7 @@ public abstract class GameSprite
     /**
      * Abstract update method
      */
-    public abstract void Update(long timeframe);
+    public abstract void Update(long timeframe, bool colliding = false);
 
     /**
      * Draw is common for all subclasses, if necessary override it
