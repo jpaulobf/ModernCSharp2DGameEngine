@@ -40,7 +40,7 @@ public class PlayerSprite : GameSprite {
     /**
      * Player Sprite update method
      */
-    public override void Update(long timeframe) {
+    public override void Update(long timeframe, bool colliding = false) {
         if (!this.Colliding) {
             if (!this.Lefting && !this.Righting) {
                 this.SourceStartX = (short)Width; //Default
