@@ -80,7 +80,7 @@ public class Stages : StagesDef {
     /**
      * Upgrade method
      */
-    public void Update(long frametime) {
+    public void Update(long frametime, bool colliding = false) {
         //add the framecounter
         this.framecount += frametime;
 
@@ -88,23 +88,28 @@ public class Stages : StagesDef {
             //render just from time to time
             this.DrawBackground();
 
-            //calc the offset
+            //reset framecount
             this.framecount = 0;
-            this.offset++;
-            if (this.offset == 4) {
-                this.currentLine--;
-                this.offset = 0;
+
+            if (!colliding) 
+            {
+                //calc the offset
+                this.offset++;
+                if (this.offset == 4) {
+                    this.currentLine--;
+                    this.offset = 0;
+                }
             }
         }
 
         //after render the background update the sprites
-        this.CheckSprites(frametime);
+        this.CheckSprites(frametime, colliding);
     }
 
     /**
      * Checksprites method.
      */
-    private void CheckSprites(long frametime) {
+    internal void CheckSprites(long frametime, bool colliding) {
         int startScreenFrame        = (this.currentLine - 115) * 4;
         int endScreenFrame          = (this.currentLine + 13) * 4;
         int currentLineYPosition    = (this.currentLine - 95) * 4;
@@ -113,7 +118,7 @@ public class Stages : StagesDef {
         foreach (var item in this.stage1_sprites.Where(item => startScreenFrame < item.Key && endScreenFrame > item.Key)) {
             
             //if (startScreenFrame < item.Key && endScreenFrame > item.Key) {
-            item.Value.Render(this.internalGraphics, frametime, currentLineYPosition, this.offset, item.Key);
+            item.Value.Render(this.internalGraphics, frametime, currentLineYPosition, this.offset, item.Key, colliding);
             //}
         }
     }
