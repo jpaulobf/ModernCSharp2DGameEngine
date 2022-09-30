@@ -14,7 +14,7 @@ public class StaticSprite : GameSprite
     /**
      * update
      */ 
-    public override void Update(long timeframe) {
+    public override void Update(long timeframe, bool colliding = false) {
         this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
