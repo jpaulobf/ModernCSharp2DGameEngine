@@ -8,14 +8,16 @@ using game.stages;
 public class EnemySprite : GameSprite {
 
     private GameInterface GameRef;
-    protected long FrameCounter = 0;
-    protected short MaxLeft     = 0;
-    protected short MaxRight    = 0;
-    protected byte Direction    = 0;
-    protected byte Type         = 0;
-    public static byte HELI     = 4;
-    public static byte SHIP     = 5;
-    public static byte AIRPLANE = 6;
+    protected long FrameCounter     = 0;
+    protected short MaxLeft         = 0;
+    protected short MaxRight        = 0;
+    protected byte Direction        = 0;
+    protected byte Type             = 0;
+    public static byte HELI         = 4;
+    public static byte SHIP         = 5;
+    public static byte AIRPLANE     = 6;
+    private bool AnimateExplosion   = false;
+    private long AnimationCounter   = 0;
 
     /**
      * Enemy Sprite constructor
@@ -114,16 +116,28 @@ public class EnemySprite : GameSprite {
             this.Direction = 0;
             this.GameRef.GetPlayerSprite().SetCollision();
             this.GameRef.SetEnemyCollision();
-            this.AnimateExplosion();
+            this.StartExplosionAnimation();
+        }
+
+        if (this.AnimateExplosion) {
+            this.AnimationCounter += frametime;
+        }
+
+        if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 5_000_000) {
+            Console.WriteLine("frame 1");
+        } else if (this.AnimationCounter > 5_000_000) {
+            Console.WriteLine("frame 2");
+            this.AnimateExplosion = false;
+            this.AnimationCounter = 0;
         }
     }
 
     /**
      * Animate the current sprite colision
      */
-    private void AnimateExplosion()
+    private void StartExplosionAnimation()
     {
-    //todo
+        this.AnimateExplosion = true;
     }
 
     private void FlipX()
