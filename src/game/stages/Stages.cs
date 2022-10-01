@@ -20,7 +20,6 @@ public class Stages : StagesDef {
     private byte offset         = 0;
     private long framecount     = 0;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
-    private volatile bool tick  = false;
 
     /**
      * Constructor
@@ -189,6 +188,5 @@ public class Stages : StagesDef {
         this.currentLine    = 574;
         this.offset         = 0;
         this.framecount     = 0;
-        this.tick           = false;
     }
 }
