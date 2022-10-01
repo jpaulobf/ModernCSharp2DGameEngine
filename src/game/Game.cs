@@ -112,7 +112,7 @@ public class Game : GameInterface
         } 
         else if (this.PlayerSprite.Colliding)
         {
-            this.Stages.Update(frametime, true);
+            this.Stages.Update(frametime, this.PlayerSprite.Colliding);
         }
 
         //if the player hit something, resetcounter will start
