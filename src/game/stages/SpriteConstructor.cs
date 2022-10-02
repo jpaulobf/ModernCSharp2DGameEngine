@@ -42,7 +42,10 @@ public class SpriteConstructor {
     public void Render(Graphics gfx, long frametime, int currentLineYPosition, int offset, int Y, bool colliding) {
         this.Update(frametime, currentLineYPosition, offset, Y, colliding);
         this.Draw(gfx);
+    }
 
+    public void Reset() {
+        this.gamesprite.Reset();
     }
 
     private void Update(long frametime, int currentLineYPosition, int offset, int Y, bool colliding) {
