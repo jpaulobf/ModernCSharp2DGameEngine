@@ -16,6 +16,7 @@ public abstract class GameSprite
     protected int MillisecsPerTile  = 0;
     public bool RenderReversed  { get; set; }
     public Bitmap SpriteImage   { get; set; }
+    internal Bitmap Pixel       { get; set; }
     public float X              { get; set; }
     public float Y              { get; set; }
     public float Width          { get; set; }
@@ -32,6 +33,7 @@ public abstract class GameSprite
     public GameSprite(string imageFilePath, int width, int height, int X, int Y, int velocity) {
         //Console.WriteLine(filepath);
         this.SpriteImage = new Bitmap(@imageFilePath);
+        this.Pixel       = new Bitmap(@"img\\pixel.png");
         // Set sprite height & width in pixels
         this.Width = width;
         this.Height = height;
@@ -70,4 +72,6 @@ public abstract class GameSprite
         return (new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height).IntersectsWith(
                 new Rectangle((short)othersprite.X, (short)othersprite.Y, (short)othersprite.Width, (short)othersprite.Height)));
     }
+
+    public abstract void Reset();
 }
