@@ -64,7 +64,8 @@ public class PlayerSprite : GameSprite {
     /**
      * Reset player sprite
      */
-    internal void Reset() {
+    public override void Reset()
+    {
         this.SpriteImage    = this.LocalSpriteImage;
         this.Colliding      = false;
         this.Width          = this.OgWidth;
