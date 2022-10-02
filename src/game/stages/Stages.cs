@@ -188,5 +188,8 @@ public class Stages : StagesDef {
         this.currentLine    = 574;
         this.offset         = 0;
         this.framecount     = 0;
+        foreach (var item in this.stage1_sprites) {
+            item.Value.Reset();
+        }
     }
 }
