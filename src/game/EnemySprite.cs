@@ -18,6 +18,9 @@ public class EnemySprite : GameSprite {
     public static byte AIRPLANE     = 6;
     private bool AnimateExplosion   = false;
     private long AnimationCounter   = 0;
+    private Bitmap ShipExplosion1   = new Bitmap(@"img\\ship_explosion_frame1.png");
+    private Bitmap ShipExplosion2   = new Bitmap(@"img\\ship_explosion_frame2.png");
+    private Bitmap DefaultBitmap;
 
     /**
      * Enemy Sprite constructor
@@ -46,6 +49,7 @@ public class EnemySprite : GameSprite {
         this.MaxLeft            = maxLeft;
         this.MaxRight           = maxRight;
         this.Direction          = direction;
+        this.DefaultBitmap      = this.SpriteImage;
     }
 
     /**
@@ -123,10 +127,18 @@ public class EnemySprite : GameSprite {
             this.AnimationCounter += frametime;
         }
 
-        if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 5_000_000) {
-            Console.WriteLine("frame 1");
-        } else if (this.AnimationCounter > 5_000_000) {
-            Console.WriteLine("frame 2");
+        if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) {
+            if (this.Type == SHIP) {
+                this.SpriteImage = this.ShipExplosion1;
+            }
+        } else if (this.AnimationCounter >= 4_000_000 && this.AnimationCounter < 8_000_000) {
+            if (this.Type == SHIP) {
+                this.SpriteImage = this.ShipExplosion2;
+            }
+        } else if (this.AnimationCounter >= 8_000_000) {
+            if (this.Type == SHIP) {
+                this.SpriteImage = this.Pixel;
+            }
             this.AnimateExplosion = false;
             this.AnimationCounter = 0;
         }
@@ -144,5 +156,10 @@ public class EnemySprite : GameSprite {
     {
        this.RenderReversed = true;
        this.Status = NORMAL;
+    }
+
+    public override void Reset()
+    {
+        this.SpriteImage = this.DefaultBitmap;
     }
 }
