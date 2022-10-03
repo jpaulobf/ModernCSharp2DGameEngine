@@ -20,6 +20,9 @@ public class EnemySprite : GameSprite {
     private long AnimationCounter   = 0;
     private Bitmap ShipExplosion1   = new Bitmap(@"img\\ship_explosion_frame1.png");
     private Bitmap ShipExplosion2   = new Bitmap(@"img\\ship_explosion_frame2.png");
+    private Bitmap HeliExplosion1   = new Bitmap(@"img\\heli_explosion_frame1.png");
+    private Bitmap HeliExplosion2   = new Bitmap(@"img\\heli_explosion_frame2.png");
+
     private Bitmap DefaultBitmap;
 
     /**
@@ -130,15 +133,17 @@ public class EnemySprite : GameSprite {
         if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) {
             if (this.Type == SHIP) {
                 this.SpriteImage = this.ShipExplosion1;
+            } else if (this.Type == HELI) {
+                this.SpriteImage = this.HeliExplosion1;
             }
         } else if (this.AnimationCounter >= 4_000_000 && this.AnimationCounter < 8_000_000) {
             if (this.Type == SHIP) {
                 this.SpriteImage = this.ShipExplosion2;
+            } else if (this.Type == HELI) {
+                this.SpriteImage = this.HeliExplosion2;
             }
         } else if (this.AnimationCounter >= 8_000_000) {
-            if (this.Type == SHIP) {
-                this.SpriteImage = this.Pixel;
-            }
+            this.SpriteImage = this.Pixel;
             this.AnimateExplosion = false;
             this.AnimationCounter = 0;
         }
