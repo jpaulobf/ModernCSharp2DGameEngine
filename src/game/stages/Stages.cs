@@ -6,19 +6,21 @@ public class Stages : StagesDef {
     private BufferedGraphics bufferedGraphics;
     private Bitmap bufferedImage;
     private Graphics internalGraphics;
-    private float scaleW        = 1.0F;
-    private float scaleH        = 1.0F;
-    private SolidBrush green1   = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
-    private SolidBrush gray1    = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
-    private SolidBrush gray2    = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
-    private SolidBrush blue     = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
-    private SolidBrush yellow   = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
-    private Rectangle drawRect  = new Rectangle(0, 0, 18, 4);
-    private byte renderBlock    = 0;
-    protected short currentLine = 574;
-    private short CURRENT_STAGE = 1;
-    private byte offset         = 0;
-    private long framecount     = 0;
+    private float scaleW            = 1.0F;
+    private float scaleH            = 1.0F;
+    private const byte PIXEL_WIDTH  = 18;
+    private const byte PIXEL_HEIGHT = 4;
+    private SolidBrush green1       = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
+    private SolidBrush gray1        = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
+    private SolidBrush gray2        = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
+    private SolidBrush blue         = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
+    private SolidBrush yellow       = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
+    private Rectangle drawRect      = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
+    private byte renderBlock        = 0;
+    protected short currentLine     = 574;
+    private short CURRENT_STAGE     = 1;
+    private byte offset             = 0;
+    private long framecount         = 0;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
 
     /**
@@ -94,10 +96,13 @@ public class Stages : StagesDef {
             {
                 //calc the offset
                 this.offset++;
-                if (this.offset == 4) {
+                if (this.offset == PIXEL_HEIGHT) {
                     this.currentLine--;
                     this.offset = 0;
                 }
+
+                //Check if the Player is colliding with background
+                this.CheckBackgroundCollision();
             }
         }
 
@@ -105,20 +110,51 @@ public class Stages : StagesDef {
         this.CheckSprites(frametime, colliding);
     }
 
+    private void CheckBackgroundCollision()
+    {
+        short firstFromLeftToRight = 0;
+        short firstFromRightToLeft = 0;
+        short value = -1;
+
+        //check 8 lines
+        for (short i = (short)(currentLine + 3); i < (currentLine + 10); i++) {
+            for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
+                value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
+                if (value == 0) {
+                    firstFromLeftToRight = j;
+                    break;
+                }
+            }
+
+            for (short j = (short)(StagesDef.stages.GetLength(2) - 1); j > 0; j--) {
+                value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
+                if (value == 0) {
+                    firstFromRightToLeft = (short)(j + 1);
+                    break;
+                }
+            }
+
+            if (this.gameref.GetPlayerSprite().X < (firstFromLeftToRight * PIXEL_WIDTH)) {
+                Console.WriteLine("Coliding Left....");
+            } else if (this.gameref.GetPlayerSprite().X + this.gameref.GetPlayerSprite().Width > (firstFromRightToLeft * PIXEL_WIDTH)) {
+                Console.WriteLine("Coliding Right....");
+            }
+        }
+    }
+
     /**
      * Checksprites method.
      */
     internal void CheckSprites(long frametime, bool colliding) {
-        int startScreenFrame        = (this.currentLine - 115) * 4;
-        int endScreenFrame          = (this.currentLine + 13) * 4;
-        int currentLineYPosition    = (this.currentLine - 95) * 4;
+        int startScreenFrame        = (this.currentLine - 115) * PIXEL_HEIGHT;
+        int endScreenFrame          = (this.currentLine + 13)  * PIXEL_HEIGHT;
+        int currentLineYPosition    = (this.currentLine - 95)  * PIXEL_HEIGHT;
 
         //if exist an sprite in the current screen frame, render it
         foreach (var item in this.stage1_sprites.Where(item => startScreenFrame < item.Key && endScreenFrame > item.Key)) {
             
             //if (startScreenFrame < item.Key && endScreenFrame > item.Key) {
-            item.Value.Render(this.internalGraphics, frametime, currentLineYPosition, this.offset, item.Key, colliding);
-            //}
+            item.Value.UpdateAndRender(this.internalGraphics, frametime, currentLineYPosition, this.offset, item.Key, colliding);
         }
     }
 
@@ -138,20 +174,20 @@ public class Stages : StagesDef {
             for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
                 this.renderBlock = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (this.renderBlock == 1) {
-                    this.drawRect.X = j * 18;
-                    this.drawRect.Y = (c * 4) + this.offset;
+                    this.drawRect.X =  j * PIXEL_WIDTH;
+                    this.drawRect.Y = (c * PIXEL_HEIGHT) + this.offset;
                     this.internalGraphics.FillRectangle(this.green1, this.drawRect);
                 } else if (this.renderBlock == 5) {
-                    this.drawRect.X = j * 18;
-                    this.drawRect.Y = (c * 4) + this.offset;
+                    this.drawRect.X =  j * PIXEL_WIDTH;
+                    this.drawRect.Y = (c * PIXEL_HEIGHT) + this.offset;
                     this.internalGraphics.FillRectangle(this.gray1, this.drawRect);
                 } else if (this.renderBlock == 6) {
-                    this.drawRect.X = j * 18;
-                    this.drawRect.Y = (c * 4) + this.offset;
+                    this.drawRect.X =  j * PIXEL_WIDTH;
+                    this.drawRect.Y = (c * PIXEL_HEIGHT) + this.offset;
                     this.internalGraphics.FillRectangle(this.gray2, this.drawRect);
                 } else if (this.renderBlock == 7) {
-                    this.drawRect.X = j * 18;
-                    this.drawRect.Y = (c * 4) + this.offset;
+                    this.drawRect.X =  j * PIXEL_WIDTH;
+                    this.drawRect.Y = (c * PIXEL_HEIGHT) + this.offset;
                     this.internalGraphics.FillRectangle(this.yellow, this.drawRect);
                 }
             }
