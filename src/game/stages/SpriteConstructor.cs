@@ -39,7 +39,7 @@ public class SpriteConstructor {
         }
     }
 
-    public void Render(Graphics gfx, long frametime, int currentLineYPosition, int offset, int Y, bool colliding) {
+    public void UpdateAndRender(Graphics gfx, long frametime, int currentLineYPosition, int offset, int Y, bool colliding) {
         this.Update(frametime, currentLineYPosition, offset, Y, colliding);
         this.Draw(gfx);
     }
