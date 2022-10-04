@@ -7,23 +7,23 @@ using System.Drawing;
  */
 public abstract class GameSprite
 {
-    protected const bool NORMAL     = true;
-    protected const bool REVERSED   = false;
-    protected bool Status           = NORMAL;
-    protected short SourceStartX    = 0;
-    protected short SourceStartY    = 0;
-    protected byte TilesNumber      = 1;
-    protected int MillisecsPerTile  = 0;
-    public bool RenderReversed  { get; set; }
-    public Bitmap SpriteImage   { get; set; }
-    internal Bitmap Pixel       { get; set; }
-    public float X              { get; set; }
-    public float Y              { get; set; }
-    public float Width          { get; set; }
-    public float Height         { get; set; }
-    public int Velocity         { get; set; }
-    public bool Lefting         { get; set; }
-    public bool Righting        { get; set; }
+    protected const bool NORMAL         = true;
+    protected const bool REVERSED       = false;
+    protected bool Status               = NORMAL;
+    protected short SourceStartX        = 0;
+    protected short SourceStartY        = 0;
+    protected byte TilesNumber          = 1;
+    protected uint MillisecsPerTile     = 0;
+    public bool RenderReversed          { get; set; }
+    public Bitmap SpriteImage           { get; set; }
+    internal Bitmap Pixel               { get; set; }
+    public float X                      { get; set; }
+    public float Y                      { get; set; }
+    public float Width                  { get; set; }
+    public float Height                 { get; set; }
+    public int Velocity                 { get; set; }
+    public bool Lefting                 { get; set; }
+    public bool Righting                { get; set; }
     protected Rectangle SourceRect;
     protected Rectangle DestineRect;
 
@@ -49,7 +49,7 @@ public abstract class GameSprite
     /**
      * Abstract update method
      */
-    public abstract void Update(long timeframe, bool colliding = false);
+    public abstract void Update(ulong timeframe, bool colliding = false);
 
     /**
      * Draw is common for all subclasses, if necessary override it
