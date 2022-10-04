@@ -33,8 +33,8 @@ public class Game : GameInterface
     //-----------------------------------------------------//
     private bool IS_LEFT_KEY_DOWN           = false;
     private bool IS_RIGHT_KEY_DOWN          = false;
-    private bool Paused                     = false;
-    private bool ResetAfterDead             = false;
+    private volatile bool Paused            = false;
+    private volatile bool ResetAfterDead    = false;
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
     private Point PausePoint;
