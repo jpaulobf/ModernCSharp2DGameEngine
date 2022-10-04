@@ -2,9 +2,9 @@ namespace game;
 
 public interface GameInterface {
 
-    public void Update(long frametime);
+    public void Update(ulong frametime);
 
-    public void Draw(long frametime);
+    public void Draw(ulong frametime);
 
     public Graphics GetGraphics();
 
