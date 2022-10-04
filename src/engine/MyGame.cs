@@ -39,12 +39,13 @@ public class MyGame
         private Graphics graphics;
         private IntPtr hDC;
         private System.ComponentModel.IContainer components;
-        private bool goFullscreen = false;
-        private int ExternalResolutionWidth = 738;
-        private int ExternalResolutionHeight = 516;
-        private const int FPS_MAX_ARRAY = 10;
-        private int[] FPS_AVERAGE = new int[FPS_MAX_ARRAY];
-        private byte fps_aux_counter = 0;
+        private bool goFullscreen                   = false;
+        private bool ShowFPS                        = true;
+        private int ExternalResolutionWidth         = 738;
+        private int ExternalResolutionHeight        = 516;
+        private const int FPS_MAX_ARRAY             = 10;
+        private int[] FPS_AVERAGE                   = new int[FPS_MAX_ARRAY];
+        private byte fps_aux_counter                = 0;
         private InterpolationMode interpolationMode = InterpolationMode.HighQualityBicubic;
         
         /**
@@ -141,8 +142,7 @@ public class MyGame
         public void draw(long frametime)
         {
             this.game.Draw(frametime);
-            this.RenderFPS(this.game.GetGraphics(), frametime);
-            this.Render();
+            if (this.ShowFPS) this.RenderFPS(this.game.GetGraphics(), frametime);
         }      
 
         public void update(long frametime)
@@ -150,7 +150,7 @@ public class MyGame
             this.game.Update(frametime);
         }
 
-        private void Render() {
+        public void Render() {
             this.game.Render(this.graphics);
         }
 
@@ -344,8 +344,11 @@ public class MyGame
                     //draw
                     this.draw(timeElapsed);
 
+                    //render
+                    this.render();
+
                     //Yield
-                    //Thread.Yield();
+                    Thread.Yield();
 
                     //update the referencial time with the initial time
                     timeReference = timeStamp;
@@ -371,6 +374,9 @@ public class MyGame
 
                         //draw
                         this.draw(lastframetime);
+
+                        //render
+                        this.render();
                         
                         //and than, store the time spent
                         afterDraw = Stopwatch.GetTimestamp() - beforeDraw;
@@ -413,7 +419,15 @@ public class MyGame
 
             this.Dispose();
         }
-    
+
+        /**
+         * Render the canvas
+         */
+        private void render()
+        {
+           this.canvas.Render();
+        }
+
         /* Método de update, só executa quando a flag permite */
         public void update(long frametime) 
         {
