@@ -7,18 +7,19 @@ using game.stages;
  */
 public class EnemySprite : GameSprite {
     private GameInterface GameRef;
-    protected ulong FrameCounter            = 0;
+    protected long FrameCounter             = 0;
     protected short MaxLeft                 = 0;
     protected short MaxRight                = 0;
     protected byte Direction                = 0;
     protected byte DefaultDirection         = 0;
     protected byte DefaultTilesNumber       = 0;
+    protected bool DefaultRenderReverse     = false;
     protected byte Type                     = 0;
     public static byte HELI                 = 4;
     public static byte SHIP                 = 5;
     public static byte AIRPLANE             = 6;
     private volatile bool AnimateExplosion  = false;
-    private ulong AnimationCounter          = 0;
+    private long AnimationCounter           = 0;
     private Bitmap ShipExplosion1           = new Bitmap(@"img\\ship_explosion_frame1.png");
     private Bitmap ShipExplosion2           = new Bitmap(@"img\\ship_explosion_frame2.png");
     private Bitmap HeliExplosion1           = new Bitmap(@"img\\heli_explosion_frame1.png");
@@ -43,24 +44,25 @@ public class EnemySprite : GameSprite {
                        short maxRight = 0, 
                        byte direction = 0) : base(imageFilePath, width, height, X, Y, velocity) {
         //after base constructor
-        this.Type               = type;
-        this.TilesNumber        = tilesNumber;
-        this.MillisecsPerTile   = millisecondsPerTile;
-        this.GameRef            = game;
-        this.RenderReversed     = reversed;
-        this.FrameCounter       = 0;
-        this.MaxLeft            = maxLeft;
-        this.MaxRight           = maxRight;
-        this.Direction          = direction;
-        this.DefaultBitmap      = this.SpriteImage;
-        this.DefaultDirection   = direction;
-        this.DefaultTilesNumber = tilesNumber;
+        this.Type                   = type;
+        this.TilesNumber            = tilesNumber;
+        this.MillisecsPerTile       = millisecondsPerTile;
+        this.GameRef                = game;
+        this.RenderReversed         = reversed;
+        this.FrameCounter           = 0;
+        this.MaxLeft                = maxLeft;
+        this.MaxRight               = maxRight;
+        this.Direction              = direction;
+        this.DefaultBitmap          = this.SpriteImage;
+        this.DefaultDirection       = direction;
+        this.DefaultTilesNumber     = tilesNumber;
+        this.DefaultRenderReverse   = RenderReversed;
     }
 
     /**
      * Enemy Sprite update class
      */
-    public override void Update(ulong frametime, bool colliding = false)
+    public override void Update(long frametime, bool colliding = false)
     {
         //if the current sprite has more than 1 tile
         if (this.TilesNumber > 1)
@@ -131,25 +133,25 @@ public class EnemySprite : GameSprite {
         //this will start after collision
         if (this.AnimateExplosion) {
             this.AnimationCounter += frametime;
-        }
 
-        //this will start after explosion start
-        if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) {
-            if (this.Type == SHIP) {
-                this.SpriteImage = this.ShipExplosion1;
-            } else if (this.Type == HELI) {
-                this.SpriteImage = this.HeliExplosion1;
+            //this will start after explosion start
+            if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) {
+                if (this.Type == SHIP) {
+                    this.SpriteImage = this.ShipExplosion1;
+                } else if (this.Type == HELI) {
+                    this.SpriteImage = this.HeliExplosion1;
+                }
+            } else if (this.AnimationCounter >= 4_000_000 && this.AnimationCounter < 8_000_000) {
+                if (this.Type == SHIP) {
+                    this.SpriteImage = this.ShipExplosion2;
+                } else if (this.Type == HELI) {
+                    this.SpriteImage = this.HeliExplosion2;
+                }
+            } else if (this.AnimationCounter >= 8_000_000) {
+                this.SpriteImage = this.Pixel;
+                this.AnimateExplosion = false;
+                this.AnimationCounter = 0;
             }
-        } else if (this.AnimationCounter >= 4_000_000 && this.AnimationCounter < 8_000_000) {
-            if (this.Type == SHIP) {
-                this.SpriteImage = this.ShipExplosion2;
-            } else if (this.Type == HELI) {
-                this.SpriteImage = this.HeliExplosion2;
-            }
-        } else if (this.AnimationCounter >= 8_000_000) {
-            this.SpriteImage = this.Pixel;
-            this.AnimateExplosion = false;
-            this.AnimationCounter = 0;
         }
     }
 
@@ -174,5 +176,14 @@ public class EnemySprite : GameSprite {
         this.TilesNumber        = this.DefaultTilesNumber;
         this.Direction          = this.DefaultDirection;
         this.AnimationCounter   = 0;
+        this.RenderReversed     = this.DefaultRenderReverse;
+        this.X                  = this.DefaultX;
+        
+        if (this.Status == REVERSED) {
+            this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
+            this.Status = NORMAL;
+        }
+        
+        
     }
 }
