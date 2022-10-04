@@ -12,6 +12,8 @@ public interface CanvasEngineInterface {
      * @param frametime
      */
     public void draw(long frametime);
+
+    public void Render();
     
     void GraphicDispose();
     
