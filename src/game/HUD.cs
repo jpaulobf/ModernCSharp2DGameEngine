@@ -16,7 +16,7 @@ public class HUD {
     /**
      * Update the HUD
      */
-    public void Update(long frametime) {
+    public void Update(ulong frametime) {
 
     }
 
