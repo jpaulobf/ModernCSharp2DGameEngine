@@ -275,14 +275,16 @@ public class Game : GameInterface
      * Reset the game
      */
     private void Reset() {
-        this.IS_LEFT_KEY_DOWN   = false;
-        this.IS_RIGHT_KEY_DOWN  = false;
-        this.Paused             = false;
-        this.ResetAfterDead     = false;
-        this.ResetCounter       = 0;
-        this.Hud.Reset();
-        this.Stages.Reset();
-        this.PlayerSprite.Reset();
+        lock (this) {
+            this.IS_LEFT_KEY_DOWN   = false;
+            this.IS_RIGHT_KEY_DOWN  = false;
+            this.Paused             = false;
+            this.ResetAfterDead     = false;
+            this.ResetCounter       = 0;
+            this.Hud.Reset();
+            this.Stages.Reset();
+            this.PlayerSprite.Reset();
+        }
     }
 
     //Accessors
