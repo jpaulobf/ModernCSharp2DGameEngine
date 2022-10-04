@@ -20,7 +20,7 @@ public class Stages : StagesDef {
     protected volatile short CurrentLine    = 574;
     private short CURRENT_STAGE             = 1;
     private volatile byte Offset            = 0;
-    private ulong Framecount                = 0;
+    private long Framecount                 = 0;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
 
     /**
@@ -48,7 +48,7 @@ public class Stages : StagesDef {
         this.stage1_sprites.Add(2216, new SpriteConstructor(game, SpriteConstructor.HOUSE, 85));
         this.stage1_sprites.Add(2159, new SpriteConstructor(game, SpriteConstructor.SHIP, 325, 1, true));
         this.stage1_sprites.Add(2063, new SpriteConstructor(game, SpriteConstructor.FUEL, 417));
-        this.stage1_sprites.Add(2012, new SpriteConstructor(game, SpriteConstructor.HELI, 302, 2));
+        this.stage1_sprites.Add(2012, new SpriteConstructor(game, SpriteConstructor.HELI, 302, 2, false, 198, 540, SpriteConstructor.RIGHT));
         this.stage1_sprites.Add(1923, new SpriteConstructor(game, SpriteConstructor.FUEL, 372));
         this.stage1_sprites.Add(1850, new SpriteConstructor(game, SpriteConstructor.FUEL, 458));
         this.stage1_sprites.Add(1783, new SpriteConstructor(game, SpriteConstructor.HOUSE, 557));
@@ -81,7 +81,7 @@ public class Stages : StagesDef {
     /**
      * Upgrade method
      */
-    public void Update(ulong frametime, bool colliding = false) {
+    public void Update(long frametime, bool colliding = false) {
         //add the framecounter
         this.Framecount += frametime;
 
@@ -100,10 +100,13 @@ public class Stages : StagesDef {
                     this.CurrentLine--;
                     this.Offset = 0;
                 }
-
-                //Check if the Player is colliding with background
-                this.CheckBackgroundCollision();
             }
+        }
+
+        if (!colliding) 
+        {
+            //Check if the Player is colliding with background
+            //this.CheckBackgroundCollision();
         }
 
         //after render the background update the sprites
@@ -118,20 +121,21 @@ public class Stages : StagesDef {
         short firstFromLeftToRight  = 0;
         short firstFromRightToLeft  = 0;
         short value                 = -1;
+        int columns                 = StagesDef.stages.GetLength(2);
         short clBefore              = (short)(this.CurrentLine + 3);
         short clAfter               = (short)(clBefore + 7);
 
         //check 8 lines
-        for (short i = clBefore; i < clAfter; i++) {
-            for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
+        for (int i = clBefore; i < clAfter; i++) {
+            for (int j = 0; j < columns; j++) {
                 value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (value == 0) {
-                    firstFromLeftToRight = j;
+                    firstFromLeftToRight = (short)j;
                     break;
                 }
             }
 
-            for (short j = (short)(StagesDef.stages.GetLength(2) - 1); j > 0; j--) {
+            for (int j = columns - 1; j > 0; j--) {
                 value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (value == 0) {
                     firstFromRightToLeft = (short)(j + 1);
@@ -151,7 +155,7 @@ public class Stages : StagesDef {
     /**
      * Checksprites method.
      */
-    internal void CheckSprites(ulong frametime, bool colliding) {
+    internal void CheckSprites(long frametime, bool colliding) {
         int startScreenFrame        = (this.CurrentLine - 115) * PIXEL_HEIGHT;
         int endScreenFrame          = (this.CurrentLine + 13)  * PIXEL_HEIGHT;
         int currentLineYPosition    = (this.CurrentLine - 95)  * PIXEL_HEIGHT;
@@ -167,7 +171,7 @@ public class Stages : StagesDef {
     /**
      * Draw method
      */
-    public void Draw(Graphics gfx, ulong frametime) {
+    public void Draw(Graphics gfx, long frametime) {
         this.BufferedGraphics.Render(gfx);
     }
 
@@ -175,9 +179,11 @@ public class Stages : StagesDef {
      * Render the current stage at the current frame
      */
     private void DrawBackground() {
+        int currentMinus95  = this.CurrentLine - 95;
+        int currentPlus13   = currentMinus95 + 108;
         this.InternalGraphics.FillRectangle(Blue, 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        for (short i = (short)(CurrentLine - 95), c = -1; i < (CurrentLine + 13); i++, c++) {
-            for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
+        for (int i = currentMinus95, c = -1; i < currentPlus13; i++, c++) {
+            for (int j = 0; j < StagesDef.stages.GetLength(2); j++) {
                 this.RenderBlock = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (this.RenderBlock == 1) {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
