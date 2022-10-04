@@ -5,13 +5,13 @@ public interface CanvasEngineInterface {
      * Update the game logic / receives the frametime
      * @param frametime
      */
-    public void update(ulong frametime);
+    public void update(long frametime);
 
     /**
      * Draw the game / receives the frametime
      * @param frametime
      */
-    public void draw(ulong frametime);
+    public void draw(long frametime);
 
     public void Render();
     
