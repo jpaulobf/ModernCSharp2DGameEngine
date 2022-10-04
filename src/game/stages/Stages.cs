@@ -3,24 +3,24 @@ namespace game.stages;
 public class Stages : StagesDef {
 
     private GameInterface GameRef;
-    private BufferedGraphics bufferedGraphics;
-    private Bitmap bufferedImage;
-    private Graphics internalGraphics;
-    private float scaleW            = 1.0F;
-    private float scaleH            = 1.0F;
+    private BufferedGraphics BufferedGraphics;
+    private Bitmap BufferedImage;
+    private Graphics InternalGraphics;
+    private float ScaleW            = 1.0F;
+    private float ScaleH            = 1.0F;
     private const byte PIXEL_WIDTH  = 18;
     private const byte PIXEL_HEIGHT = 4;
-    private SolidBrush green1       = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
-    private SolidBrush gray1        = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
-    private SolidBrush gray2        = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
-    private SolidBrush blue         = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
-    private SolidBrush yellow       = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
-    private Rectangle drawRect      = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
-    private byte renderBlock        = 0;
-    protected short currentLine     = 574;
+    private SolidBrush Green1 = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
+    private SolidBrush Gray1        = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
+    private SolidBrush Gray2        = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
+    private SolidBrush Blue         = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
+    private SolidBrush Yellow       = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
+    private Rectangle DrawRect      = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
+    private byte RenderBlock        = 0;
+    protected short CurrentLine     = 574;
     private short CURRENT_STAGE     = 1;
-    private byte offset             = 0;
-    private long framecount         = 0;
+    private byte Offset             = 0;
+    private long Framecount         = 0;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
 
     /**
@@ -30,19 +30,19 @@ public class Stages : StagesDef {
         this.GameRef = game;
 
         //create the imagebuffer
-        this.bufferedImage      = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        this.bufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
-        this.internalGraphics   = bufferedGraphics.Graphics;
+        this.BufferedImage      = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
+        this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //define the interpolation mode
-        this.internalGraphics.InterpolationMode = this.GameRef.Interpolation;
+        this.InternalGraphics.InterpolationMode = this.GameRef.Interpolation;
 
         //calc the scale
-        this.scaleW = (float)((float)this.GameRef.WindowSize.Width/(float)this.GameRef.GetInternalResolutionWidth());
-        this.scaleH = (float)((float)this.GameRef.WindowSize.Height/(float)this.GameRef.GetInternalResolutionHeight());
+        this.ScaleW = (float)((float)this.GameRef.WindowSize.Width/(float)this.GameRef.GetInternalResolutionWidth());
+        this.ScaleH = (float)((float)this.GameRef.WindowSize.Height/(float)this.GameRef.GetInternalResolutionHeight());
 
         //transform the image based on calc scale
-        this.internalGraphics.ScaleTransform(scaleW, scaleH);
+        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
 
         //add stage 1 sprites
         this.stage1_sprites.Add(2216, new SpriteConstructor(game, SpriteConstructor.HOUSE, 85));
@@ -83,22 +83,22 @@ public class Stages : StagesDef {
      */
     public void Update(long frametime, bool colliding = false) {
         //add the framecounter
-        this.framecount += frametime;
+        this.Framecount += frametime;
 
-        if (this.framecount >= 90_000) {
+        if (this.Framecount >= 90_000) {
             //render just from time to time
             this.DrawBackground();
 
             //reset framecount
-            this.framecount = 0;
+            this.Framecount = 0;
 
             if (!colliding) 
             {
                 //calc the offset
-                this.offset++;
-                if (this.offset == PIXEL_HEIGHT) {
-                    this.currentLine--;
-                    this.offset = 0;
+                this.Offset++;
+                if (this.Offset == PIXEL_HEIGHT) {
+                    this.CurrentLine--;
+                    this.Offset = 0;
                 }
 
                 //Check if the Player is colliding with background
@@ -120,7 +120,7 @@ public class Stages : StagesDef {
         short value = -1;
 
         //check 8 lines
-        for (short i = (short)(currentLine + 3); i < (currentLine + 10); i++) {
+        for (short i = (short)(CurrentLine + 3); i < (CurrentLine + 10); i++) {
             for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
                 value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (value == 0) {
@@ -151,15 +151,15 @@ public class Stages : StagesDef {
      * Checksprites method.
      */
     internal void CheckSprites(long frametime, bool colliding) {
-        int startScreenFrame        = (this.currentLine - 115) * PIXEL_HEIGHT;
-        int endScreenFrame          = (this.currentLine + 13)  * PIXEL_HEIGHT;
-        int currentLineYPosition    = (this.currentLine - 95)  * PIXEL_HEIGHT;
+        int startScreenFrame        = (this.CurrentLine - 115) * PIXEL_HEIGHT;
+        int endScreenFrame          = (this.CurrentLine + 13)  * PIXEL_HEIGHT;
+        int currentLineYPosition    = (this.CurrentLine - 95)  * PIXEL_HEIGHT;
 
         //if exist an sprite in the current screen frame, render it
         foreach (var item in this.stage1_sprites.Where(item => startScreenFrame < item.Key && endScreenFrame > item.Key)) {
             
             //if (startScreenFrame < item.Key && endScreenFrame > item.Key) {
-            item.Value.UpdateAndRender(this.internalGraphics, frametime, currentLineYPosition, this.offset, item.Key, colliding);
+            item.Value.UpdateAndRender(this.InternalGraphics, frametime, currentLineYPosition, this.Offset, item.Key, colliding);
         }
     }
 
@@ -167,33 +167,33 @@ public class Stages : StagesDef {
      * Draw method
      */
     public void Draw(Graphics gfx, long frametime) {
-        this.bufferedGraphics.Render(gfx);
+        this.BufferedGraphics.Render(gfx);
     }
 
     /**
      * Render the current stage at the current frame
      */
     private void DrawBackground() {
-        this.internalGraphics.FillRectangle(blue, 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        for (short i = (short)(currentLine - 95), c = -1; i < (currentLine + 13); i++, c++) {
+        this.InternalGraphics.FillRectangle(Blue, 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+        for (short i = (short)(CurrentLine - 95), c = -1; i < (CurrentLine + 13); i++, c++) {
             for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
-                this.renderBlock = StagesDef.stages[CURRENT_STAGE - 1, i, j];
-                if (this.renderBlock == 1) {
-                    this.drawRect.X =  j * PIXEL_WIDTH;
-                    this.drawRect.Y = (c * PIXEL_HEIGHT) + this.offset;
-                    this.internalGraphics.FillRectangle(this.green1, this.drawRect);
-                } else if (this.renderBlock == 5) {
-                    this.drawRect.X =  j * PIXEL_WIDTH;
-                    this.drawRect.Y = (c * PIXEL_HEIGHT) + this.offset;
-                    this.internalGraphics.FillRectangle(this.gray1, this.drawRect);
-                } else if (this.renderBlock == 6) {
-                    this.drawRect.X =  j * PIXEL_WIDTH;
-                    this.drawRect.Y = (c * PIXEL_HEIGHT) + this.offset;
-                    this.internalGraphics.FillRectangle(this.gray2, this.drawRect);
-                } else if (this.renderBlock == 7) {
-                    this.drawRect.X =  j * PIXEL_WIDTH;
-                    this.drawRect.Y = (c * PIXEL_HEIGHT) + this.offset;
-                    this.internalGraphics.FillRectangle(this.yellow, this.drawRect);
+                this.RenderBlock = StagesDef.stages[CURRENT_STAGE - 1, i, j];
+                if (this.RenderBlock == 1) {
+                    this.DrawRect.X =  j * PIXEL_WIDTH;
+                    this.DrawRect.Y = (c * PIXEL_HEIGHT) + this.Offset;
+                    this.InternalGraphics.FillRectangle(this.Green1, this.DrawRect);
+                } else if (this.RenderBlock == 5) {
+                    this.DrawRect.X =  j * PIXEL_WIDTH;
+                    this.DrawRect.Y = (c * PIXEL_HEIGHT) + this.Offset;
+                    this.InternalGraphics.FillRectangle(this.Gray1, this.DrawRect);
+                } else if (this.RenderBlock == 6) {
+                    this.DrawRect.X =  j * PIXEL_WIDTH;
+                    this.DrawRect.Y = (c * PIXEL_HEIGHT) + this.Offset;
+                    this.InternalGraphics.FillRectangle(this.Gray2, this.DrawRect);
+                } else if (this.RenderBlock == 7) {
+                    this.DrawRect.X =  j * PIXEL_WIDTH;
+                    this.DrawRect.Y = (c * PIXEL_HEIGHT) + this.Offset;
+                    this.InternalGraphics.FillRectangle(this.Yellow, this.DrawRect);
                 }
             }
         }
@@ -208,27 +208,27 @@ public class Stages : StagesDef {
             //calc new scale
             int width = ((Form)sender).Width;
             int height = ((Form)sender).Height;
-            this.scaleW = (float)((float)width/(float)this.GameRef.GetInternalResolutionWidth());
-            this.scaleH = (float)((float)height/(float)this.GameRef.GetInternalResolutionHeight());
+            this.ScaleW = (float)((float)width/(float)this.GameRef.GetInternalResolutionWidth());
+            this.ScaleH = (float)((float)height/(float)this.GameRef.GetInternalResolutionHeight());
 
             //Invalidate the current buffer
             BufferedGraphicsManager.Current.Invalidate();
 
             await Task.Run(() => {
                 //apply new scale
-                this.bufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.bufferedImage), new Rectangle(0, 0, width, height));        
-                this.internalGraphics = bufferedGraphics.Graphics;
-                this.internalGraphics.ScaleTransform(scaleW, scaleH);
-                this.internalGraphics.InterpolationMode = this.GameRef.Interpolation;
+                this.BufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));        
+                this.InternalGraphics = BufferedGraphics.Graphics;
+                this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+                this.InternalGraphics.InterpolationMode = this.GameRef.Interpolation;
             });
         } catch {}  
     }
 
     public void Reset()
     {
-        this.currentLine    = 574;
-        this.offset         = 0;
-        this.framecount     = 0;
+        this.CurrentLine    = 574;
+        this.Offset         = 0;
+        this.Framecount     = 0;
         foreach (var item in this.stage1_sprites) {
             item.Value.Reset();
         }
