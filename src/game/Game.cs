@@ -35,7 +35,7 @@ public class Game : GameInterface
     private bool IS_RIGHT_KEY_DOWN          = false;
     private volatile bool Paused            = false;
     private volatile bool ResetAfterDead    = false;
-    private long ResetCounter               = 0;
+    private ulong ResetCounter              = 0;
     private Font PauseFont                  = new Font("Arial", 16);
     private Point PausePoint;
     private HUD Hud;
@@ -81,7 +81,7 @@ public class Game : GameInterface
     /**
      * Update the game
      */
-    public void Update(long frametime)
+    public void Update(ulong frametime)
     {
         if (!Paused && !this.PlayerSprite.Colliding) 
         {
@@ -132,7 +132,7 @@ public class Game : GameInterface
     /**
      * Draw the game
      */
-    public void Draw(long frametime)
+    public void Draw(ulong frametime)
     {
         if (!this.WindowResizing) 
         {
