@@ -20,7 +20,7 @@ public class Stages : StagesDef {
     protected volatile short CurrentLine    = 574;
     private short CURRENT_STAGE             = 1;
     private volatile byte Offset            = 0;
-    private long Framecount                 = 0;
+    private ulong Framecount                = 0;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
 
     /**
@@ -81,7 +81,7 @@ public class Stages : StagesDef {
     /**
      * Upgrade method
      */
-    public void Update(long frametime, bool colliding = false) {
+    public void Update(ulong frametime, bool colliding = false) {
         //add the framecounter
         this.Framecount += frametime;
 
@@ -115,12 +115,14 @@ public class Stages : StagesDef {
      */
     private void CheckBackgroundCollision()
     {
-        short firstFromLeftToRight = 0;
-        short firstFromRightToLeft = 0;
-        short value = -1;
+        short firstFromLeftToRight  = 0;
+        short firstFromRightToLeft  = 0;
+        short value                 = -1;
+        short clBefore              = (short)(this.CurrentLine + 3);
+        short clAfter               = (short)(clBefore + 7);
 
         //check 8 lines
-        for (short i = (short)(this.CurrentLine + 3); i < (this.CurrentLine + 10); i++) {
+        for (short i = clBefore; i < clAfter; i++) {
             for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
                 value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (value == 0) {
@@ -149,7 +151,7 @@ public class Stages : StagesDef {
     /**
      * Checksprites method.
      */
-    internal void CheckSprites(long frametime, bool colliding) {
+    internal void CheckSprites(ulong frametime, bool colliding) {
         int startScreenFrame        = (this.CurrentLine - 115) * PIXEL_HEIGHT;
         int endScreenFrame          = (this.CurrentLine + 13)  * PIXEL_HEIGHT;
         int currentLineYPosition    = (this.CurrentLine - 95)  * PIXEL_HEIGHT;
@@ -165,7 +167,7 @@ public class Stages : StagesDef {
     /**
      * Draw method
      */
-    public void Draw(Graphics gfx, long frametime) {
+    public void Draw(Graphics gfx, ulong frametime) {
         this.BufferedGraphics.Render(gfx);
     }
 
