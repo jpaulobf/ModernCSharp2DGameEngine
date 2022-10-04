@@ -27,15 +27,7 @@ public class PlayerSprite : GameSprite {
 
     public void SetCollision() {
         this.Colliding = true;
-        this.Explode();
     }
-
-    /**
-     * Animate the sprite colision
-     */
-    private void Explode() {
-        //TODO
-    }   
 
     /**
      * Player Sprite update method
