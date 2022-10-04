@@ -6,24 +6,23 @@ using game.stages;
  * Class representing enemies sprites
  */
 public class EnemySprite : GameSprite {
-
     private GameInterface GameRef;
-    protected long FrameCounter         = 0;
-    protected short MaxLeft             = 0;
-    protected short MaxRight            = 0;
-    protected byte Direction            = 0;
-    protected byte DefaultDirection     = 0;
-    protected byte DefaultTilesNumber   = 0;
-    protected byte Type                 = 0;
-    public static byte HELI             = 4;
-    public static byte SHIP             = 5;
-    public static byte AIRPLANE         = 6;
-    private bool AnimateExplosion       = false;
-    private long AnimationCounter       = 0;
-    private Bitmap ShipExplosion1       = new Bitmap(@"img\\ship_explosion_frame1.png");
-    private Bitmap ShipExplosion2       = new Bitmap(@"img\\ship_explosion_frame2.png");
-    private Bitmap HeliExplosion1       = new Bitmap(@"img\\heli_explosion_frame1.png");
-    private Bitmap HeliExplosion2       = new Bitmap(@"img\\heli_explosion_frame2.png");
+    protected long FrameCounter             = 0;
+    protected short MaxLeft                 = 0;
+    protected short MaxRight                = 0;
+    protected byte Direction                = 0;
+    protected byte DefaultDirection         = 0;
+    protected byte DefaultTilesNumber       = 0;
+    protected byte Type                     = 0;
+    public static byte HELI                 = 4;
+    public static byte SHIP                 = 5;
+    public static byte AIRPLANE             = 6;
+    private volatile bool AnimateExplosion  = false;
+    private long AnimationCounter           = 0;
+    private Bitmap ShipExplosion1           = new Bitmap(@"img\\ship_explosion_frame1.png");
+    private Bitmap ShipExplosion2           = new Bitmap(@"img\\ship_explosion_frame2.png");
+    private Bitmap HeliExplosion1           = new Bitmap(@"img\\heli_explosion_frame1.png");
+    private Bitmap HeliExplosion2           = new Bitmap(@"img\\heli_explosion_frame2.png");
     private Bitmap DefaultBitmap;
 
     /**
@@ -129,10 +128,12 @@ public class EnemySprite : GameSprite {
             this.StartExplosionAnimation();
         }
 
+        //this will start after collision
         if (this.AnimateExplosion) {
             this.AnimationCounter += frametime;
         }
 
+        //this will start after explosion start
         if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) {
             if (this.Type == SHIP) {
                 this.SpriteImage = this.ShipExplosion1;
@@ -168,8 +169,10 @@ public class EnemySprite : GameSprite {
 
     public override void Reset()
     {
-        this.SpriteImage    = this.DefaultBitmap;
-        this.TilesNumber    = this.DefaultTilesNumber;
-        this.Direction      = this.DefaultDirection;
+        this.AnimateExplosion   = false;
+        this.SpriteImage        = this.DefaultBitmap;
+        this.TilesNumber        = this.DefaultTilesNumber;
+        this.Direction          = this.DefaultDirection;
+        this.AnimationCounter   = 0;
     }
 }
