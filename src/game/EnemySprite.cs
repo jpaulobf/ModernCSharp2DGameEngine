@@ -7,7 +7,7 @@ using game.stages;
  */
 public class EnemySprite : GameSprite {
     private GameInterface GameRef;
-    protected long FrameCounter             = 0;
+    protected ulong FrameCounter            = 0;
     protected short MaxLeft                 = 0;
     protected short MaxRight                = 0;
     protected byte Direction                = 0;
@@ -18,7 +18,7 @@ public class EnemySprite : GameSprite {
     public static byte SHIP                 = 5;
     public static byte AIRPLANE             = 6;
     private volatile bool AnimateExplosion  = false;
-    private long AnimationCounter           = 0;
+    private ulong AnimationCounter          = 0;
     private Bitmap ShipExplosion1           = new Bitmap(@"img\\ship_explosion_frame1.png");
     private Bitmap ShipExplosion2           = new Bitmap(@"img\\ship_explosion_frame2.png");
     private Bitmap HeliExplosion1           = new Bitmap(@"img\\heli_explosion_frame1.png");
@@ -37,7 +37,7 @@ public class EnemySprite : GameSprite {
                        int Y = 0, 
                        int velocity = 0, 
                        byte tilesNumber = 1, 
-                       int millisecondsPerTile = 0, 
+                       uint millisecondsPerTile = 0, 
                        bool reversed = false, 
                        short maxLeft = 0,
                        short maxRight = 0, 
@@ -60,7 +60,7 @@ public class EnemySprite : GameSprite {
     /**
      * Enemy Sprite update class
      */
-    public override void Update(long frametime, bool colliding = false)
+    public override void Update(ulong frametime, bool colliding = false)
     {
         //if the current sprite has more than 1 tile
         if (this.TilesNumber > 1)
