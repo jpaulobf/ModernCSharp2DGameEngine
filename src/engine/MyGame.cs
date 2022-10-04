@@ -139,22 +139,23 @@ public class MyGame
             this.game.KeyUp(sender, e);     
         }
 
-        public void draw(ulong frametime)
+        public void draw(long frametime)
         {
             this.game.Draw(frametime);
-            if (this.ShowFPS) this.RenderFPS(this.game.GetGraphics(), frametime);
+            this.RenderFPS(this.game.GetGraphics(), frametime);
         }      
 
-        public void update(ulong frametime)
+        public void update(long frametime)
         {
             this.game.Update(frametime);
         }
 
-        public void Render() {
+        public void Render() 
+        {
             this.game.Render(this.graphics);
         }
 
-        private void RenderFPS(Graphics graphics, ulong frametime) {
+        private void RenderFPS(Graphics graphics, long frametime) {
             FPS_AVERAGE[fps_aux_counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
             graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.Black, 0, 0);
         }
@@ -181,16 +182,16 @@ public class MyGame
         //private Thread? thread = null;
         private Task? task                      = null;
         private Timer? stateTimer               = null;
-        private ulong beforeTimer               = 0;
-        private ulong lastframetimer            = 0;
+        private long beforeTimer                = 0;
+        private long lastframetimer             = 0;
         private volatile bool useThread         = true;
         private volatile bool isEngineRunning   = true;
-        private static ulong FPS240             = (long)(10_000_000 / 240);
-        private static ulong FPS120             = (long)(10_000_000 / 120);
-        private static ulong FPS90              = (long)(10_000_000 / 90);
-        private static ulong FPS60              = (long)(10_000_000 / 60);
-        private static ulong FPS30              = (long)(10_000_000 / 30);
-        private ulong TARGET_FRAMETIME          = FPS60;
+        private static long FPS240              = (long)(10_000_000 / 240);
+        private static long FPS120              = (long)(10_000_000 / 120);
+        private static long FPS90               = (long)(10_000_000 / 90);
+        private static long FPS60               = (long)(10_000_000 / 60);
+        private static long FPS30               = (long)(10_000_000 / 30);
+        private long TARGET_FRAMETIME           = FPS60;
         private bool UNLIMITED_FPS              = false;
         private CanvasEngineInterface canvas;
 
@@ -220,19 +221,16 @@ public class MyGame
                     this.TARGET_FRAMETIME = FPS240;
                     break;
                 case 0:
-                    this.UNLIMITED_FPS = true;
-                    this.useThread = true;
+                    this.UNLIMITED_FPS  = true;
+                    this.useThread      = true;
                     break;
                 default:
-                    this.TARGET_FRAMETIME = (ulong)(10_000_000 / targetFPS);
+                    this.TARGET_FRAMETIME = (10_000_000 / targetFPS);
                     break;
             }
-            
-            if (canvas == null) {
-                this.canvas = new Canvas(targetFPS);
-            } else {
-                this.canvas = canvas;
-            }
+
+            //store the canvas            
+            this.canvas = canvas;
 
             this.lastframetimer = this.TARGET_FRAMETIME;
         }
@@ -257,7 +255,6 @@ public class MyGame
                 this.task = new Task(Run, TaskCreationOptions.LongRunning);
                 this.task.Start();
             } else {
-                
                 /**
                  * Thanks to Mike Zboray - https://github.com/mzboray/HighPrecisionTimer
                  */
@@ -268,7 +265,7 @@ public class MyGame
                 timer.StartElapsedTimer();
                 
                 //test the performance
-                this.beforeTimer = (ulong)Stopwatch.GetTimestamp();
+                this.beforeTimer = Stopwatch.GetTimestamp();
             }
         }
 
@@ -280,30 +277,31 @@ public class MyGame
         }
 
         public void RunTimer() {
-            ulong beforeUpdate       = 0;
-            ulong afterUpdate        = 0;
-            ulong frequencyCalc      = (10_000_000 / (ulong)Stopwatch.Frequency);
+            long beforeUpdate       = 0;
+            long afterUpdate        = 0;
+            long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
 
             if (this.isEngineRunning) {
 
                 //calc the update time
-                beforeUpdate = (ulong)Stopwatch.GetTimestamp();
+                beforeUpdate = Stopwatch.GetTimestamp();
 
                 //update the game (gathering input from user, and processing the necessary games updates)
                 this.update(lastframetimer);
 
                 //get the timestamp after the update
-                afterUpdate = (ulong)Stopwatch.GetTimestamp() - beforeUpdate;
+                afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
                 afterUpdate *= frequencyCalc;
 
                 //only draw if there is some (any) enough time
                 if ((TARGET_FRAMETIME - afterUpdate) > 0) {
                     //draw
                     this.draw(lastframetimer);
+                    this.render();
                 }
 
-                this.lastframetimer = ((ulong)Stopwatch.GetTimestamp() - beforeTimer) * frequencyCalc;
-                this.beforeTimer = (ulong)Stopwatch.GetTimestamp();
+                this.lastframetimer = (Stopwatch.GetTimestamp() - beforeTimer) * frequencyCalc;
+                this.beforeTimer = Stopwatch.GetTimestamp();
             }
         }
 
@@ -314,25 +312,25 @@ public class MyGame
          */
         private void Run() 
         {
-            ulong timeReference      = (ulong)Stopwatch.GetTimestamp();
-            ulong beforeUpdate       = 0;
-            ulong afterUpdate        = 0;
-            ulong beforeDraw         = 0;
-            ulong afterDraw          = 0;
-            ulong beforeSleep        = 0;
-            ulong afterSleep         = 0;
-            ulong accumulator        = 0;
-            ulong timeElapsed        = 0;
-            ulong timeStamp          = 0;
-            ulong lastframetime      = TARGET_FRAMETIME;
-            ulong frequencyCalc      = (10_000_000 / (ulong)Stopwatch.Frequency);
+            long timeReference      = Stopwatch.GetTimestamp();
+            long beforeUpdate       = 0;
+            long afterUpdate        = 0;
+            long beforeDraw         = 0;
+            long afterDraw          = 0;
+            long beforeSleep        = 0;
+            long afterSleep         = 0;
+            long accumulator        = 0;
+            long timeElapsed        = 0;
+            long timeStamp          = 0;
+            long lastframetime      = TARGET_FRAMETIME;
+            long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
 
             //gameloop
             if (UNLIMITED_FPS) {
                 while (this.isEngineRunning) {
     
                     //mark the time before the iteration
-                    timeStamp = (ulong)Stopwatch.GetTimestamp();
+                    timeStamp = Stopwatch.GetTimestamp();
     
                     //compute the time from previous iteration and the current
                     timeElapsed = (timeStamp - timeReference);
@@ -359,18 +357,18 @@ public class MyGame
                     accumulator = 0;
 
                     //calc the update time
-                    beforeUpdate = (ulong)Stopwatch.GetTimestamp();
+                    beforeUpdate = Stopwatch.GetTimestamp();
 
                     //update the game (gathering input from user, and processing the necessary games updates)
                     this.update(lastframetime);
 
                     //get the timestamp after the update
-                    afterUpdate = (ulong)Stopwatch.GetTimestamp() - beforeUpdate;
+                    afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
                     
                     //only draw if there is some (any) enough time
                     if ((TARGET_FRAMETIME - afterUpdate) > 0) {
                         
-                        beforeDraw = (ulong)Stopwatch.GetTimestamp();
+                        beforeDraw = Stopwatch.GetTimestamp();
 
                         //draw
                         this.draw(lastframetime);
@@ -379,7 +377,7 @@ public class MyGame
                         this.render();
                         
                         //and than, store the time spent
-                        afterDraw = (ulong)Stopwatch.GetTimestamp() - beforeDraw;
+                        afterDraw = Stopwatch.GetTimestamp() - beforeDraw;
                     }
 
                     //correct the timing by the stopwatch frequency (and using the same variable "afterdraw")
@@ -388,7 +386,7 @@ public class MyGame
 
                     if (accumulator > 0) {
                         
-                        beforeSleep = (ulong)Stopwatch.GetTimestamp();
+                        beforeSleep = Stopwatch.GetTimestamp();
 
                         //This method is imprecise... Timer Resolution in .Net Takes 12~14 ms to tick 
                         //Use, if possible, max power (target-fps: 0)
@@ -396,7 +394,7 @@ public class MyGame
                         Thread.Sleep((short)(accumulator * 0.0001));
                         Thread.Yield();
 
-                        afterSleep = (ulong)Stopwatch.GetTimestamp() - beforeSleep;
+                        afterSleep = Stopwatch.GetTimestamp() - beforeSleep;
 
                     } else {
                         /*  
@@ -417,7 +415,7 @@ public class MyGame
                 }
             }
 
-            this.Dispose();
+            this?.Dispose();
         }
 
         /**
@@ -429,13 +427,13 @@ public class MyGame
         }
 
         /* Método de update, só executa quando a flag permite */
-        public void update(ulong frametime) 
+        public void update(long frametime) 
         {
             this.canvas.update(frametime);
         }
     
         /* Método de desenho, só executa quando a flag permite */
-        public void draw(ulong frametime) 
+        public void draw(long frametime) 
         {
             this.canvas.draw(frametime);
         }
