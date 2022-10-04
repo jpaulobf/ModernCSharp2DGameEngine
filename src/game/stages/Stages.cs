@@ -6,21 +6,21 @@ public class Stages : StagesDef {
     private BufferedGraphics BufferedGraphics;
     private Bitmap BufferedImage;
     private Graphics InternalGraphics;
-    private float ScaleW            = 1.0F;
-    private float ScaleH            = 1.0F;
-    private const byte PIXEL_WIDTH  = 18;
-    private const byte PIXEL_HEIGHT = 4;
-    private SolidBrush Green1 = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
-    private SolidBrush Gray1        = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
-    private SolidBrush Gray2        = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
-    private SolidBrush Blue         = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
-    private SolidBrush Yellow       = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
-    private Rectangle DrawRect      = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
-    private byte RenderBlock        = 0;
-    protected short CurrentLine     = 574;
-    private short CURRENT_STAGE     = 1;
-    private byte Offset             = 0;
-    private long Framecount         = 0;
+    private float ScaleW                    = 1.0F;
+    private float ScaleH                    = 1.0F;
+    private const byte PIXEL_WIDTH          = 18;
+    private const byte PIXEL_HEIGHT         = 4;
+    private SolidBrush Green1               = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
+    private SolidBrush Gray1                = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
+    private SolidBrush Gray2                = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
+    private SolidBrush Blue                 = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
+    private SolidBrush Yellow               = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
+    private Rectangle DrawRect              = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
+    private byte RenderBlock                = 0;
+    protected volatile short CurrentLine    = 574;
+    private short CURRENT_STAGE             = 1;
+    private volatile byte Offset            = 0;
+    private long Framecount                 = 0;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
 
     /**
@@ -120,7 +120,7 @@ public class Stages : StagesDef {
         short value = -1;
 
         //check 8 lines
-        for (short i = (short)(CurrentLine + 3); i < (CurrentLine + 10); i++) {
+        for (short i = (short)(this.CurrentLine + 3); i < (this.CurrentLine + 10); i++) {
             for (short j = 0; j < StagesDef.stages.GetLength(2); j++) {
                 value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (value == 0) {
@@ -139,7 +139,6 @@ public class Stages : StagesDef {
 
             if ((this.GameRef.GetPlayerSprite().X < (firstFromLeftToRight * PIXEL_WIDTH)) || 
                 (this.GameRef.GetPlayerSprite().X + this.GameRef.GetPlayerSprite().Width > (firstFromRightToLeft * PIXEL_WIDTH))) {
-                Console.WriteLine("aui....");
                 this.GameRef.GetPlayerSprite().SetCollision();
                 this.GameRef.SetEnemyCollision();
                 break;
