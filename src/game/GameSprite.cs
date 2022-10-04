@@ -18,6 +18,7 @@ public abstract class GameSprite
     public Bitmap SpriteImage           { get; set; }
     internal Bitmap Pixel               { get; set; }
     public float X                      { get; set; }
+    internal float DefaultX             = 0;
     public float Y                      { get; set; }
     public float Width                  { get; set; }
     public float Height                 { get; set; }
@@ -41,6 +42,7 @@ public abstract class GameSprite
         // Set sprite coodinates
         this.X = X;
         this.Y = Y;
+        this.DefaultX = X;
         
         // Set sprite Velocity
         this.Velocity = velocity;
@@ -49,7 +51,7 @@ public abstract class GameSprite
     /**
      * Abstract update method
      */
-    public abstract void Update(ulong timeframe, bool colliding = false);
+    public abstract void Update(long timeframe, bool colliding = false);
 
     /**
      * Draw is common for all subclasses, if necessary override it
