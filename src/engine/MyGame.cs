@@ -32,18 +32,18 @@ public class MyGame
      * Date:   04/sept/2022
      */
     private class Canvas : Form, CanvasEngineInterface {
-        private GameInterface game;
-        private GameEngine gameEngine;
-        private Graphics graphics;
-        private System.ComponentModel.IContainer components;
-        private bool goFullscreen                   = false;
+        private GameInterface Game;
+        private GameEngine GameEngine;
+        private Graphics Graphics;
+        private System.ComponentModel.IContainer Components;
+        private bool GoFullscreen                   = false;
         private bool ShowFPS                        = true;
         private int ExternalResolutionWidth         = 738;
         private int ExternalResolutionHeight        = 516;
         private const int FPS_MAX_ARRAY             = 10;
         private int[] FPS_AVERAGE                   = new int[FPS_MAX_ARRAY];
-        private byte fps_aux_counter                = 0;
-        private InterpolationMode interpolationMode = InterpolationMode.HighQualityBicubic;
+        private byte Fps_Aux_Counter                = 0;
+        private InterpolationMode InterpolationMode = InterpolationMode.HighQualityBicubic;
         
         /**
          * Canvas constructor
@@ -57,7 +57,7 @@ public class MyGame
             //this.DoubleBuffered = true;
 
             //start the components
-            this.components                 = new System.ComponentModel.Container();
+            this.Components                 = new System.ComponentModel.Container();
             this.AutoScaleMode              = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize                 = new Size(ExternalResolutionWidth, ExternalResolutionHeight);
             this.Text                       = "My C# Modern GameEngine";
@@ -65,35 +65,35 @@ public class MyGame
             this.StartPosition              = FormStartPosition.CenterScreen;
 
             //create the backbuffer image
-            this.graphics                   = this.CreateGraphics();
-            this.graphics.InterpolationMode = interpolationMode;
+            this.Graphics                   = this.CreateGraphics();
+            this.Graphics.InterpolationMode = InterpolationMode;
 
             //no resizible
             this.FormBorderStyle            = FormBorderStyle.FixedSingle;
             
             //go fullscreen
-            this.GoFullscreen(goFullscreen);
+            this.ToggleFullScreen(GoFullscreen);
 
             //foward the keyboard methods
             this.FowardKeyboard();
 
-            if (this.goFullscreen) {
+            if (this.GoFullscreen) {
                 //init the game class
-                this.game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                this.Game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                      new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                     interpolationMode);
+                                     InterpolationMode);
             } else {
                 //init the game class
-                this.game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                this.Game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                      new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
-                                     interpolationMode);
+                                     InterpolationMode);
             }
 
-            this.Resize += this.game.Resize;
+            this.Resize += this.Game.Resize;
 
             //starts the game engine, the empty canvas & engine init method.
-            this.gameEngine = new GameEngine(targetFPS, this, useThread);
-            this.gameEngine.Init();
+            this.GameEngine = new GameEngine(targetFPS, this, useThread);
+            this.GameEngine.Init();
 
             for (int i = 0; i < FPS_AVERAGE.Length; i++) {
                 FPS_AVERAGE[i] = targetFPS;
@@ -112,7 +112,7 @@ public class MyGame
             this.Closing    += Canvas_Closing;
         }
 
-        private void GoFullscreen(bool fullscreen)
+        private void ToggleFullScreen(bool fullscreen)
         {
             if (fullscreen) {
                 this.WindowState        = FormWindowState.Normal;
@@ -127,41 +127,41 @@ public class MyGame
             }
         }
 
-        void Canvas_Closing(object sender, System.ComponentModel.CancelEventArgs e) {   this.gameEngine.Stop(); Application.Exit(); }
-        void Canvas_KeyPress(object sender, KeyPressEventArgs e)    {   this.game.KeyPress(sender, e);  }
-        void Canvas_KeyDown(object sender, KeyEventArgs e)          {   this.game.KeyDown(sender, e);   }
-        void Canvas_KeyUp(object sender, KeyEventArgs e) {
+        void Canvas_Closing(object? sender, System.ComponentModel.CancelEventArgs e)    {   this.GameEngine.Stop(); Application.Exit(); }
+        void Canvas_KeyPress(object? sender, KeyPressEventArgs e)                       {   this.Game.KeyPress(sender, e);              }
+        void Canvas_KeyDown(object? sender, KeyEventArgs e)                             {   this.Game.KeyDown(sender, e);               }
+        void Canvas_KeyUp(object? sender, KeyEventArgs e) {
             if (e.KeyValue == 113) {
-                this.goFullscreen = !this.goFullscreen;
-                this.GoFullscreen(this.goFullscreen);
+                this.GoFullscreen = !this.GoFullscreen;
+                this.ToggleFullScreen(this.GoFullscreen);
             }
-            this.game.KeyUp(sender, e);     
+            this.Game.KeyUp(sender, e);     
         }
 
-        public void draw(long frametime)
+        public void Draw(long frametime)
         {
-            this.game.Draw(frametime);
-            this.RenderFPS(this.game.GetGraphics(), frametime);
+            this.Game.Draw(frametime);
+            if (ShowFPS) this.RenderFPS(this.Game.GetGraphics(), frametime);
         }      
 
-        public void update(long frametime)
+        public void Update(long frametime)
         {
-            this.game.Update(frametime);
+            this.Game.Update(frametime);
         }
 
         public void Render() 
         {
-            this.game.Render(this.graphics);
+            this.Game.Render(this.Graphics);
         }
 
         private void RenderFPS(Graphics graphics, long frametime) {
-            FPS_AVERAGE[fps_aux_counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
+            FPS_AVERAGE[Fps_Aux_Counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
             graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.White, 0, 0);
         }
 
         public void GraphicDispose()
         {
-            this.graphics.Dispose();
+            this.Graphics.Dispose();
         }
     }
 
@@ -174,12 +174,12 @@ public class MyGame
     private class GameEngine {
 
         //private Thread? thread = null;
-        private Task? task                      = null;
-        private Timer? stateTimer               = null;
-        private long beforeTimer                = 0;
-        private long lastframetimer             = 0;
-        private volatile bool useThread         = true;
-        private volatile bool isEngineRunning   = true;
+        private Task? Task                      = null;
+        private Timer? StateTimer               = null;
+        private long BeforeTimer                = 0;
+        private long LastframeTimer             = 0;
+        private volatile bool UseThread         = true;
+        private volatile bool IsEngineRunning   = true;
         private static long FPS240              = (long)(10_000_000 / 240);
         private static long FPS120              = (long)(10_000_000 / 120);
         private static long FPS90               = (long)(10_000_000 / 90);
@@ -187,7 +187,7 @@ public class MyGame
         private static long FPS30               = (long)(10_000_000 / 30);
         private long TARGET_FRAMETIME           = FPS60;
         private bool UNLIMITED_FPS              = false;
-        private CanvasEngineInterface canvas;
+        private CanvasEngineInterface Canvas;
 
         /**
          * Constructor. Handle with target FPS & foward actions to the empty canvas
@@ -197,7 +197,7 @@ public class MyGame
         public GameEngine(int targetFPS, CanvasEngineInterface canvas, bool useThread = false) 
         {
             this.UNLIMITED_FPS = false;
-            this.useThread = useThread;
+            this.UseThread = useThread;
             switch(targetFPS) {
                 case 30:
                     this.TARGET_FRAMETIME = FPS30;
@@ -216,7 +216,7 @@ public class MyGame
                     break;
                 case 0:
                     this.UNLIMITED_FPS  = true;
-                    this.useThread      = true;
+                    this.UseThread      = true;
                     break;
                 default:
                     this.TARGET_FRAMETIME = (10_000_000 / targetFPS);
@@ -224,9 +224,9 @@ public class MyGame
             }
 
             //store the canvas            
-            this.canvas = canvas;
+            this.Canvas = canvas;
 
-            this.lastframetimer = this.TARGET_FRAMETIME;
+            this.LastframeTimer = this.TARGET_FRAMETIME;
         }
 
         /**
@@ -236,7 +236,7 @@ public class MyGame
          */
         public void Init() 
         {
-            if (this.useThread) {
+            if (this.UseThread) {
                 /*
                 alternative:
                 */
@@ -246,8 +246,8 @@ public class MyGame
                 this.thread.IsBackground = true;
                 this.thread.Start();
                 */
-                this.task = new Task(Run, TaskCreationOptions.LongRunning);
-                this.task.Start();
+                this.Task = new Task(Run, TaskCreationOptions.LongRunning);
+                this.Task.Start();
             } else {
                 /**
                  * Thanks to Mike Zboray - https://github.com/mzboray/HighPrecisionTimer
@@ -259,14 +259,14 @@ public class MyGame
                 timer.StartElapsedTimer();
                 
                 //test the performance
-                this.beforeTimer = Stopwatch.GetTimestamp();
+                this.BeforeTimer = Stopwatch.GetTimestamp();
             }
         }
 
         public void Stop() {
-            this.isEngineRunning = false;
-            if (this.stateTimer != null) {
-                this.stateTimer.Dispose();
+            this.IsEngineRunning = false;
+            if (this.StateTimer != null) {
+                this.StateTimer.Dispose();
             }
         }
 
@@ -275,13 +275,13 @@ public class MyGame
             long afterUpdate        = 0;
             long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
 
-            if (this.isEngineRunning) {
+            if (this.IsEngineRunning) {
 
                 //calc the update time
                 beforeUpdate = Stopwatch.GetTimestamp();
 
                 //update the game (gathering input from user, and processing the necessary games updates)
-                this.update(lastframetimer);
+                this.update(LastframeTimer);
 
                 //get the timestamp after the update
                 afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
@@ -290,12 +290,12 @@ public class MyGame
                 //only draw if there is some (any) enough time
                 if ((TARGET_FRAMETIME - afterUpdate) > 0) {
                     //draw
-                    this.draw(lastframetimer);
+                    this.draw(LastframeTimer);
                     this.render();
                 }
 
-                this.lastframetimer = (Stopwatch.GetTimestamp() - beforeTimer) * frequencyCalc;
-                this.beforeTimer = Stopwatch.GetTimestamp();
+                this.LastframeTimer = (Stopwatch.GetTimestamp() - BeforeTimer) * frequencyCalc;
+                this.BeforeTimer = Stopwatch.GetTimestamp();
             }
         }
 
@@ -321,7 +321,7 @@ public class MyGame
 
             //gameloop
             if (UNLIMITED_FPS) {
-                while (this.isEngineRunning) {
+                while (this.IsEngineRunning) {
     
                     //mark the time before the iteration
                     timeStamp = Stopwatch.GetTimestamp();
@@ -346,7 +346,7 @@ public class MyGame
                     timeReference = timeStamp;
                 }
             } else {
-                while (this.isEngineRunning) {
+                while (this.IsEngineRunning) {
 
                     accumulator = 0;
 
@@ -417,24 +417,24 @@ public class MyGame
          */
         private void render()
         {
-           this.canvas.Render();
+           this.Canvas.Render();
         }
 
         /* Método de update, só executa quando a flag permite */
         public void update(long frametime) 
         {
-            this.canvas.update(frametime);
+            this.Canvas.Update(frametime);
         }
     
         /* Método de desenho, só executa quando a flag permite */
         public void draw(long frametime) 
         {
-            this.canvas.draw(frametime);
+            this.Canvas.Draw(frametime);
         }
 
         private void Dispose() {
             try {
-                this.canvas.GraphicDispose();
+                this.Canvas.GraphicDispose();
             } catch {}
         }
     }
