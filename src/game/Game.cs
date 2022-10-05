@@ -16,9 +16,9 @@ public class Game : GameInterface
     //-----------------------------------------------------//
     //--- Window & Buffering control                    ---//
     //-----------------------------------------------------//
-    private BufferedGraphics BufferedGraphics;
-    private Bitmap BufferedImage;
-    private Graphics InternalGraphics;
+    private volatile BufferedGraphics BufferedGraphics;
+    private volatile Bitmap BufferedImage;
+    private volatile Graphics InternalGraphics;
     public Size Resolution                  { get; set; }
     public Size WindowSize                  { get; }
     public InterpolationMode Interpolation  { get; }
@@ -31,8 +31,8 @@ public class Game : GameInterface
     //-----------------------------------------------------//
     //--- Game Elements control                         ---//
     //-----------------------------------------------------//
-    private bool IS_LEFT_KEY_DOWN           = false;
-    private bool IS_RIGHT_KEY_DOWN          = false;
+    private volatile bool IS_LEFT_KEY_DOWN  = false;
+    private volatile bool IS_RIGHT_KEY_DOWN = false;
     private volatile bool Paused            = false;
     private volatile bool ResetAfterDead    = false;
     private long ResetCounter               = 0;
@@ -275,16 +275,14 @@ public class Game : GameInterface
      * Reset the game
      */
     private void Reset() {
-        lock (this) {
-            this.IS_LEFT_KEY_DOWN   = false;
-            this.IS_RIGHT_KEY_DOWN  = false;
-            this.Paused             = false;
-            this.ResetAfterDead     = false;
-            this.ResetCounter       = 0;
-            this.Hud.Reset();
-            this.Stages.Reset();
-            this.PlayerSprite.Reset();
-        }
+        this.IS_LEFT_KEY_DOWN   = false;
+        this.IS_RIGHT_KEY_DOWN  = false;
+        this.Paused             = false;
+        this.ResetAfterDead     = false;
+        this.ResetCounter       = 0;
+        this.Hud.Reset();
+        this.Stages.Reset();
+        this.PlayerSprite.Reset();
     }
 
     //Accessors
