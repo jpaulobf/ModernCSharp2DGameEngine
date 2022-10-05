@@ -6,21 +6,25 @@ public class Stages : StagesDef {
     private BufferedGraphics BufferedGraphics;
     private Bitmap BufferedImage;
     private Graphics InternalGraphics;
-    private float ScaleW                    = 1.0F;
-    private float ScaleH                    = 1.0F;
-    private const byte PIXEL_WIDTH          = 18;
-    private const byte PIXEL_HEIGHT         = 4;
-    private SolidBrush Green1               = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
-    private SolidBrush Gray1                = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
-    private SolidBrush Gray2                = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
-    private SolidBrush Blue                 = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
-    private SolidBrush Yellow               = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
-    private Rectangle DrawRect              = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
-    private byte RenderBlock                = 0;
-    protected volatile short CurrentLine    = 574;
-    private short CURRENT_STAGE             = 1;
-    private volatile byte Offset            = 0;
-    private long Framecount                 = 0;
+    private float ScaleW                        = 1.0F;
+    private float ScaleH                        = 1.0F;
+    private const byte PIXEL_WIDTH              = 18;
+    private const byte PIXEL_HEIGHT             = 4;
+    private SolidBrush Green1                   = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
+    private SolidBrush Gray1                    = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
+    private SolidBrush Gray2                    = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
+    private SolidBrush Blue                     = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
+    private SolidBrush Yellow                   = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
+    private Rectangle DrawRect                  = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
+    private byte RenderBlock                    = 0;
+    protected volatile short CurrentLine        = 574;
+    private short CURRENT_STAGE                 = 1;
+    private volatile byte Offset                = 0;
+    private long Framecount                     = 0;
+    private volatile int StartScreenFrame       = 0;
+    private volatile int EndScreenFrame         = 0;
+    private volatile int CurrentLineYPosition   = 0;
+
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
 
     /**
@@ -48,7 +52,7 @@ public class Stages : StagesDef {
         this.stage1_sprites.Add(2216, new SpriteConstructor(game, SpriteConstructor.HOUSE, 85));
         this.stage1_sprites.Add(2159, new SpriteConstructor(game, SpriteConstructor.SHIP, 325, 1, true));
         this.stage1_sprites.Add(2063, new SpriteConstructor(game, SpriteConstructor.FUEL, 417));
-        this.stage1_sprites.Add(2012, new SpriteConstructor(game, SpriteConstructor.HELI, 302, 2, false, 198, 540, SpriteConstructor.RIGHT));
+        this.stage1_sprites.Add(2012, new SpriteConstructor(game, SpriteConstructor.HELI, 302, 2));
         this.stage1_sprites.Add(1923, new SpriteConstructor(game, SpriteConstructor.FUEL, 372));
         this.stage1_sprites.Add(1850, new SpriteConstructor(game, SpriteConstructor.FUEL, 458));
         this.stage1_sprites.Add(1783, new SpriteConstructor(game, SpriteConstructor.HOUSE, 557));
@@ -106,11 +110,19 @@ public class Stages : StagesDef {
         if (!colliding) 
         {
             //Check if the Player is colliding with background
-            //this.CheckBackgroundCollision();
+            this.CheckBackgroundCollision();
         }
 
         //after render the background update the sprites
-        this.CheckSprites(frametime, colliding);
+        int current                 = this.CurrentLine;
+        this.StartScreenFrame       = (current - 115) * PIXEL_HEIGHT;
+        this.EndScreenFrame         = (current + 13)  * PIXEL_HEIGHT;
+        this.CurrentLineYPosition   = (current - 95)  * PIXEL_HEIGHT;
+
+        //if exist an sprite in the current screen frame, render it
+        foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) {
+            item.Value.Update(frametime, this.CurrentLineYPosition, this.Offset, item.Key, colliding);
+        }
     }
 
     /**
@@ -118,19 +130,19 @@ public class Stages : StagesDef {
      */
     private void CheckBackgroundCollision()
     {
-        short firstFromLeftToRight  = 0;
-        short firstFromRightToLeft  = 0;
-        short value                 = -1;
+        int firstFromLeftToRight    = 0;
+        int firstFromRightToLeft    = 0;
+        int value                   = -1;
         int columns                 = StagesDef.stages.GetLength(2);
-        short clBefore              = (short)(this.CurrentLine + 3);
-        short clAfter               = (short)(clBefore + 7);
+        int clBefore                = this.CurrentLine + 3;
+        int clAfter                 = clBefore + 7;
 
         //check 8 lines
         for (int i = clBefore; i < clAfter; i++) {
             for (int j = 0; j < columns; j++) {
                 value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (value == 0) {
-                    firstFromLeftToRight = (short)j;
+                    firstFromLeftToRight = j;
                     break;
                 }
             }
@@ -138,7 +150,7 @@ public class Stages : StagesDef {
             for (int j = columns - 1; j > 0; j--) {
                 value = StagesDef.stages[CURRENT_STAGE - 1, i, j];
                 if (value == 0) {
-                    firstFromRightToLeft = (short)(j + 1);
+                    firstFromRightToLeft = j + 1;
                     break;
                 }
             }
@@ -153,25 +165,13 @@ public class Stages : StagesDef {
     }
 
     /**
-     * Checksprites method.
-     */
-    internal void CheckSprites(long frametime, bool colliding) {
-        int startScreenFrame        = (this.CurrentLine - 115) * PIXEL_HEIGHT;
-        int endScreenFrame          = (this.CurrentLine + 13)  * PIXEL_HEIGHT;
-        int currentLineYPosition    = (this.CurrentLine - 95)  * PIXEL_HEIGHT;
-
-        //if exist an sprite in the current screen frame, render it
-        foreach (var item in this.stage1_sprites.Where(item => startScreenFrame < item.Key && endScreenFrame > item.Key)) {
-            
-            //if (startScreenFrame < item.Key && endScreenFrame > item.Key) {
-            item.Value.UpdateAndRender(this.InternalGraphics, frametime, currentLineYPosition, this.Offset, item.Key, colliding);
-        }
-    }
-
-    /**
      * Draw method
      */
     public void Draw(Graphics gfx, long frametime) {
+        foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
+        {
+            item.Value.Draw(this.InternalGraphics);
+        }
         this.BufferedGraphics.Render(gfx);
     }
 
@@ -231,6 +231,9 @@ public class Stages : StagesDef {
         } catch {}  
     }
 
+    /**
+     * Reset stages elements
+     */
     public void Reset()
     {
         this.CurrentLine    = 574;
