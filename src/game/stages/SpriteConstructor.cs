@@ -48,7 +48,7 @@ public class SpriteConstructor {
         this.gamesprite.Reset();
     }
 
-    private void Update(long frametime, int currentLineYPosition, int offset, int Y, bool colliding) {
+    internal void Update(long frametime, int currentLineYPosition, int offset, int Y, bool colliding) {
         this.gamesprite.Y = Y - currentLineYPosition + offset;
         this.gamesprite.RenderReversed = this.flag;
         this.gamesprite.Update(frametime, colliding);
@@ -57,7 +57,7 @@ public class SpriteConstructor {
     /**
      * Render method
      */
-    private void Draw(Graphics gfx) {
+    internal void Draw(Graphics gfx) {
         this.gamesprite.Draw(gfx);
     }
 }
