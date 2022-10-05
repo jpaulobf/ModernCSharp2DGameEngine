@@ -166,31 +166,33 @@ public class Game : GameInterface
     /**
      * Resize screen (buggy...)
      */
-    public async void Resize(object sender, System.EventArgs e)
+    public async void Resize(object? sender, System.EventArgs e)
     {
         //stop the render method
         this.WindowResizing = true;
         System.Threading.Thread.Sleep(1);
         
         try {
-            //calc new scale
-            int width = ((Form)sender).Width;
-            int height = ((Form)sender).Height;
-            this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
-            this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
+            if (sender != null) {
+                //calc new scale
+                int width = ((Form)sender).Width;
+                int height = ((Form)sender).Height;
+                this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
+                this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
 
-            //Invalidate the current buffer
-            BufferedGraphicsManager.Current.Invalidate();
-            BufferedGraphicsManager.Current.Dispose();
+                //Invalidate the current buffer
+                BufferedGraphicsManager.Current.Invalidate();
+                BufferedGraphicsManager.Current.Dispose();
 
-            //apply new scale
-            this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
-            this.InternalGraphics   = BufferedGraphics.Graphics;
-            
-            this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
-            this.InternalGraphics.InterpolationMode = this.Interpolation;
+                //apply new scale
+                this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
+                this.InternalGraphics   = BufferedGraphics.Graphics;
+                
+                this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+                this.InternalGraphics.InterpolationMode = this.Interpolation;
 
-            this.Stages.Resize(sender, e);
+                this.Stages.Resize(sender, e);
+            }
 
         } catch (Exception ex) {
             Console.WriteLine(ex);
@@ -202,7 +204,7 @@ public class Game : GameInterface
     /**
      * Game key down
      */
-    public void KeyDown(object sender, KeyEventArgs e)
+    public void KeyDown(object? sender, KeyEventArgs e)
     {
         if (e.KeyValue == 37) {
             IS_LEFT_KEY_DOWN = true;
@@ -214,12 +216,12 @@ public class Game : GameInterface
     /**
      * Game Key press
      */
-    public void KeyPress(object sender, KeyPressEventArgs e) {}
+    public void KeyPress(object? sender, KeyPressEventArgs e) {}
 
     /**
      * Game Key up
      */
-    public void KeyUp(object sender, KeyEventArgs e)
+    public void KeyUp(object? sender, KeyEventArgs e)
     {
         if (e.KeyValue == 37) {
             IS_LEFT_KEY_DOWN = false;
