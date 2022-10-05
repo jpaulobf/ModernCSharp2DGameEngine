@@ -2,15 +2,15 @@ namespace game;
 
 public class HUD {
 
-    private Rectangle rectSep;
-    private Rectangle rect;
-    private GameInterface gameref;
+    private Rectangle SeparatorRect;
+    private Rectangle HudRect;
+    private GameInterface GameRef;
     public byte PlayerLives {get;set;} = 5;
 
     public HUD(GameInterface game) {
-        this.gameref = game;
-        this.rectSep = new Rectangle(0, 428, 738, 3);
-        this.rect = new Rectangle(0, 431, 738, 85);
+        this.GameRef        = game;
+        this.SeparatorRect  = new Rectangle(0, 428, 738, 3);
+        this.HudRect        = new Rectangle(0, 431, 738, 85);
     }
 
     /**
@@ -24,8 +24,8 @@ public class HUD {
      * Draw the HUD
      */
     public void Draw(Graphics gfx) {
-        gfx.FillRectangle(Brushes.Black, this.rectSep);
-        gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 144, 144, 144)), this.rect);
+        gfx.FillRectangle(Brushes.Black, this.SeparatorRect);
+        gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 144, 144, 144)), this.HudRect);
     }
 
     /**
