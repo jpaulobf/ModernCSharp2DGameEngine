@@ -21,9 +21,8 @@ public class MyGame
      * Date:   04/sept/2022
      */
     public MyGame(int targetFPS, bool useThread = false) {
-        
+        //run the application
         Application.Run(new Canvas(targetFPS, useThread));
-
     }
 
     /**
@@ -33,11 +32,9 @@ public class MyGame
      * Date:   04/sept/2022
      */
     private class Canvas : Form, CanvasEngineInterface {
-        
         private GameInterface game;
         private GameEngine gameEngine;
         private Graphics graphics;
-        private IntPtr hDC;
         private System.ComponentModel.IContainer components;
         private bool goFullscreen                   = false;
         private bool ShowFPS                        = true;
@@ -68,8 +65,7 @@ public class MyGame
             this.StartPosition              = FormStartPosition.CenterScreen;
 
             //create the backbuffer image
-            this.hDC                        = this.CreateGraphics().GetHdc();
-            this.graphics                   = Graphics.FromHdc(this.hDC);
+            this.graphics                   = this.CreateGraphics();
             this.graphics.InterpolationMode = interpolationMode;
 
             //no resizible
@@ -79,7 +75,7 @@ public class MyGame
             this.GoFullscreen(goFullscreen);
 
             //foward the keyboard methods
-            this.fowardKeyboard();
+            this.FowardKeyboard();
 
             if (this.goFullscreen) {
                 //init the game class
@@ -104,7 +100,10 @@ public class MyGame
             }
         }
 
-        private void fowardKeyboard()
+        /**
+         * Foward the keyboard actions
+         */
+        private void FowardKeyboard()
         {
             this.KeyPreview = true;
             this.KeyPress   += Canvas_KeyPress;
@@ -157,12 +156,7 @@ public class MyGame
 
         private void RenderFPS(Graphics graphics, long frametime) {
             FPS_AVERAGE[fps_aux_counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
-            graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.Black, 0, 0);
-        }
-
-        public void ReleaseHdc()
-        {
-            this.graphics.ReleaseHdc(this.hDC);
+            graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.White, 0, 0);
         }
 
         public void GraphicDispose()
@@ -440,7 +434,6 @@ public class MyGame
 
         private void Dispose() {
             try {
-                this.canvas.ReleaseHdc();
                 this.canvas.GraphicDispose();
             } catch {}
         }
