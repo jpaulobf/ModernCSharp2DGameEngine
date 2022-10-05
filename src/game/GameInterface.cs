@@ -12,13 +12,13 @@ public interface GameInterface {
 
     public Size Resolution { get; set; }
 
-    public void KeyDown(object sender, System.Windows.Forms.KeyEventArgs e);
+    public void KeyDown(object? sender, System.Windows.Forms.KeyEventArgs e);
 
-    public void KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e);
+    public void KeyPress(object? sender, System.Windows.Forms.KeyPressEventArgs e);
 
-    public void KeyUp(object sender, System.Windows.Forms.KeyEventArgs e);
+    public void KeyUp(object? sender, System.Windows.Forms.KeyEventArgs e);
     
-    public void Resize(object sender, System.EventArgs e);
+    public void Resize(object? sender, System.EventArgs e);
 
     public System.Drawing.Drawing2D.InterpolationMode Interpolation { get; }
 
