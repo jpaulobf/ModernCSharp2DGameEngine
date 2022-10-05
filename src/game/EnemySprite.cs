@@ -53,10 +53,10 @@ public class EnemySprite : GameSprite {
         this.MaxLeft                = maxLeft;
         this.MaxRight               = maxRight;
         this.Direction              = direction;
-        this.DefaultBitmap          = this.SpriteImage;
+        this.DefaultBitmap          = new Bitmap(@imageFilePath);
         this.DefaultDirection       = direction;
         this.DefaultTilesNumber     = tilesNumber;
-        this.DefaultRenderReverse   = RenderReversed;
+        this.DefaultRenderReverse   = reversed;
     }
 
     /**
@@ -169,21 +169,18 @@ public class EnemySprite : GameSprite {
        this.Status = NORMAL;
     }
 
+    /**
+     * Reset the sprite
+     */
     public override void Reset()
     {
         this.AnimateExplosion   = false;
-        this.SpriteImage        = this.DefaultBitmap;
+        this.SpriteImage        = new Bitmap(this.DefaultBitmap);
         this.TilesNumber        = this.DefaultTilesNumber;
         this.Direction          = this.DefaultDirection;
         this.AnimationCounter   = 0;
         this.RenderReversed     = this.DefaultRenderReverse;
         this.X                  = this.DefaultX;
-        
-        if (this.Status == REVERSED) {
-            this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
-            this.Status = NORMAL;
-        }
-        
-        
+        this.Status             = NORMAL;
     }
 }
