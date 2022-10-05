@@ -16,6 +16,4 @@ public interface CanvasEngineInterface {
     public void Render();
     
     void GraphicDispose();
-    
-    void ReleaseHdc();
 }
