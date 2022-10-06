@@ -1,9 +1,9 @@
-namespace engine;
+namespace Engine;
 
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
-using game;
+using Game;
 using System.Drawing.Drawing2D;
 
 /**
@@ -31,8 +31,8 @@ public class MyGame
      * Author: Joao Paulo B Faria
      * Date:   04/sept/2022
      */
-    private class Canvas : Form, CanvasEngineInterface {
-        private GameInterface Game;
+    private class Canvas : Form, ICanvasEngine {
+        private IGame Game;
         private GameEngine GameEngine;
         private Graphics Graphics;
         private System.ComponentModel.IContainer Components;
@@ -79,12 +79,12 @@ public class MyGame
 
             if (this.GoFullscreen) {
                 //init the game class
-                this.Game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                this.Game = new MainGameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                      new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                      InterpolationMode);
             } else {
                 //init the game class
-                this.Game = new Game(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                this.Game = new MainGameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                      new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
                                      InterpolationMode);
             }
@@ -187,14 +187,14 @@ public class MyGame
         private static long FPS30               = (long)(10_000_000 / 30);
         private long TARGET_FRAMETIME           = FPS60;
         private bool UNLIMITED_FPS              = false;
-        private CanvasEngineInterface Canvas;
+        private ICanvasEngine Canvas;
 
         /**
          * Constructor. Handle with target FPS & foward actions to the empty canvas
          * Author: Joao Paulo B Faria
          * Date:   04/sept/2022
          */
-        public GameEngine(int targetFPS, CanvasEngineInterface canvas, bool useThread = false) 
+        public GameEngine(int targetFPS, ICanvasEngine canvas, bool useThread = false) 
         {
             this.UNLIMITED_FPS = false;
             this.UseThread = useThread;
