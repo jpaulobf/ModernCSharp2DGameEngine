@@ -1,4 +1,4 @@
-namespace game;
+namespace Game;
 
 using System.Drawing;
 
