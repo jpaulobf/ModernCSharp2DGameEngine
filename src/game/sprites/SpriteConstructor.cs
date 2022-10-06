@@ -1,4 +1,4 @@
-namespace Game.Stages;
+namespace Game;
 
 /**
  * Author: Joao P B Faria
