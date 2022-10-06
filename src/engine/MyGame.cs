@@ -7,20 +7,20 @@ using Game;
 using System.Drawing.Drawing2D;
 
 /**
- * This is the MyGame class
- * usually, this name will be replace by the game name, like: Tetris for instance
  * Author: Joao Paulo B Faria
- * Date:   setp/2022
+ * Date:   sept/2022
+ * Definition: This is the MyGame class: usually, this name will be replace by the game name, like: Tetris for instance
  */
 public class MyGame
 {
     /**
      * Game engine constructor.
-     * This method will start the GameLoop & Empty Canvas elements
      * Author: Joao Paulo B Faria
      * Date:   04/sept/2022
+     * Definition: This method will start the GameLoop & Empty Canvas elements
      */
-    public MyGame(int targetFPS, bool useThread = false) {
+    public MyGame(int targetFPS, bool useThread = false)
+    {
         //run the application
         Application.Run(new Canvas(targetFPS, useThread));
     }
@@ -31,7 +31,8 @@ public class MyGame
      * Author: Joao Paulo B Faria
      * Date:   04/sept/2022
      */
-    private class Canvas : Form, ICanvasEngine {
+    private class Canvas : Form, ICanvasEngine 
+    {
         private IGame Game;
         private GameEngine GameEngine;
         private Graphics Graphics;
@@ -49,19 +50,14 @@ public class MyGame
          * Canvas constructor
          * Author: Joao Paulo B Faria
          * Date:   04/sept/2022
-         *
          */
-        public Canvas(int targetFPS, bool useThread = false) {
-            
-            //define as double buffered canvas
-            //this.DoubleBuffered = true;
-
+        public Canvas(int targetFPS, bool useThread = false) 
+        {
             //start the components
             this.Components                 = new System.ComponentModel.Container();
             this.AutoScaleMode              = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize                 = new Size(ExternalResolutionWidth, ExternalResolutionHeight);
             this.Text                       = "My C# Modern GameEngine";
-
             this.StartPosition              = FormStartPosition.CenterScreen;
 
             //create the backbuffer image
@@ -77,25 +73,31 @@ public class MyGame
             //foward the keyboard methods
             this.FowardKeyboard();
 
-            if (this.GoFullscreen) {
+            if (this.GoFullscreen) 
+            {
                 //init the game class
-                this.Game = new MainGameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                     new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                     InterpolationMode);
-            } else {
+                this.Game = new GameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                                                   new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                                                   InterpolationMode);
+            } 
+            else 
+            {
                 //init the game class
-                this.Game = new MainGameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                     new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
-                                     InterpolationMode);
+                this.Game = new GameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                                                   new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
+                                                   InterpolationMode);
             }
 
+            //add resize method to the Resize event
             this.Resize += this.Game.Resize;
 
             //starts the game engine, the empty canvas & engine init method.
             this.GameEngine = new GameEngine(targetFPS, this, useThread);
             this.GameEngine.Init();
 
-            for (int i = 0; i < FPS_AVERAGE.Length; i++) {
+            //store the target fps as initial value of array to avoid calc error.
+            for (int i = 0; i < FPS_AVERAGE.Length; i++) 
+            {
                 FPS_AVERAGE[i] = targetFPS;
             }
         }
@@ -112,13 +114,19 @@ public class MyGame
             this.Closing    += Canvas_Closing;
         }
 
+        /**
+         * Toggle Fullscreen/Window Mode
+         */
         private void ToggleFullScreen(bool fullscreen)
         {
-            if (fullscreen) {
+            if (fullscreen) 
+            {
                 this.WindowState        = FormWindowState.Normal;
                 this.FormBorderStyle    = System.Windows.Forms.FormBorderStyle.None;
                 this.Bounds             = Screen.PrimaryScreen.Bounds;
-            } else {
+            } 
+            else 
+            {
                 this.WindowState        = FormWindowState.Normal;
                 this.FormBorderStyle    = System.Windows.Forms.FormBorderStyle.Sizable;
                 this.ClientSize         = new Size(ExternalResolutionWidth, ExternalResolutionHeight);
@@ -127,38 +135,63 @@ public class MyGame
             }
         }
 
+        /**
+         * Canvas Closing event
+         */
         void Canvas_Closing(object? sender, System.ComponentModel.CancelEventArgs e)    {   this.GameEngine.Stop(); Application.Exit(); }
+        
+        /**
+         * Canvas Key events
+         */
         void Canvas_KeyPress(object? sender, KeyPressEventArgs e)                       {   this.Game.KeyPress(sender, e);              }
         void Canvas_KeyDown(object? sender, KeyEventArgs e)                             {   this.Game.KeyDown(sender, e);               }
-        void Canvas_KeyUp(object? sender, KeyEventArgs e) {
-            if (e.KeyValue == 113) {
+        void Canvas_KeyUp(object? sender, KeyEventArgs e) 
+        {
+            if (e.KeyValue == 113) 
+            {
                 this.GoFullscreen = !this.GoFullscreen;
                 this.ToggleFullScreen(this.GoFullscreen);
             }
             this.Game.KeyUp(sender, e);     
         }
 
+        /**
+         * Draw the Game (and draw FPS if desired)
+         */
         public void Draw(long frametime)
         {
             this.Game.Draw(frametime);
             if (ShowFPS) this.RenderFPS(this.Game.GetGraphics(), frametime);
-        }      
+        }
 
+        /**
+         * Update Game Logic
+         */
         public void Update(long frametime)
         {
             this.Game.Update(frametime);
         }
 
+        /**
+         * Render the Backbuffer to Canvas Form
+         */
         public void Render() 
         {
             this.Game.Render(this.Graphics);
         }
 
-        private void RenderFPS(Graphics graphics, long frametime) {
+        /**
+         * Draw the Game FPS
+         */
+        private void RenderFPS(Graphics graphics, long frametime) 
+        {
             FPS_AVERAGE[Fps_Aux_Counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
             graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.White, 0, 0);
         }
 
+        /**
+         * Dispose the Graphics object
+         */
         public void GraphicDispose()
         {
             this.Graphics.Dispose();
@@ -198,7 +231,8 @@ public class MyGame
         {
             this.UNLIMITED_FPS = false;
             this.UseThread = useThread;
-            switch(targetFPS) {
+            switch(targetFPS) 
+            {
                 case 30:
                     this.TARGET_FRAMETIME = FPS30;
                     break;
@@ -236,7 +270,8 @@ public class MyGame
          */
         public void Init() 
         {
-            if (this.UseThread) {
+            if (this.UseThread) 
+            {
                 /*
                 alternative:
                 */
@@ -248,7 +283,9 @@ public class MyGame
                 */
                 this.Task = new Task(Run, TaskCreationOptions.LongRunning);
                 this.Task.Start();
-            } else {
+            } 
+            else 
+            {
                 /**
                  * Thanks to Mike Zboray - https://github.com/mzboray/HighPrecisionTimer
                  */
@@ -263,20 +300,29 @@ public class MyGame
             }
         }
 
-        public void Stop() {
+        /**
+         * Stop the engine
+         */
+        public void Stop() 
+        {
             this.IsEngineRunning = false;
-            if (this.StateTimer != null) {
+            if (this.StateTimer != null) 
+            {
                 this.StateTimer.Dispose();
             }
         }
 
-        public void RunTimer() {
+        /**
+         * Run the Game Loop by the timer resolution
+         */
+        public void RunTimer() 
+        {
             long beforeUpdate       = 0;
             long afterUpdate        = 0;
             long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
 
-            if (this.IsEngineRunning) {
-
+            if (this.IsEngineRunning) 
+            {
                 //calc the update time
                 beforeUpdate = Stopwatch.GetTimestamp();
 
@@ -320,8 +366,10 @@ public class MyGame
             long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
 
             //gameloop
-            if (UNLIMITED_FPS) {
-                while (this.IsEngineRunning) {
+            if (UNLIMITED_FPS)
+             {
+                while (this.IsEngineRunning) 
+                {
     
                     //mark the time before the iteration
                     timeStamp = Stopwatch.GetTimestamp();
@@ -345,8 +393,11 @@ public class MyGame
                     //update the referencial time with the initial time
                     timeReference = timeStamp;
                 }
-            } else {
-                while (this.IsEngineRunning) {
+            } 
+            else 
+            {
+                while (this.IsEngineRunning) 
+                {
 
                     accumulator = 0;
 
@@ -360,7 +411,8 @@ public class MyGame
                     afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
                     
                     //only draw if there is some (any) enough time
-                    if ((TARGET_FRAMETIME - afterUpdate) > 0) {
+                    if ((TARGET_FRAMETIME - afterUpdate) > 0) 
+                    {
                         
                         beforeDraw = Stopwatch.GetTimestamp();
 
@@ -378,7 +430,8 @@ public class MyGame
                     afterDraw = ((afterUpdate + afterDraw) * frequencyCalc);
                     accumulator = TARGET_FRAMETIME - afterDraw;
 
-                    if (accumulator > 0) {
+                    if (accumulator > 0) 
+                    {
                         
                         beforeSleep = Stopwatch.GetTimestamp();
 
@@ -390,7 +443,9 @@ public class MyGame
 
                         afterSleep = Stopwatch.GetTimestamp() - beforeSleep;
 
-                    } else {
+                    } 
+                    else 
+                    {
                         /*  
                         Explanation:
                             if the total time to execute, consumes more miliseconds than the target-frame's amount, 
@@ -400,7 +455,8 @@ public class MyGame
                                     Please test this code with your scenario.
                         */
                         //System.out.println("Skip 1 frame... " + ++counter + " time(s)");
-                        if (accumulator < 0) {
+                        if (accumulator < 0) 
+                        {
                             this.update(TARGET_FRAMETIME);
                         }
                     }
@@ -420,22 +476,32 @@ public class MyGame
            this.Canvas.Render();
         }
 
-        /* Método de update, só executa quando a flag permite */
+        /** 
+         * Update game logic
+         */
         public void update(long frametime) 
         {
             this.Canvas.Update(frametime);
         }
     
-        /* Método de desenho, só executa quando a flag permite */
+        /** 
+         * Draw
+         */
         public void draw(long frametime) 
         {
             this.Canvas.Draw(frametime);
         }
 
+        /** 
+         * Dispose the Graphics object
+         */
         private void Dispose() {
-            try {
+            try 
+            {
                 this.Canvas.GraphicDispose();
-            } catch {}
+            } 
+            catch 
+            {}
         }
     }
 }
