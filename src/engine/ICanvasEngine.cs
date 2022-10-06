@@ -1,5 +1,8 @@
 namespace Engine;
 
+/**
+ * Public interface for Canvas from GameEngine
+ */
 public interface ICanvasEngine {
     /**
      * Update the game logic / receives the frametime
