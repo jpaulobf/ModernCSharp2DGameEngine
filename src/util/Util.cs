@@ -1,5 +1,10 @@
 namespace Util;
 
+/**
+ * Author: Joao P B Faria
+ * Date: Sept/2022
+ * Description: Util methods class
+ */
 public sealed class Util {
     
     /**
