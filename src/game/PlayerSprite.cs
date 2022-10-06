@@ -1,8 +1,8 @@
-namespace game;
+namespace Game;
 
-public class PlayerSprite : GameSprite {
-
-    private GameInterface GameRef;
+public class PlayerSprite : GameSprite 
+{
+    private IGame GameRef;
     private Bitmap LocalSpriteImage;
     private Bitmap SpriteSplosion;
     private float OgWidth           = 0;
@@ -15,7 +15,7 @@ public class PlayerSprite : GameSprite {
     /**
      * Player Sprite constructor
      */
-    public PlayerSprite(GameInterface game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity) {
+    public PlayerSprite(IGame game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity) {
         this.GameRef            = game;
         this.SpriteSplosion     = new Bitmap(@"img\\sprite_splosion.png");
         this.LocalSpriteImage   = new Bitmap(@imageFilePath);
