@@ -1,5 +1,10 @@
 namespace Game;
 
+/**
+ * Author: Joao P B Faria
+ * Date: Sept/2022
+ * Description: Class representing the Main Player (Player Sprite)
+ */
 public class PlayerSprite : GameSprite 
 {
     private IGame GameRef;
@@ -25,6 +30,9 @@ public class PlayerSprite : GameSprite
         this.OgY                = Y;
     }
 
+    /**
+     * Define as colliding
+     */
     public void SetCollision() {
         this.Colliding = true;
     }
@@ -33,15 +41,23 @@ public class PlayerSprite : GameSprite
      * Player Sprite update method
      */
     public override void Update(long timeframe, bool colliding = false) {
-        if (!this.Colliding) {
-            if (!this.Lefting && !this.Righting) {
+        if (!this.Colliding) 
+        {
+            if (!this.Lefting && !this.Righting) 
+            {
                 this.SourceStartX = (short)Width; //Default
-            } else if (this.Lefting) { //Lefting
+            } 
+            else if (this.Lefting) 
+            {
                 this.SourceStartX = 0;
-            } else if (this.Righting) { //Righting
+            } 
+            else if (this.Righting) 
+            { 
                 this.SourceStartX = (short)(Width * 2);
             }
-        } else {
+        } 
+        else 
+        {
             this.SourceStartX = 0;
             this.Width = 32;
             this.Height = 25;
