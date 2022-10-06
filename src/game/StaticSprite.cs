@@ -1,5 +1,10 @@
 namespace Game;
 
+/**
+ * Author: Joao P B Faria
+ * Date: Sept/2022
+ * Description: Class representing static sprites (like houses & fuel)
+ */
 public class StaticSprite : GameSprite
 {
     private IGame GameRef;
@@ -23,6 +28,9 @@ public class StaticSprite : GameSprite
         }
     }
     
+    /**
+     * Reset the static sprite
+     */
     public override void Reset()
     {
     }
