@@ -3,7 +3,9 @@ namespace Game;
 using Game.Stages;
 
 /**
- * Class representing enemies sprites
+ * Author: Joao P B Faria
+ * Date: Oct/2022
+ * Description: Class representing enemies sprites
  */
 public class EnemySprite : GameSprite 
 {
@@ -28,7 +30,9 @@ public class EnemySprite : GameSprite
     private Bitmap DefaultBitmap;
 
     /**
-     * Enemy Sprite constructor
+     * Author: Joao P B Faria
+     * Date: Oct/2022
+     * Description: Enemy Sprite constructor
      */
     public EnemySprite(IGame game,
                        byte type,
@@ -164,6 +168,9 @@ public class EnemySprite : GameSprite
         this.AnimateExplosion = true;
     }
 
+    /**
+     * Flip the sprite in X-axis
+     */
     private void FlipX()
     {
        this.RenderReversed = true;
