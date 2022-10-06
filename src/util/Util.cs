@@ -1,6 +1,6 @@
 namespace util;
 
-public class Util {
+public sealed class Util {
     
     /**
      * Code from Microsoft.com
