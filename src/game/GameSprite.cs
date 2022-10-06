@@ -3,7 +3,9 @@ namespace Game;
 using System.Drawing;
 
 /**
- * Abstrac class for the game sprites
+ * Author: Joao P B Faria
+ * Date: Oct/2022
+ * Description: Abstrac class for the game sprites
  */
 public abstract class GameSprite
 {
@@ -31,7 +33,8 @@ public abstract class GameSprite
     /**
      * GameSprite constructor
      */
-    public GameSprite(string imageFilePath, int width, int height, int X, int Y, int velocity) {
+    public GameSprite(string imageFilePath, int width, int height, int X, int Y, int velocity) 
+    {
         //Console.WriteLine(filepath);
         this.SpriteImage = new Bitmap(@imageFilePath);
         this.Pixel       = new Bitmap(@"img\\pixel.png");
@@ -58,7 +61,8 @@ public abstract class GameSprite
      */
     public void Draw(Graphics gfx)
     {
-        if (this.RenderReversed && this.Status == NORMAL) {
+        if (this.RenderReversed && this.Status == NORMAL) 
+        {
             this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
             this.Status = REVERSED;
         }
@@ -70,7 +74,8 @@ public abstract class GameSprite
     /**
      * Default collision detection method
      */
-    public bool CollisionDetection(GameSprite othersprite) {
+    public bool CollisionDetection(GameSprite othersprite) 
+    {
         return (new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height).IntersectsWith(
                 new Rectangle((short)othersprite.X, (short)othersprite.Y, (short)othersprite.Width, (short)othersprite.Height)));
     }
