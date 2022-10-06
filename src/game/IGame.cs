@@ -1,5 +1,10 @@
 namespace Game;
 
+/**
+ * Author: Joao P B Faria
+ * Date: Sept/2022
+ * Description: GameController public Interface
+ */
 public interface IGame 
 {
     public void Update(long frametime);
