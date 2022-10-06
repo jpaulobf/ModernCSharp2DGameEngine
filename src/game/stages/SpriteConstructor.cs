@@ -1,7 +1,7 @@
-namespace game.stages;
+namespace Game.Stages;
 
 public class SpriteConstructor {
-    private GameInterface GameRef;
+    private IGame GameRef;
     public int X { get; set; }
     public int Y { get; set; }
     public byte Type { get; set; }
@@ -19,7 +19,7 @@ public class SpriteConstructor {
     /**
      * Constructor
      */
-    public SpriteConstructor(GameInterface game, byte type, int X, byte parameter = 1, bool flag = false, short maxLeft = 0, short maxRight = 0, byte direction = 0) {
+    public SpriteConstructor(IGame game, byte type, int X, byte parameter = 1, bool flag = false, short maxLeft = 0, short maxRight = 0, byte direction = 0) {
         this.GameRef = game;
         this.X = X;
         this.Y = Y;
