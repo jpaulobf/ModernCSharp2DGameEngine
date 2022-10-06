@@ -1,6 +1,12 @@
 namespace Game.Stages;
 
-public class SpriteConstructor {
+/**
+ * Author: Joao P B Faria
+ * Date: Oct/2022
+ * Description: Class responsible for create the sprites (as a gateway)
+ */
+public class SpriteConstructor 
+{
     private IGame GameRef;
     public int X { get; set; }
     public int Y { get; set; }
@@ -39,15 +45,16 @@ public class SpriteConstructor {
         }
     }
 
-    public void UpdateAndRender(Graphics gfx, long frametime, int currentLineYPosition, int offset, int Y, bool colliding) {
-        this.Update(frametime, currentLineYPosition, offset, Y, colliding);
-        this.Draw(gfx);
-    }
-
+    /**
+     * Reset the Sprite
+     */
     public void Reset() {
         this.GameSprite.Reset();
     }
 
+    /**
+     * Update the sprites
+     */
     internal void Update(long frametime, int currentLineYPosition, int offset, int Y, bool colliding) {
         this.GameSprite.Y = Y - currentLineYPosition + offset;
         this.GameSprite.RenderReversed = this.Flag;
@@ -55,7 +62,7 @@ public class SpriteConstructor {
     }
 
     /**
-     * Render method
+     * Draw the sprite
      */
     internal void Draw(Graphics gfx) {
         this.GameSprite.Draw(gfx);
