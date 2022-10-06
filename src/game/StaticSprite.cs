@@ -1,13 +1,13 @@
-namespace game;
+namespace Game;
 
 public class StaticSprite : GameSprite
 {
-    private GameInterface GameRef;
+    private IGame GameRef;
 
     /**
      * Static Sprite constructor
      */
-    public StaticSprite(GameInterface game, string imageFilePath, int width, int height, int X = 0, int Y = 0) : base(imageFilePath, width, height, X, Y, 0) {
+    public StaticSprite(IGame game, string imageFilePath, int width, int height, int X = 0, int Y = 0) : base(imageFilePath, width, height, X, Y, 0) {
         this.GameRef = game;
     }
 
