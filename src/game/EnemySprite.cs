@@ -1,12 +1,13 @@
-namespace game;
+namespace Game;
 
-using game.stages;
+using Game.Stages;
 
 /**
  * Class representing enemies sprites
  */
-public class EnemySprite : GameSprite {
-    private GameInterface GameRef;
+public class EnemySprite : GameSprite 
+{
+    private IGame GameRef;
     protected long FrameCounter             = 0;
     protected short MaxLeft                 = 0;
     protected short MaxRight                = 0;
@@ -29,7 +30,7 @@ public class EnemySprite : GameSprite {
     /**
      * Enemy Sprite constructor
      */
-    public EnemySprite(GameInterface game,
+    public EnemySprite(IGame game,
                        byte type,
                        string imageFilePath, 
                        int width, 
