@@ -1,5 +1,10 @@
 namespace Game;
 
+/**
+ * Author: Joao P B Faria
+ * Date: Oct/2022
+ * Description: HUD control class
+ */
 public class HUD 
 {
     private Rectangle SeparatorRect;
@@ -7,6 +12,9 @@ public class HUD
     private IGame GameRef;
     public byte PlayerLives {get;set;} = 5;
 
+    /**
+     * Constructor
+     */
     public HUD(IGame game) 
     {
         this.GameRef        = game;
