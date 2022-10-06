@@ -1,5 +1,10 @@
 namespace Game.Stages;
 
+/**
+ * Author: Joao P B Faria
+ * Date: Oct/2022
+ * Definition: This class represent the Game Stages, with their background and enemy/static sprites.
+ */
 public class GameStages : IStagesDef 
 {
     private IGame GameRef;
@@ -10,6 +15,7 @@ public class GameStages : IStagesDef
     private float ScaleH                        = 1.0F;
     private const byte PIXEL_WIDTH              = 18;
     private const byte PIXEL_HEIGHT             = 4;
+    private SolidBrush [] Brushes;
     private SolidBrush Black                    = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
     private SolidBrush Green1                   = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
     private SolidBrush Green2                   = new SolidBrush(Color.FromArgb(255, 53, 95, 24));
@@ -17,7 +23,6 @@ public class GameStages : IStagesDef
     private SolidBrush Gray2                    = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
     private SolidBrush Blue                     = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
     private SolidBrush Yellow                   = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
-    private SolidBrush [] Brushes;
     private Rectangle DrawRect                  = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
     protected volatile short CurrentLine        = 574;
     private short CURRENT_STAGE                 = 1;
@@ -31,13 +36,14 @@ public class GameStages : IStagesDef
     private volatile bool CanDrawStageOpening   = true;
     private volatile bool CanStartTheStage      = false;
     private volatile bool CanStartStageOpening  = true;
-
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
 
     /**
      * Constructor
      */
-    public GameStages(IGame game) {
+    public GameStages(IGame game) 
+    {
+        //store the game reference
         this.GameRef = game;
 
         //create the imagebuffer
@@ -94,7 +100,8 @@ public class GameStages : IStagesDef
     /**
      * Upgrade method
      */
-    public void Update(long frametime, bool colliding = false) {
+    public void Update(long frametime, bool colliding = false) 
+    {
         //add the framecounter
         this.Framecount += frametime;
 
@@ -116,8 +123,8 @@ public class GameStages : IStagesDef
         if (this.CanStartTheStage) 
         {
             //control the BG vertical scroll
-            if (this.Framecount >= 90_000) {
-                
+            if (this.Framecount >= 90_000) 
+            {
                 //flag the draw
                 this.CanDrawBackground = true;
 
@@ -150,7 +157,8 @@ public class GameStages : IStagesDef
             this.CurrentLineYPosition   = (current - 95)  * PIXEL_HEIGHT;
 
             //if exist an sprite in the current screen frame, render it
-            foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) {
+            foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
+            {
                 item.Value.Update(frametime, this.CurrentLineYPosition, this.Offset, item.Key, colliding);
             }
         }
@@ -169,25 +177,31 @@ public class GameStages : IStagesDef
         int clAfter                 = clBefore + 7;
 
         //check 8 lines
-        for (int i = clBefore; i < clAfter; i++) {
-            for (int j = 0; j < columns; j++) {
+        for (int i = clBefore; i < clAfter; i++) 
+        {
+            for (int j = 0; j < columns; j++) 
+            {
                 value = IStagesDef.stages[CURRENT_STAGE - 1, i, j];
-                if (value == 0) {
+                if (value == 0) 
+                {
                     firstFromLeftToRight = j;
                     break;
                 }
             }
 
-            for (int j = columns - 1; j > 0; j--) {
+            for (int j = columns - 1; j > 0; j--) 
+            {
                 value = IStagesDef.stages[CURRENT_STAGE - 1, i, j];
-                if (value == 0) {
+                if (value == 0) 
+                {
                     firstFromRightToLeft = j + 1;
                     break;
                 }
             }
 
             if ((this.GameRef.GetPlayerSprite().X < (firstFromLeftToRight * PIXEL_WIDTH)) || 
-                (this.GameRef.GetPlayerSprite().X + this.GameRef.GetPlayerSprite().Width > (firstFromRightToLeft * PIXEL_WIDTH))) {
+                (this.GameRef.GetPlayerSprite().X + this.GameRef.GetPlayerSprite().Width > (firstFromRightToLeft * PIXEL_WIDTH))) 
+            {
                 this.GameRef.GetPlayerSprite().SetCollision();
                 this.GameRef.SetEnemyCollision();
                 break;
@@ -198,8 +212,8 @@ public class GameStages : IStagesDef
     /**
      * Draw method
      */
-    public void Draw(Graphics gfx, long frametime) {
-
+    public void Draw(Graphics gfx, long frametime) 
+    {
         //draw the stage opening
         if (this.CanDrawStageOpening) 
         {
@@ -233,10 +247,13 @@ public class GameStages : IStagesDef
         int c = 0 + this.OpeningOffset;
         int z = 108;
 
-        for (int i = c; i < z; i++) {
-            for (int j = 0; j < IStagesDef.opening.GetLength(2); j++) {
+        for (int i = c; i < z; i++) 
+        {
+            for (int j = 0; j < IStagesDef.opening.GetLength(2); j++) 
+            {
                 byte renderBlock = IStagesDef.opening[CURRENT_STAGE - 1, i, j];
-                if (renderBlock == 1) {
+                if (renderBlock == 1) 
+                {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
                     this.DrawRect.Y = (i * PIXEL_HEIGHT);
                     this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
@@ -256,13 +273,17 @@ public class GameStages : IStagesDef
     /**
      * Render the current stage at the current frame
      */
-    private void DrawBackground() {
+    private void DrawBackground() 
+    {
         int currentMinus95  = this.CurrentLine - 95;
         int currentPlus13   = currentMinus95 + 108;
-        for (int i = currentMinus95, c = -1; i < currentPlus13; i++, c++) {
-            for (int j = 0; j < IStagesDef.stages.GetLength(2); j++) {
+        for (int i = currentMinus95, c = -1; i < currentPlus13; i++, c++) 
+        {
+            for (int j = 0; j < IStagesDef.stages.GetLength(2); j++) 
+            {
                 byte renderBlock = IStagesDef.stages[CURRENT_STAGE - 1, i, j];
-                if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) {
+                if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
+                {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
                     this.DrawRect.Y = (c * PIXEL_HEIGHT) + this.Offset;
                     this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
@@ -288,7 +309,8 @@ public class GameStages : IStagesDef
             //Invalidate the current buffer
             BufferedGraphicsManager.Current.Invalidate();
 
-            await Task.Run(() => {
+            await Task.Run(() => 
+            {
                 //apply new scale
                 this.BufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));        
                 this.InternalGraphics = BufferedGraphics.Graphics;
@@ -313,7 +335,8 @@ public class GameStages : IStagesDef
         this.CanStartTheStage       = false;
         this.CanStartStageOpening   = true;
 
-        foreach (var item in this.stage1_sprites) {
+        foreach (var item in this.stage1_sprites) 
+        {
             item.Value.Reset();
         }
     }
