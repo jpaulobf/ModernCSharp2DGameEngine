@@ -109,7 +109,7 @@ public class GameStages : IStagesDef
         if (this.CanStartStageOpening) 
         {
             //control the BG vertical scroll
-            if (this.Framecount >= 160_000) 
+            if (this.Framecount >= 90_000) 
             {
                 this.OpeningOffset += 1;
 
@@ -285,6 +285,7 @@ public class GameStages : IStagesDef
         {
             this.CanStartStageOpening   = false;
             this.CanStartTheStage       = true;
+            this.GameRef.TogglePlayerSprite();
         }
 
         this.CanDrawStageOpening = false;
@@ -355,6 +356,7 @@ public class GameStages : IStagesDef
         this.CanDrawStageOpening    = true;
         this.CanStartTheStage       = false;
         this.CanStartStageOpening   = true;
+        this.GameRef.DisablePlayerSprite();
 
         foreach (var item in this.stage1_sprites) 
         {
