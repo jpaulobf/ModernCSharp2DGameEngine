@@ -35,6 +35,7 @@ public class GameController : IGame
     private volatile bool IS_RIGHT_KEY_DOWN = false;
     private volatile bool Paused            = false;
     private volatile bool ResetAfterDead    = false;
+    private volatile bool ShowPlayerSprite  = false;
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
     private Point PausePoint;
@@ -90,25 +91,27 @@ public class GameController : IGame
             PlayerSprite.Righting = false;
             PlayerSprite.Lefting = false;
 
-            if (IS_LEFT_KEY_DOWN) 
-            {
-                PlayerSprite.X -= moveDistance;
-                PlayerSprite.Lefting = true;
-            }
+            if (this.ShowPlayerSprite) {
+                if (IS_LEFT_KEY_DOWN) 
+                {
+                    PlayerSprite.X -= moveDistance;
+                    PlayerSprite.Lefting = true;
+                }
 
-            if (IS_RIGHT_KEY_DOWN) 
-            {
-                PlayerSprite.X += moveDistance;
-                PlayerSprite.Righting = true;
-            }
+                if (IS_RIGHT_KEY_DOWN) 
+                {
+                    PlayerSprite.X += moveDistance;
+                    PlayerSprite.Righting = true;
+                }
 
-            if (PlayerSprite.X > this.InternalResolutionWidth) 
-            {
-                PlayerSprite.X = 0;
-            } 
-            else if (PlayerSprite.X < 0) 
-            {
-                PlayerSprite.X = this.InternalResolutionWidth;
+                if (PlayerSprite.X > this.InternalResolutionWidth) 
+                {
+                    PlayerSprite.X = 0;
+                } 
+                else if (PlayerSprite.X < 0) 
+                {
+                    PlayerSprite.X = this.InternalResolutionWidth;
+                }
             }
             
             this.Hud.Update(frametime);
@@ -147,8 +150,10 @@ public class GameController : IGame
             //draw the HUD
             this.Hud.Draw(this.InternalGraphics);
 
-            // Draw Player Sprite
-            this.PlayerSprite.Draw(this.InternalGraphics);
+            if (this.ShowPlayerSprite) {
+                // Draw Player Sprite
+                this.PlayerSprite.Draw(this.InternalGraphics);
+            }
 
             //draw pause message
             if (this.Paused) 
@@ -282,6 +287,17 @@ public class GameController : IGame
         this.PlayerSprite.Reset();
         this.PlayerSprite.Colliding = false;
         this.ResetAfterDead         = false;
+    }
+
+    /**
+     * Toggle PlayerSprite visible or not
+     */
+    public void TogglePlayerSprite() {
+        this.ShowPlayerSprite = !this.ShowPlayerSprite;
+    }
+
+    public void DisablePlayerSprite() {
+        this.ShowPlayerSprite = false;
     }
 
     /**
