@@ -230,6 +230,12 @@ public class GameController : IGame
         {
             IS_RIGHT_KEY_DOWN = true;
         }
+
+        if (e.KeyValue == 32 || e.KeyValue == 37 || e.KeyValue == 38 || e.KeyValue == 39 || e.KeyValue == 40) {
+            if (this.ShowPlayerSprite) {
+                this.Stages.Start();
+            }    
+        }
     }
 
     /**
@@ -259,12 +265,6 @@ public class GameController : IGame
         if (e.KeyValue == 82) 
         {
             this.Reset();
-        }
-
-        if (e.KeyValue == 32) {
-            if (this.ShowPlayerSprite) {
-                this.Stages.Start();
-            }
         }
     }
 
