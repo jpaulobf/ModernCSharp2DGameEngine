@@ -40,4 +40,8 @@ public interface IGame
     public PlayerSprite GetPlayerSprite();
 
     public void SetEnemyCollision();
+
+    public void TogglePlayerSprite();
+
+    public void DisablePlayerSprite();
 }
