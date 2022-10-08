@@ -25,7 +25,8 @@ public class GameStages : IStagesDef
     private SolidBrush Yellow                   = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
     private Rectangle DrawRect                  = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
     protected volatile short CurrentLine        = 574;
-    private short CURRENT_STAGE                 = 1;
+    private const byte STATE_DEC                = 1;
+    private short CURRENT_STAGE                 = 1 - STATE_DEC;
     private volatile byte Offset                = 0;
     private volatile byte OpeningOffset         = 0;
     private long Framecount                     = 0;
@@ -181,7 +182,7 @@ public class GameStages : IStagesDef
         {
             for (int j = 0; j < columns; j++) 
             {
-                value = IStagesDef.stages[CURRENT_STAGE - 1, i, j];
+                value = IStagesDef.stages[CURRENT_STAGE, i, j];
                 if (value == 0) 
                 {
                     firstFromLeftToRight = j;
@@ -191,7 +192,7 @@ public class GameStages : IStagesDef
 
             for (int j = columns - 1; j > 0; j--) 
             {
-                value = IStagesDef.stages[CURRENT_STAGE - 1, i, j];
+                value = IStagesDef.stages[CURRENT_STAGE, i, j];
                 if (value == 0) 
                 {
                     firstFromRightToLeft = j + 1;
@@ -244,27 +245,46 @@ public class GameStages : IStagesDef
      */
     private void DrawStageOpening()
     {
-        int c = 0 + this.OpeningOffset;
-        int z = 108;
+        int currentOpeningLine  = this.OpeningOffset;
+        int maxOpeningLines     = 108;
+        int stageLinesCount     = IStagesDef.stages.GetLength(1);
+        int openingColumnsCount = IStagesDef.opening.GetLength(2);
 
-        for (int i = c; i < z; i++) 
+        for (int i = currentOpeningLine; i < maxOpeningLines; i++) 
         {
-            for (int j = 0; j < IStagesDef.opening.GetLength(2); j++) 
+            for (int j = 0; j < openingColumnsCount; j++) 
             {
-                byte renderBlock = IStagesDef.opening[CURRENT_STAGE - 1, i, j];
+                byte renderBlock = IStagesDef.opening[CURRENT_STAGE, i, j];
                 if (renderBlock == 1) 
                 {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
-                    this.DrawRect.Y = (i * PIXEL_HEIGHT);
+                    this.DrawRect.Y =  i * PIXEL_HEIGHT;
                     this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
                 }
             }
         }
 
-        if (c == z) 
+        int sceneBeginning = stageLinesCount - currentOpeningLine;
+
+        for (int i = sceneBeginning, z = 0; i < stageLinesCount; i++, z++) 
         {
-            this.CanStartStageOpening = false;
-            this.CanStartTheStage = true;
+            for (int j = 0; j < openingColumnsCount; j++) 
+            {
+                byte renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
+               
+                if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
+                {
+                    this.DrawRect.X =  j * PIXEL_WIDTH;
+                    this.DrawRect.Y =  z * PIXEL_HEIGHT;
+                    this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
+                }
+            }
+        }
+
+        if (currentOpeningLine == maxOpeningLines) 
+        {
+            this.CanStartStageOpening   = false;
+            this.CanStartTheStage       = true;
         }
 
         this.CanDrawStageOpening = false;
@@ -277,11 +297,12 @@ public class GameStages : IStagesDef
     {
         int currentMinus95  = this.CurrentLine - 95;
         int currentPlus13   = currentMinus95 + 108;
+        int stagesColumns   = IStagesDef.stages.GetLength(2);
         for (int i = currentMinus95, c = -1; i < currentPlus13; i++, c++) 
         {
-            for (int j = 0; j < IStagesDef.stages.GetLength(2); j++) 
+            for (int j = 0; j < stagesColumns; j++) 
             {
-                byte renderBlock = IStagesDef.stages[CURRENT_STAGE - 1, i, j];
+                byte renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
                 if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
                 {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
