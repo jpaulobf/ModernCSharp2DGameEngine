@@ -364,6 +364,7 @@ public class GameStages : IStagesDef
         this.CanDrawStageOpening    = true;
         this.CanStartTheStage       = false;
         this.CanStartStageOpening   = true;
+        this.RunStage               = false;
         this.GameRef.DisablePlayerSprite();
 
         foreach (var item in this.stage1_sprites) 
