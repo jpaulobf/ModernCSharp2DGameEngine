@@ -25,9 +25,11 @@ public class GameStages : IStagesDef
     private SolidBrush Yellow                   = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
     private Rectangle DrawRect                  = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
     protected volatile short CurrentLine        = 574;
+    private const byte OPENING_LINES            = 108;
+    protected volatile short CurrentOpeningLine = 0;
     private const byte STATE_DEC                = 1;
     private short CURRENT_STAGE                 = 1 - STATE_DEC;
-    private volatile byte Offset                = 0;
+    private volatile short Offset               = 0;
     private volatile byte OpeningOffset         = 0;
     private long Framecount                     = 0;
     private volatile int StartScreenFrame       = 0;
@@ -96,6 +98,9 @@ public class GameStages : IStagesDef
         this.stage1_sprites.Add(164,  new SpriteConstructor(game, SpriteConstructor.FUEL, 407));
         this.stage1_sprites.Add(107,  new SpriteConstructor(game, SpriteConstructor.HELI, 288, 2, false, 198, 540, SpriteConstructor.RIGHT));
         this.stage1_sprites.Add(41,   new SpriteConstructor(game, SpriteConstructor.SHIP, 320, 1, false, 288, 450, SpriteConstructor.LEFT));
+
+        //the offset starts negative for the opening animation
+        this.Offset = PIXEL_HEIGHT * OPENING_LINES * -1;
     }
 
     /**
@@ -109,9 +114,16 @@ public class GameStages : IStagesDef
         if (this.CanStartStageOpening) 
         {
             //control the BG vertical scroll
-            if (this.Framecount >= 90_000) 
+            if (this.Framecount >= 160_000) 
             {
-                this.OpeningOffset += 1;
+                //calc the offset
+                this.OpeningOffset += 4;
+                if (this.OpeningOffset == PIXEL_HEIGHT) {
+                    this.CurrentOpeningLine++;
+                    this.OpeningOffset = 0;
+
+                    this.Offset += 4;
+                }
 
                 //reset framecount
                 this.Framecount = 0;
@@ -151,7 +163,10 @@ public class GameStages : IStagesDef
                 this.CheckBackgroundCollision();
             }
 
-            //update the sprites
+            
+        }
+
+        //update the sprites
             int current                 = this.CurrentLine;
             this.StartScreenFrame       = (current - 115) * PIXEL_HEIGHT;
             this.EndScreenFrame         = (current + 13)  * PIXEL_HEIGHT;
@@ -162,7 +177,6 @@ public class GameStages : IStagesDef
             {
                 item.Value.Update(frametime, this.CurrentLineYPosition, this.Offset, item.Key, colliding);
             }
-        }
     }
 
     /**
@@ -253,8 +267,8 @@ public class GameStages : IStagesDef
      */
     private void DrawStageOpening()
     {
-        int currentOpeningLine  = this.OpeningOffset;
-        int maxOpeningLines     = 108;
+        int currentOpeningLine  = this.CurrentOpeningLine;
+        int maxOpeningLines     = OPENING_LINES;
         int stageLinesCount     = IStagesDef.stages.GetLength(1);
         int openingColumnsCount = IStagesDef.opening.GetLength(2);
 
@@ -266,14 +280,13 @@ public class GameStages : IStagesDef
                 if (renderBlock == 1) 
                 {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
-                    this.DrawRect.Y =  i * PIXEL_HEIGHT;
+                    this.DrawRect.Y =  (i * PIXEL_HEIGHT) + this.OpeningOffset - 3;
                     this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
                 }
             }
         }
 
         int sceneBeginning = stageLinesCount - currentOpeningLine;
-
         for (int i = sceneBeginning, z = 0; i < stageLinesCount; i++, z++) 
         {
             for (int j = 0; j < openingColumnsCount; j++) 
@@ -283,7 +296,7 @@ public class GameStages : IStagesDef
                 if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
                 {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
-                    this.DrawRect.Y =  z * PIXEL_HEIGHT;
+                    this.DrawRect.Y =  (z * PIXEL_HEIGHT) + this.OpeningOffset - 3;
                     this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
                 }
             }
@@ -291,6 +304,7 @@ public class GameStages : IStagesDef
 
         if (currentOpeningLine == maxOpeningLines) 
         {
+            this.Offset = 0;
             this.CanStartStageOpening   = false;
             this.CanStartTheStage       = true;
             this.GameRef.TogglePlayerSprite();
@@ -357,15 +371,16 @@ public class GameStages : IStagesDef
     public void Reset()
     {
         this.CurrentLine            = 574;
-        this.Offset                 = 0;
         this.Framecount             = 0;
         this.OpeningOffset          = 0;
+        this.CurrentOpeningLine     = 0;
         this.CanDrawBackground      = false;
         this.CanDrawStageOpening    = true;
         this.CanStartTheStage       = false;
         this.CanStartStageOpening   = true;
         this.RunStage               = false;
         this.GameRef.DisablePlayerSprite();
+        this.Offset                 = PIXEL_HEIGHT * OPENING_LINES * -1; //the offset starts negative for the opening animation
 
         foreach (var item in this.stage1_sprites) 
         {
