@@ -260,6 +260,12 @@ public class GameController : IGame
         {
             this.Reset();
         }
+
+        if (e.KeyValue == 32) {
+            if (this.ShowPlayerSprite) {
+                this.Stages.Start();
+            }
+        }
     }
 
     /**
