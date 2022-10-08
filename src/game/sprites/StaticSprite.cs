@@ -24,7 +24,7 @@ public class StaticSprite : GameSprite
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
         if (this.CollisionDetection(this.GameRef.GetPlayerSprite())) {
-            Console.WriteLine("Fuel...");
+            //Console.WriteLine("Fuel...");
         }
     }
     
