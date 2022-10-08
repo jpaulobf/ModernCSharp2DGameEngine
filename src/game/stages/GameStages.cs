@@ -37,6 +37,7 @@ public class GameStages : IStagesDef
     private volatile bool CanDrawStageOpening   = true;
     private volatile bool CanStartTheStage      = false;
     private volatile bool CanStartStageOpening  = true;
+    private volatile bool RunStage              = false;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
 
     /**
@@ -61,7 +62,6 @@ public class GameStages : IStagesDef
 
         //transform the image based on calc scale
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
-
         this.Brushes = new SolidBrush[] {this.Black, this.Green1, this.Green2, this.Black, this.Black, this.Gray1, this.Gray2, this.Yellow, this.Blue };
 
         //add stage 1 sprites
@@ -130,7 +130,7 @@ public class GameStages : IStagesDef
                 this.CanDrawBackground = true;
 
                 //scroll down if not collided
-                if (!colliding) 
+                if (!colliding && this.RunStage) 
                 {
                     //calc the offset
                     this.Offset++;
@@ -163,6 +163,14 @@ public class GameStages : IStagesDef
                 item.Value.Update(frametime, this.CurrentLineYPosition, this.Offset, item.Key, colliding);
             }
         }
+    }
+
+    /**
+     * Start the stage
+     */
+    internal void Start()
+    {
+        this.RunStage = true;
     }
 
     /**
