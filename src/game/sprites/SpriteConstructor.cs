@@ -67,4 +67,12 @@ public class SpriteConstructor
     internal void Draw(Graphics gfx) {
         this.GameSprite.Draw(gfx);
     }
+
+    /**
+     * Return the GameSprite
+     */
+    internal GameSprite GetGameSprite() 
+    { 
+        return (this.GameSprite);
+    }
 }
