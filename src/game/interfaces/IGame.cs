@@ -27,6 +27,8 @@ public interface IGame
 
     public System.Drawing.Drawing2D.InterpolationMode Interpolation { get; }
 
+    public List<SpriteConstructor> GetStageSprites();
+
     public int GetInternalResolutionWidth();
 
     public int GetInternalResolutionHeight();
