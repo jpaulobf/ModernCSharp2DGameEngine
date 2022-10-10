@@ -335,4 +335,12 @@ public class GameController : IGame
     public float getScaleW()                    {  return (this.ScaleW);                    }
     public float getScaleH()                    {   return (this.ScaleH);                   }
     public PlayerSprite GetPlayerSprite()       {   return (this.PlayerSprite);             }
+
+    /**
+     * return the current sprite list
+     */
+    public List<SpriteConstructor> GetStageSprites()
+    {
+        return(this.Stages.GetCurrentSpriteList());
+    }
 }
