@@ -12,9 +12,9 @@ public class Shot : GameSprite
     /**
      * Constructor
      */
-    public Shot(string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity)
+    public Shot(IGame game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity)
     {
-
+        this.GameRef = game;
     }
 
     /**
