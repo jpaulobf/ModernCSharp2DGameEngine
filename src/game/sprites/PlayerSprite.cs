@@ -10,12 +10,15 @@ public class PlayerSprite : GameSprite
     private IGame GameRef;
     private Bitmap LocalSpriteImage;
     private Bitmap SpriteSplosion;
-    private float OgWidth           = 0;
-    private float OgHeight          = 0;
-    private int OgX                 = 0;
-    private int OgY                 = 0;
-    private SolidBrush YellowBrush  = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
-    public bool Colliding { get; set; } = false;
+    private GameSprite ShotSprite;
+    private const string SplosionImageFilePath  = "img\\sprite_splosion.png";
+    private const string ShotImageFilePath      = "img\\shot_sprite.png";
+    private float OgWidth                       = 0;
+    private float OgHeight                      = 0;
+    private int OgX                             = 0;
+    private int OgY                             = 0;
+    private SolidBrush YellowBrush              = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
+    public bool Colliding { get; set; }         = false;
 
     /**
      * Player Sprite constructor
@@ -24,10 +27,16 @@ public class PlayerSprite : GameSprite
         this.GameRef            = game;
         this.SpriteSplosion     = new Bitmap(@"img\\sprite_splosion.png");
         this.LocalSpriteImage   = new Bitmap(@imageFilePath);
+        this.ShotSprite         = new Shot(game, ShotImageFilePath, 5, 18, 0, 0, 100);
         this.OgWidth            = width;
         this.OgHeight           = height;
         this.OgX                = X;
         this.OgY                = Y;
+    }
+
+    public void Shooting() 
+    {
+        Console.WriteLine("shooting...");
     }
 
     /**
