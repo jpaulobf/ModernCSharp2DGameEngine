@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Game.Stages;
 
 /**
@@ -41,6 +43,8 @@ public class GameStages : IStagesDef
     private volatile bool CanStartStageOpening  = true;
     private volatile bool RunStage              = false;
     private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
+    private List<SpriteConstructor> currentSprites;
+    private List<SpriteConstructor> nextSprites;
 
     /**
      * Constructor
@@ -98,6 +102,9 @@ public class GameStages : IStagesDef
         this.stage1_sprites.Add(164,  new SpriteConstructor(game, SpriteConstructor.FUEL, 407));
         this.stage1_sprites.Add(107,  new SpriteConstructor(game, SpriteConstructor.HELI, 288, 2, false, 198, 540, SpriteConstructor.RIGHT));
         this.stage1_sprites.Add(41,   new SpriteConstructor(game, SpriteConstructor.SHIP, 320, 1, false, 288, 450, SpriteConstructor.LEFT));
+
+        //store the sprites of current stage
+        this.currentSprites = this.stage1_sprites.Values.Where(item => item.Type != SpriteConstructor.HOUSE && item.Type != SpriteConstructor.HOUSE2).ToList();
 
         //the offset starts negative for the opening animation
         this.Offset = PIXEL_HEIGHT * OPENING_LINES * -1;
@@ -386,5 +393,12 @@ public class GameStages : IStagesDef
         {
             item.Value.Reset();
         }
+    }
+
+    /**
+     * Return the current sprite list
+     */
+    public List<SpriteConstructor> GetCurrentSpriteList() {
+        return (this.currentSprites);
     }
 }
