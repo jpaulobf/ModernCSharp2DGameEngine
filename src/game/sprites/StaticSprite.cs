@@ -34,4 +34,8 @@ public class StaticSprite : GameSprite
     public override void Reset()
     {
     }
+
+    public override void SetCollision(bool isPlayerCollision)
+    {
+    }
 }
