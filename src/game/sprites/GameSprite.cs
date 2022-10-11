@@ -16,6 +16,7 @@ public abstract class GameSprite
     protected short SourceStartY        = 0;
     protected byte TilesNumber          = 1;
     protected uint MillisecsPerTile     = 0;
+    public bool Destroyed               { get; set; } = false;
     public bool RenderReversed          { get; set; }
     public Bitmap SpriteImage           { get; set; }
     internal Bitmap Pixel               { get; set; }
@@ -59,7 +60,7 @@ public abstract class GameSprite
     /**
      * Draw is common for all subclasses, if necessary override it
      */
-    public void Draw(Graphics gfx)
+    public virtual void Draw(Graphics gfx)
     {
         if (this.RenderReversed && this.Status == NORMAL) 
         {
@@ -79,6 +80,8 @@ public abstract class GameSprite
         return (new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height).IntersectsWith(
                 new Rectangle((short)othersprite.X, (short)othersprite.Y, (short)othersprite.Width, (short)othersprite.Height)));
     }
+
+    public abstract void SetCollision(bool isPlayerCollision);
 
     public abstract void Reset();
 }
