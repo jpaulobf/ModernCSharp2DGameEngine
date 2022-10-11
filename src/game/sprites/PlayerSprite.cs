@@ -10,7 +10,7 @@ public class PlayerSprite : GameSprite
     private IGame GameRef;
     private Bitmap LocalSpriteImage;
     private Bitmap SpriteSplosion;
-    private GameSprite ShotSprite;
+    private GameSprite Shot;
     private const string SplosionImageFilePath  = "img\\sprite_splosion.png";
     private const string ShotImageFilePath      = "img\\shot_sprite.png";
     private float OgWidth                       = 0;
@@ -27,16 +27,23 @@ public class PlayerSprite : GameSprite
         this.GameRef            = game;
         this.SpriteSplosion     = new Bitmap(@"img\\sprite_splosion.png");
         this.LocalSpriteImage   = new Bitmap(@imageFilePath);
-        this.ShotSprite         = new Shot(game, ShotImageFilePath, 5, 18, 0, 0, 100);
+        this.Shot               = new Shot(game, ShotImageFilePath, 5, 18, 0, 0, 600);
         this.OgWidth            = width;
         this.OgHeight           = height;
         this.OgX                = X;
         this.OgY                = Y;
     }
 
+    /**
+     * Shot
+     */
     public void Shooting() 
     {
-        Console.WriteLine("shooting...");
+        Shot shot = ((Shot)this.Shot);
+        if (shot.IsShotAvailable()) {
+            shot.TriggerShot(this.X, this.Y, this.Width);
+            shot.DisableShot();
+        }
     }
 
     /**
@@ -73,9 +80,24 @@ public class PlayerSprite : GameSprite
             this.SpriteImage = this.SpriteSplosion;
         }
 
+        //update the shot object
+        this.Shot.Update(timeframe);
+
         //define the source & destine rect
         this.SourceRect = new Rectangle(SourceStartX, SourceStartY, (short)Width - 1, (short)Height);
         this.DestineRect = new Rectangle((short)X, (short)Y, (short)Width, (short)Height);
+    }
+
+    /**
+     * Draw Player Sprite
+     */
+    public override void Draw(Graphics gfx)
+    {
+        //call base draw
+        base.Draw(gfx);
+
+        //draw the shot object
+        this.Shot.Draw(gfx);
     }
 
     /**
@@ -89,5 +111,9 @@ public class PlayerSprite : GameSprite
         this.Height         = this.OgHeight;
         this.X              = this.OgX;
         this.Y              = this.OgY;
+    }
+
+    public override void SetCollision(bool isPlayerCollision)
+    {
     }
 }
