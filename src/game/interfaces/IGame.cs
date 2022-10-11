@@ -41,7 +41,7 @@ public interface IGame
 
     public PlayerSprite GetPlayerSprite();
 
-    public void SetEnemyCollision();
+    public void SetCollidingWithAnEnemy();
 
     public void TogglePlayerSprite();
 
