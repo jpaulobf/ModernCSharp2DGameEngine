@@ -169,21 +169,19 @@ public class GameStages : IStagesDef
                 //Check if the Player is colliding with background
                 this.CheckBackgroundCollision();
             }
-
-            
         }
 
         //update the sprites
-            int current                 = this.CurrentLine;
-            this.StartScreenFrame       = (current - 115) * PIXEL_HEIGHT;
-            this.EndScreenFrame         = (current + 13)  * PIXEL_HEIGHT;
-            this.CurrentLineYPosition   = (current - 95)  * PIXEL_HEIGHT;
+        int current                 = this.CurrentLine;
+        this.StartScreenFrame       = (current - 115) * PIXEL_HEIGHT;
+        this.EndScreenFrame         = (current + 13)  * PIXEL_HEIGHT;
+        this.CurrentLineYPosition   = (current - 95)  * PIXEL_HEIGHT;
 
-            //if exist an sprite in the current screen frame, render it
-            foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
-            {
-                item.Value.Update(frametime, this.CurrentLineYPosition, this.Offset, item.Key, colliding);
-            }
+        //if exist an sprite in the current screen frame, render it
+        foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
+        {
+            item.Value.Update(frametime, this.CurrentLineYPosition, this.Offset, item.Key, colliding);
+        }
     }
 
     /**
@@ -233,7 +231,7 @@ public class GameStages : IStagesDef
                 (this.GameRef.GetPlayerSprite().X + this.GameRef.GetPlayerSprite().Width > (firstFromRightToLeft * PIXEL_WIDTH))) 
             {
                 this.GameRef.GetPlayerSprite().SetCollision();
-                this.GameRef.SetEnemyCollision();
+                this.GameRef.SetCollidingWithAnEnemy();
                 break;
             } 
         }
