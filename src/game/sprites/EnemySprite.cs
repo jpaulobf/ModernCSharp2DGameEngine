@@ -1,7 +1,5 @@
 namespace Game;
 
-using Game.Stages;
-
 /**
  * Author: Joao P B Faria
  * Date: Oct/2022
@@ -126,13 +124,9 @@ public class EnemySprite : GameSprite
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
         //verify if the player sprite is coliding with this current
-        if ((!colliding) && this.CollisionDetection(this.GameRef.GetPlayerSprite())) 
+        if ((!colliding) && !this.Destroyed && this.CollisionDetection(this.GameRef.GetPlayerSprite())) 
         {
-            this.TilesNumber = 0;
-            this.Direction = 0;
-            this.GameRef.GetPlayerSprite().SetCollision();
-            this.GameRef.SetEnemyCollision();
-            this.StartExplosionAnimation();
+            this.SetCollision(true);
         }
 
         //this will start after collision
@@ -158,6 +152,22 @@ public class EnemySprite : GameSprite
                 this.AnimationCounter = 0;
             }
         }
+    }
+
+    /**
+     * Set sprite as colliding
+     */
+    public override void SetCollision(bool playerCollision)
+    {
+        this.TilesNumber = 0;
+        this.Direction = 0;
+        this.Destroyed = true;
+        if (playerCollision) 
+        {   
+            this.GameRef.GetPlayerSprite().SetCollision();
+            this.GameRef.SetCollidingWithAnEnemy();
+        }
+        this.StartExplosionAnimation();
     }
 
     /**
@@ -190,5 +200,6 @@ public class EnemySprite : GameSprite
         this.RenderReversed     = this.DefaultRenderReverse;
         this.X                  = this.DefaultX;
         this.Status             = NORMAL;
+        this.Destroyed          = false;
     }
 }
