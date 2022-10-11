@@ -33,6 +33,7 @@ public class GameController : IGame
     //-----------------------------------------------------//
     private volatile bool IS_LEFT_KEY_DOWN  = false;
     private volatile bool IS_RIGHT_KEY_DOWN = false;
+    private volatile bool IS_SHOT_KEY_DOWN  = false;
     private volatile bool Paused            = false;
     private volatile bool ResetAfterDead    = false;
     private volatile bool ShowPlayerSprite  = false;
@@ -94,14 +95,19 @@ public class GameController : IGame
             if (this.ShowPlayerSprite) {
                 if (IS_LEFT_KEY_DOWN) 
                 {
-                    PlayerSprite.X -= moveDistance;
-                    PlayerSprite.Lefting = true;
+                    this.PlayerSprite.X -= moveDistance;
+                    this.PlayerSprite.Lefting = true;
                 }
 
                 if (IS_RIGHT_KEY_DOWN) 
                 {
-                    PlayerSprite.X += moveDistance;
-                    PlayerSprite.Righting = true;
+                    this.PlayerSprite.X += moveDistance;
+                    this.PlayerSprite.Righting = true;
+                }
+
+                if (IS_SHOT_KEY_DOWN) 
+                {
+                    this.PlayerSprite.Shooting();
                 }
 
                 if (PlayerSprite.X > this.InternalResolutionWidth) 
@@ -233,7 +239,7 @@ public class GameController : IGame
 
         if (e.KeyValue == 32) {
             if (this.ShowPlayerSprite) {
-                this.PlayerSprite.Shooting();
+                IS_SHOT_KEY_DOWN = true;
             }
         }
 
@@ -262,6 +268,10 @@ public class GameController : IGame
         {
             IS_RIGHT_KEY_DOWN = false;
         }
+        else if (e.KeyValue == 32)
+        {
+            IS_SHOT_KEY_DOWN = false;
+        }
 
         if (e.KeyValue == 80 || e.KeyValue == 19) 
         {
@@ -277,7 +287,7 @@ public class GameController : IGame
     /**
      * Control the game to show the colision and reset the level
      */
-    public void SetEnemyCollision()
+    public void SetCollidingWithAnEnemy()
     {
         if (this.Hud.PlayerIsAlive()) 
         {
@@ -326,6 +336,7 @@ public class GameController : IGame
     private void Reset() {
         this.IS_LEFT_KEY_DOWN   = false;
         this.IS_RIGHT_KEY_DOWN  = false;
+        this.IS_SHOT_KEY_DOWN   = false;
         this.Paused             = false;
         this.ResetAfterDead     = false;
         this.ResetCounter       = 0;
