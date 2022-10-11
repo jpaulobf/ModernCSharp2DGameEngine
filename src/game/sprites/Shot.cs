@@ -62,10 +62,6 @@ public class Shot : GameSprite
                     }
                 }
             }
-
-            
-
-            
         }
     }
 
