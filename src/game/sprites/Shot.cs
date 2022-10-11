@@ -8,6 +8,10 @@ namespace Game;
 public class Shot : GameSprite
 {
     private IGame GameRef;
+    private const byte AVAILABLE = 0;
+    private const byte UNAVAILABLE = 1;
+    private int ShotStatus = AVAILABLE;
+    private bool HasShot = false;
 
     /**
      * Constructor
@@ -17,19 +21,70 @@ public class Shot : GameSprite
         this.GameRef = game;
     }
 
+    public void TriggerShot(float airplaneX, float airplaneY, float airplaneWidth) 
+    {
+        this.HasShot = true;
+        this.X = airplaneX + (airplaneWidth/2);
+        this.Y = airplaneY - this.Height;
+    }
+
+    public void UpdateShotToHitOrLoose() 
+    {
+        this.HasShot = false;
+        this.ShotStatus = AVAILABLE;
+    }
+
     /**
      * control & update each shot
      */
-    public override void Update(long timeframe, bool colliding = false)
+    public override void Update(long frametime, bool colliding = false)
     {
-        this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
-        this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
-
-        foreach (var item in this.GameRef.GetStageSprites()) {
-            if (this.CollisionDetection(item.GetGameSprite())) {
-                Console.WriteLine("boooommm");
+        if (this.HasShot) 
+        {
+            float step = (float)(this.Velocity * ((double)frametime / 10_000_000));
+            this.Y -= step;
+            this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
+            this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
+            
+            if (this.Y < 0) {
+                this.UpdateShotToHitOrLoose();
+            } 
+            else 
+            {
+                foreach (var item in this.GameRef.GetStageSprites()) 
+                {
+                    GameSprite gamesprite = item.GetGameSprite();
+                    if (this.CollisionDetection(gamesprite) && !gamesprite.Destroyed) 
+                    {
+                        this.UpdateShotToHitOrLoose();
+                        gamesprite.SetCollision(false);
+                        break;
+                    }
+                }
             }
+
+            
+
+            
         }
+    }
+
+    public override void Draw(Graphics gfx) 
+    {
+        if (this.HasShot)
+        {
+            gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
+        }
+    }
+
+    public bool IsShotAvailable() 
+    {
+        return (this.ShotStatus == AVAILABLE);
+    }
+
+    public void DisableShot() 
+    {
+        this.ShotStatus = UNAVAILABLE;
     }
     
     /**
@@ -38,5 +93,10 @@ public class Shot : GameSprite
     public override void Reset()
     {
 
+    }
+
+    public override void SetCollision(bool isPlayerCollision)
+    {
+        
     }
 }
