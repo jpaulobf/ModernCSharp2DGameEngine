@@ -356,8 +356,8 @@ public class GameController : IGame
     /**
      * return the current sprite list
      */
-    public List<SpriteConstructor> GetStageSprites()
+    public IEnumerable<SpriteConstructor> GetCurrentScreenSprites()
     {
-        return(this.Stages.GetCurrentSpriteList());
+        return(this.Stages.GetCurrentScreenSprites());
     }
 }
