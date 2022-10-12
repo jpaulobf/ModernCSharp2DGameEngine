@@ -8,6 +8,10 @@ namespace Game;
 public class StaticSprite : GameSprite
 {
     private IGame GameRef;
+    private volatile bool AnimateExplosion  = false;
+    private long AnimationCounter           = 0;
+    private Bitmap Explosion1               = new Bitmap(@"img\\heli_explosion_frame1.png");
+    private Bitmap Explosion2               = new Bitmap(@"img\\heli_explosion_frame2.png");
 
     /**
      * Static Sprite constructor
@@ -19,12 +23,28 @@ public class StaticSprite : GameSprite
     /**
      * update
      */
-    public override void Update(long timeframe, bool colliding = false) {
+    public override void Update(long frametime, bool colliding = false) {
         this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
         if (this.CollisionDetection(this.GameRef.GetPlayerSprite())) {
-            //Console.WriteLine("Fuel...");
+            Console.WriteLine("Fuel...");
+        }
+
+        //this will start after collision
+        if (this.AnimateExplosion) {
+            this.AnimationCounter += frametime;
+
+            //this will start after explosion start
+            if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) {
+                this.SpriteImage = this.Explosion1;
+            } else if (this.AnimationCounter >= 4_000_000 && this.AnimationCounter < 8_000_000) {
+                this.SpriteImage = this.Explosion2;
+            } else if (this.AnimationCounter >= 8_000_000) {
+                this.SpriteImage = this.Pixel;
+                this.AnimateExplosion = false;
+                this.AnimationCounter = 0;
+            }
         }
     }
     
@@ -37,5 +57,8 @@ public class StaticSprite : GameSprite
 
     public override void SetCollision(bool isPlayerCollision)
     {
+        this.TilesNumber = 0;
+        this.Destroyed = true;
+        this.AnimateExplosion = true;
     }
 }
