@@ -25,7 +25,7 @@ public class SpriteConstructor
     /**
      * Constructor
      */
-    public SpriteConstructor(IGame game, byte type, int X, byte parameter = 1, bool flag = false, short maxLeft = 0, short maxRight = 0, byte direction = 0) {
+    public SpriteConstructor(IGame game, byte type, int X, int Y, byte parameter = 1, bool flag = false, short maxLeft = 0, short maxRight = 0, byte direction = 0) {
         this.GameRef = game;
         this.X = X;
         this.Y = Y;
