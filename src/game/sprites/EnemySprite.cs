@@ -167,14 +167,6 @@ public class EnemySprite : GameSprite
             this.GameRef.GetPlayerSprite().SetCollision();
             this.GameRef.SetCollidingWithAnEnemy();
         }
-        this.StartExplosionAnimation();
-    }
-
-    /**
-     * Animate the current sprite colision
-     */
-    private void StartExplosionAnimation()
-    {
         this.AnimateExplosion = true;
     }
 
