@@ -51,7 +51,7 @@ public class Shot : GameSprite
             } 
             else 
             {
-                foreach (var item in this.GameRef.GetStageSprites()) 
+                foreach (var item in this.GameRef.GetCurrentScreenSprites()) 
                 {
                     GameSprite gamesprite = item.GetGameSprite();
                     if (this.CollisionDetection(gamesprite) && !gamesprite.Destroyed) 
