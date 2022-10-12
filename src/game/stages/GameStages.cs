@@ -70,38 +70,40 @@ public class GameStages : IStagesDef
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
         this.Brushes = new SolidBrush[] {this.Black, this.Green1, this.Green2, this.Black, this.Black, this.Gray1, this.Gray2, this.Yellow, this.Blue };
 
+        int key = 0;
+
         //add stage 1 sprites
-        this.stage1_sprites.Add(2216, new SpriteConstructor(game, SpriteConstructor.HOUSE, 85));
-        this.stage1_sprites.Add(2159, new SpriteConstructor(game, SpriteConstructor.SHIP, 325, 1, true));
-        this.stage1_sprites.Add(2063, new SpriteConstructor(game, SpriteConstructor.FUEL, 417));
-        this.stage1_sprites.Add(2012, new SpriteConstructor(game, SpriteConstructor.HELI, 302, 2));
-        this.stage1_sprites.Add(1923, new SpriteConstructor(game, SpriteConstructor.FUEL, 372));
-        this.stage1_sprites.Add(1850, new SpriteConstructor(game, SpriteConstructor.FUEL, 458));
-        this.stage1_sprites.Add(1783, new SpriteConstructor(game, SpriteConstructor.HOUSE, 557));
-        this.stage1_sprites.Add(1710, new SpriteConstructor(game, SpriteConstructor.HOUSE2, 81));
-        this.stage1_sprites.Add(1637, new SpriteConstructor(game, SpriteConstructor.HOUSE2, 545));
-        this.stage1_sprites.Add(1557, new SpriteConstructor(game, SpriteConstructor.FUEL, 394));
-        this.stage1_sprites.Add(1499, new SpriteConstructor(game, SpriteConstructor.HELI, 261, 2));
-        this.stage1_sprites.Add(1410, new SpriteConstructor(game, SpriteConstructor.FUEL, 288));
-        this.stage1_sprites.Add(1353, new SpriteConstructor(game, SpriteConstructor.HELI, 339, 2));
-        this.stage1_sprites.Add(1263, new SpriteConstructor(game, SpriteConstructor.FUEL, 439));
-        this.stage1_sprites.Add(1197, new SpriteConstructor(game, SpriteConstructor.HOUSE, 581));
-        this.stage1_sprites.Add(1140, new SpriteConstructor(game, SpriteConstructor.SHIP, 417));
-        this.stage1_sprites.Add(1060, new SpriteConstructor(game, SpriteConstructor.HELI, 417, 2));
-        this.stage1_sprites.Add(993,  new SpriteConstructor(game, SpriteConstructor.SHIP, 302));
-        this.stage1_sprites.Add(897,  new SpriteConstructor(game, SpriteConstructor.FUEL, 371));
-        this.stage1_sprites.Add(840,  new SpriteConstructor(game, SpriteConstructor.HELI, 458, 2));
-        this.stage1_sprites.Add(757,  new SpriteConstructor(game, SpriteConstructor.HOUSE, 564));
-        this.stage1_sprites.Add(684,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 94));
-        this.stage1_sprites.Add(611,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 568));
-        this.stage1_sprites.Add(547,  new SpriteConstructor(game, SpriteConstructor.HELI, 444, 2, true));
-        this.stage1_sprites.Add(464,  new SpriteConstructor(game, SpriteConstructor.HOUSE, 586));
-        this.stage1_sprites.Add(407,  new SpriteConstructor(game, SpriteConstructor.SHIP, 417));
-        this.stage1_sprites.Add(327,  new SpriteConstructor(game, SpriteConstructor.HELI, 426, 2));
-        this.stage1_sprites.Add(245,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 549));
-        this.stage1_sprites.Add(164,  new SpriteConstructor(game, SpriteConstructor.FUEL, 407));
-        this.stage1_sprites.Add(107,  new SpriteConstructor(game, SpriteConstructor.HELI, 288, 2, false, 198, 540, SpriteConstructor.RIGHT));
-        this.stage1_sprites.Add(41,   new SpriteConstructor(game, SpriteConstructor.SHIP, 320, 1, false, 288, 450, SpriteConstructor.LEFT));
+        this.stage1_sprites.Add(key = 2216, new SpriteConstructor(game, SpriteConstructor.HOUSE, 85, key));
+        this.stage1_sprites.Add(key = 2159, new SpriteConstructor(game, SpriteConstructor.SHIP, 325, key, 1, true));
+        this.stage1_sprites.Add(key = 2063, new SpriteConstructor(game, SpriteConstructor.FUEL, 417, key));
+        this.stage1_sprites.Add(key = 2012, new SpriteConstructor(game, SpriteConstructor.HELI, 302, key, 2));
+        this.stage1_sprites.Add(key = 1923, new SpriteConstructor(game, SpriteConstructor.FUEL, 372, key));
+        this.stage1_sprites.Add(key = 1850, new SpriteConstructor(game, SpriteConstructor.FUEL, 458, key));
+        this.stage1_sprites.Add(key = 1783, new SpriteConstructor(game, SpriteConstructor.HOUSE, 557, key));
+        this.stage1_sprites.Add(key = 1710, new SpriteConstructor(game, SpriteConstructor.HOUSE2, 81, key));
+        this.stage1_sprites.Add(key = 1637, new SpriteConstructor(game, SpriteConstructor.HOUSE2, 545, key));
+        this.stage1_sprites.Add(key = 1557, new SpriteConstructor(game, SpriteConstructor.FUEL, 394, key));
+        this.stage1_sprites.Add(key = 1499, new SpriteConstructor(game, SpriteConstructor.HELI, 261, key, 2));
+        this.stage1_sprites.Add(key = 1410, new SpriteConstructor(game, SpriteConstructor.FUEL, 288, key));
+        this.stage1_sprites.Add(key = 1353, new SpriteConstructor(game, SpriteConstructor.HELI, 339, key, 2));
+        this.stage1_sprites.Add(key = 1263, new SpriteConstructor(game, SpriteConstructor.FUEL, 439, key));
+        this.stage1_sprites.Add(key = 1197, new SpriteConstructor(game, SpriteConstructor.HOUSE, 581, key));
+        this.stage1_sprites.Add(key = 1140, new SpriteConstructor(game, SpriteConstructor.SHIP, 417, key));
+        this.stage1_sprites.Add(key = 1060, new SpriteConstructor(game, SpriteConstructor.HELI, 417, key, 2));
+        this.stage1_sprites.Add(key = 993,  new SpriteConstructor(game, SpriteConstructor.SHIP, 302, key));
+        this.stage1_sprites.Add(key = 897,  new SpriteConstructor(game, SpriteConstructor.FUEL, 371, key));
+        this.stage1_sprites.Add(key = 840,  new SpriteConstructor(game, SpriteConstructor.HELI, 458, key, 2));
+        this.stage1_sprites.Add(key = 757,  new SpriteConstructor(game, SpriteConstructor.HOUSE, 564, key));
+        this.stage1_sprites.Add(key = 684,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 94, key));
+        this.stage1_sprites.Add(key = 611,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 568, key));
+        this.stage1_sprites.Add(key = 547,  new SpriteConstructor(game, SpriteConstructor.HELI, 444, key, 2, true));
+        this.stage1_sprites.Add(key = 464,  new SpriteConstructor(game, SpriteConstructor.HOUSE, 586, key));
+        this.stage1_sprites.Add(key = 407,  new SpriteConstructor(game, SpriteConstructor.SHIP, 417, key));
+        this.stage1_sprites.Add(key = 327,  new SpriteConstructor(game, SpriteConstructor.HELI, 426, key, 2));
+        this.stage1_sprites.Add(key = 245,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 549, key));
+        this.stage1_sprites.Add(key = 164,  new SpriteConstructor(game, SpriteConstructor.FUEL, 407, key));
+        this.stage1_sprites.Add(key = 107,  new SpriteConstructor(game, SpriteConstructor.HELI, 288, key, 2, false, 198, 540, SpriteConstructor.RIGHT));
+        this.stage1_sprites.Add(key = 41,   new SpriteConstructor(game, SpriteConstructor.SHIP, 320, key, 1, false, 288, 450, SpriteConstructor.LEFT));
 
         //store the sprites of current stage
         this.currentSprites = this.stage1_sprites.Values.Where(item => item.Type != SpriteConstructor.HOUSE && item.Type != SpriteConstructor.HOUSE2).ToList();
@@ -172,10 +174,10 @@ public class GameStages : IStagesDef
         }
 
         //update the sprites
-        int current                 = this.CurrentLine;
-        this.StartScreenFrame       = (current - 115) * PIXEL_HEIGHT;
-        this.EndScreenFrame         = (current + 13)  * PIXEL_HEIGHT;
-        this.CurrentLineYPosition   = (current - 95)  * PIXEL_HEIGHT;
+        int current                     = this.CurrentLine;
+        this.StartScreenFrame           = (current - 115) * PIXEL_HEIGHT;
+        this.EndScreenFrame             = (current + 13)  * PIXEL_HEIGHT;
+        this.CurrentLineYPosition       = (current - 95)  * PIXEL_HEIGHT;
 
         //if exist an sprite in the current screen frame, render it
         foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
@@ -396,7 +398,7 @@ public class GameStages : IStagesDef
     /**
      * Return the current sprite list
      */
-    public List<SpriteConstructor> GetCurrentSpriteList() {
-        return (this.currentSprites);
+    public IEnumerable<SpriteConstructor> GetCurrentScreenSprites() {
+        return (this.currentSprites.Where(item => this.StartScreenFrame < item.Y && this.EndScreenFrame > item.Y));
     }
 }
