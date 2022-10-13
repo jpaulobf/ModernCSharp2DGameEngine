@@ -20,6 +20,10 @@ public class PlayerSprite : GameSprite
     private SolidBrush YellowBrush              = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
     public bool Colliding { get; set; }         = false;
 
+    private System.Media.SoundPlayer player     = new System.Media.SoundPlayer();
+
+    
+
     /**
      * Player Sprite constructor
      */
@@ -32,6 +36,8 @@ public class PlayerSprite : GameSprite
         this.OgHeight           = height;
         this.OgX                = X;
         this.OgY                = Y;
+
+        this.player.SoundLocation = "sfx\\shot.wav";
     }
 
     /**
@@ -41,6 +47,7 @@ public class PlayerSprite : GameSprite
     {
         Shot shot = ((Shot)this.Shot);
         if (shot.IsShotAvailable()) {
+            player.Play();
             shot.TriggerShot(this.X, this.Y, this.Width);
             shot.DisableShot();
         }
