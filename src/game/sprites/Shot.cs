@@ -8,10 +8,13 @@ namespace Game;
 public class Shot : GameSprite
 {
     private IGame GameRef;
-    private const byte AVAILABLE = 0;
-    private const byte UNAVAILABLE = 1;
-    private int ShotStatus = AVAILABLE;
-    private bool HasShot = false;
+    private const byte AVAILABLE        = 0;
+    private const byte UNAVAILABLE      = 1;
+    private int ShotStatus              = AVAILABLE;
+    private bool IsBulletDestroyed      = true;
+    private bool StartDelay             = false;
+    private int Delay                   = 1_200_000;
+    private long Framecounter           = 0;
 
     /**
      * Constructor
@@ -23,14 +26,14 @@ public class Shot : GameSprite
 
     public void TriggerShot(float airplaneX, float airplaneY, float airplaneWidth) 
     {
-        this.HasShot = true;
+        this.IsBulletDestroyed = false;
         this.X = airplaneX + (airplaneWidth/2);
         this.Y = airplaneY - this.Height;
     }
 
     public void UpdateShotToHitOrLoose() 
     {
-        this.HasShot = false;
+        this.IsBulletDestroyed = true;
         this.ShotStatus = AVAILABLE;
     }
 
@@ -39,14 +42,15 @@ public class Shot : GameSprite
      */
     public override void Update(long frametime, bool colliding = false)
     {
-        if (this.HasShot) 
+        if (!this.IsBulletDestroyed) 
         {
             float step = (float)(this.Velocity * ((double)frametime / 10_000_000));
             this.Y -= step;
             this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
             this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
-            
-            if (this.Y < 0) {
+
+            if (this.Y + 20 < 0) 
+            {
                 this.UpdateShotToHitOrLoose();
             } 
             else 
@@ -56,18 +60,29 @@ public class Shot : GameSprite
                     GameSprite gamesprite = item.GetGameSprite();
                     if (this.CollisionDetection(gamesprite) && !gamesprite.Destroyed) 
                     {
-                        this.UpdateShotToHitOrLoose();
+                        this.IsBulletDestroyed  = true;
+                        this.StartDelay         = true;
                         gamesprite.SetCollision(false);
                         break;
                     }
                 }
             }
         }
+
+        if (this.StartDelay) {
+            this.Framecounter += frametime;
+            if (this.Framecounter > this.Delay) 
+            {
+                this.StartDelay = false;
+                this.Framecounter = 0;
+                this.ShotStatus = AVAILABLE;
+            }
+        }
     }
 
     public override void Draw(Graphics gfx) 
     {
-        if (this.HasShot)
+        if (!this.IsBulletDestroyed)
         {
             gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
         }
