@@ -19,10 +19,7 @@ public class PlayerSprite : GameSprite
     private int OgY                             = 0;
     private SolidBrush YellowBrush              = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
     public bool Colliding { get; set; }         = false;
-
     private System.Media.SoundPlayer player     = new System.Media.SoundPlayer();
-
-    
 
     /**
      * Player Sprite constructor
