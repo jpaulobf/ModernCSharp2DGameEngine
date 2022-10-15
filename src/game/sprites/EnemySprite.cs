@@ -124,7 +124,7 @@ public class EnemySprite : GameSprite
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
         //verify if the player sprite is coliding with this current
-        if ((!colliding) && !this.Destroyed && this.CollisionDetection(this.GameRef.GetPlayerSprite())) 
+        if ((!colliding) && !this.Destroyed && this.CollisionDetection(this.GameRef.GetPlayerController().GetPlayerSprite())) 
         {
             this.SetCollision(true);
         }
@@ -164,7 +164,7 @@ public class EnemySprite : GameSprite
         this.Destroyed = true;
         if (playerCollision) 
         {   
-            this.GameRef.GetPlayerSprite().SetCollision();
+            this.GameRef.GetPlayerController().SetCollision();
             this.GameRef.SetCollidingWithAnEnemy();
         }
         this.AnimateExplosion = true;
