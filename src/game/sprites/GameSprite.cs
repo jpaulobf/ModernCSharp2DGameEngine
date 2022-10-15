@@ -16,18 +16,16 @@ public abstract class GameSprite
     protected short SourceStartY        = 0;
     protected byte TilesNumber          = 1;
     protected uint MillisecsPerTile     = 0;
+    internal float DefaultX             = 0;
     public bool Destroyed               { get; set; } = false;
     public bool RenderReversed          { get; set; }
     public Bitmap SpriteImage           { get; set; }
     internal Bitmap Pixel               { get; set; }
     public float X                      { get; set; }
-    internal float DefaultX             = 0;
     public float Y                      { get; set; }
     public float Width                  { get; set; }
     public float Height                 { get; set; }
     public int Velocity                 { get; set; }
-    public bool Lefting                 { get; set; }
-    public bool Righting                { get; set; }
     protected Rectangle SourceRect;
     protected Rectangle DestineRect;
 
