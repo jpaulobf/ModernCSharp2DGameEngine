@@ -33,6 +33,8 @@ public class GameController : IGame
     //-----------------------------------------------------//
     private volatile bool IS_LEFT_KEY_DOWN  = false;
     private volatile bool IS_RIGHT_KEY_DOWN = false;
+    private volatile bool IS_DOWN_KEY_DOWN  = false;
+    private volatile bool IS_UP_KEY_DOWN    = false;
     private volatile bool IS_SHOT_KEY_DOWN  = false;
     private volatile bool Paused            = false;
     private volatile bool ResetAfterDead    = false;
@@ -91,6 +93,7 @@ public class GameController : IGame
             float moveDistance = (float)(PlayerSprite.Velocity * ((double)frametime / 10_000_000));
             PlayerSprite.Righting = false;
             PlayerSprite.Lefting = false;
+            this.PlayerSprite.NormalSpeed();
 
             if (this.ShowPlayerSprite) {
                 if (IS_LEFT_KEY_DOWN) 
@@ -103,6 +106,16 @@ public class GameController : IGame
                 {
                     this.PlayerSprite.X += moveDistance;
                     this.PlayerSprite.Righting = true;
+                }
+
+                if (IS_DOWN_KEY_DOWN) 
+                {
+                    this.PlayerSprite.HalfSpeed();
+                }
+
+                if (IS_UP_KEY_DOWN)
+                {
+                    this.PlayerSprite.DoubleSpeed();
                 }
 
                 if (IS_SHOT_KEY_DOWN) 
@@ -235,6 +248,16 @@ public class GameController : IGame
         else if (e.KeyValue == 39) 
         {
             IS_RIGHT_KEY_DOWN = true;
+        } 
+        
+        //you can right/left + down/up
+        if (e.KeyValue == 38)
+        {
+            IS_UP_KEY_DOWN = true;
+        }
+        else if (e.KeyValue == 40)
+        {
+            IS_DOWN_KEY_DOWN = true;
         }
 
         if (e.KeyValue == 32) {
@@ -268,7 +291,17 @@ public class GameController : IGame
         {
             IS_RIGHT_KEY_DOWN = false;
         }
-        else if (e.KeyValue == 32)
+        
+        if (e.KeyValue == 38)
+        {
+            IS_UP_KEY_DOWN = false;
+        }
+        else if (e.KeyValue == 40)
+        {
+            IS_DOWN_KEY_DOWN = false;
+        }
+
+        if (e.KeyValue == 32)
         {
             IS_SHOT_KEY_DOWN = false;
         }
