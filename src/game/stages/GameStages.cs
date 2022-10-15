@@ -120,10 +120,20 @@ public class GameStages : IStagesDef
         //add the framecounter
         this.Framecount += frametime;
 
+        int step = 90_000;
+        if (this.GameRef.GetPlayerSprite().DOUBLE_SPEED)
+        {
+            step = 50_000;
+        }
+        else if (this.GameRef.GetPlayerSprite().HALF_SPEED)
+        {
+            step = 170_000;
+        }
+
         if (this.CanStartStageOpening) 
         {
             //control the BG vertical scroll
-            if (this.Framecount >= 160_000) 
+            if (this.Framecount >= 160_000)
             {
                 //calc the offset
                 this.OpeningOffset += 4;
@@ -145,7 +155,7 @@ public class GameStages : IStagesDef
         if (this.CanStartTheStage) 
         {
             //control the BG vertical scroll
-            if (this.Framecount >= 90_000) 
+            if (this.Framecount >= step) 
             {
                 //flag the draw
                 this.CanDrawBackground = true;
