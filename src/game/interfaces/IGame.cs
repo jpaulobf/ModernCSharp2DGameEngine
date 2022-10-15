@@ -39,11 +39,11 @@ public interface IGame
 
     public Size WindowSize { get; }
 
-    public PlayerSprite GetPlayerSprite();
-
     public void SetCollidingWithAnEnemy();
 
     public void TogglePlayerSprite();
 
     public void DisablePlayerSprite();
+    
+    public PlayerController GetPlayerController();
 }
