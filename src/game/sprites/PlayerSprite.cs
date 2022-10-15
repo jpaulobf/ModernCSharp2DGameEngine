@@ -8,73 +8,43 @@ namespace Game;
 public class PlayerSprite : GameSprite 
 {
     private IGame GameRef;
+    private PlayerController PControllerRef;
     private Bitmap LocalSpriteImage;
-    private Bitmap SpriteSplosion;
-    private GameSprite Shot;
-    private const string SplosionImageFilePath  = "img\\sprite_splosion.png";
-    private const string ShotImageFilePath      = "img\\shot_sprite.png";
+    private Bitmap SpriteSplosion               = new Bitmap(@"img\\sprite_splosion.png");
     private float OgWidth                       = 0;
     private float OgHeight                      = 0;
-    private int OgX                             = 0;
-    private int OgY                             = 0;
-    public bool NORMAL_SPEED { get; set; }      = true;
-    public bool HALF_SPEED { get; set; }        = false;
-    public bool DOUBLE_SPEED { get; set; }      = false;
-    private SolidBrush YellowBrush              = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
-    public bool Colliding { get; set; }         = false;
-    private System.Media.SoundPlayer player     = new System.Media.SoundPlayer();
+    private float OgX                           = 0;
+    private float OgY                           = 0;
 
     /**
      * Player Sprite constructor
      */
-    public PlayerSprite(IGame game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity) {
+    public PlayerSprite(IGame game, PlayerController playerController, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity) {
         this.GameRef            = game;
-        this.SpriteSplosion     = new Bitmap(@"img\\sprite_splosion.png");
+        this.PControllerRef     = playerController;
         this.LocalSpriteImage   = new Bitmap(@imageFilePath);
-        this.Shot               = new Shot(game, ShotImageFilePath, 5, 18, 0, 0, 600);
+        
         this.OgWidth            = width;
         this.OgHeight           = height;
         this.OgX                = X;
         this.OgY                = Y;
-
-        this.player.SoundLocation = "sfx\\shot.wav";
-    }
-
-    /**
-     * Shot
-     */
-    public void Shooting() 
-    {
-        Shot shot = ((Shot)this.Shot);
-        if (shot.IsShotAvailable()) {
-            player.Play();
-            shot.TriggerShot(this.X, this.Y, this.Width);
-            shot.DisableShot();
-        }
-    }
-
-    /**
-     * Define as colliding
-     */
-    public void SetCollision() {
-        this.Colliding = true;
     }
 
     /**
      * Player Sprite update method
      */
     public override void Update(long timeframe, bool colliding = false) {
-        if (!this.Colliding) 
+        if (!this.PControllerRef.Colliding) 
         {
-            if (!this.Lefting && !this.Righting) 
+            if (!this.PControllerRef.Lefting && !this.PControllerRef.Righting) 
             {
                 this.SourceStartX = (short)Width; //Default
             } 
-            else if (this.Lefting) 
+            else if (this.PControllerRef.Lefting) 
             {
                 this.SourceStartX = 0;
             } 
-            else if (this.Righting) 
+            else if (this.PControllerRef.Righting) 
             { 
                 this.SourceStartX = (short)(Width * 2);
             }
@@ -86,9 +56,6 @@ public class PlayerSprite : GameSprite
             this.Height = 25;
             this.SpriteImage = this.SpriteSplosion;
         }
-
-        //update the shot object
-        this.Shot.Update(timeframe);
 
         //define the source & destine rect
         this.SourceRect = new Rectangle(SourceStartX, SourceStartY, (short)Width - 1, (short)Height);
@@ -102,9 +69,6 @@ public class PlayerSprite : GameSprite
     {
         //call base draw
         base.Draw(gfx);
-
-        //draw the shot object
-        this.Shot.Draw(gfx);
     }
 
     /**
@@ -113,36 +77,11 @@ public class PlayerSprite : GameSprite
     public override void Reset()
     {
         this.SpriteImage    = this.LocalSpriteImage;
-        this.Colliding      = false;
         this.Width          = this.OgWidth;
         this.Height         = this.OgHeight;
         this.X              = this.OgX;
         this.Y              = this.OgY;
-        this.NORMAL_SPEED   = true;
-        this.HALF_SPEED     = false;
-        this.DOUBLE_SPEED   = false;
     }
 
     public override void SetCollision(bool isPlayerCollision) {}
-
-    internal void NormalSpeed()
-    {
-        this.NORMAL_SPEED   = true;
-        this.HALF_SPEED     = false;
-        this.DOUBLE_SPEED   = false;
-    }
-
-    internal void HalfSpeed()
-    {
-        this.NORMAL_SPEED   = false;
-        this.HALF_SPEED     = true;
-        this.DOUBLE_SPEED   = false;
-    }
-
-    internal void DoubleSpeed()
-    {
-        this.NORMAL_SPEED   = false;
-        this.HALF_SPEED     = false;
-        this.DOUBLE_SPEED   = true;
-    }
 }
