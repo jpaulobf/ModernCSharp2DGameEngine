@@ -17,6 +17,9 @@ public class PlayerSprite : GameSprite
     private float OgHeight                      = 0;
     private int OgX                             = 0;
     private int OgY                             = 0;
+    public bool NORMAL_SPEED { get; set; }      = true;
+    public bool HALF_SPEED { get; set; }        = false;
+    public bool DOUBLE_SPEED { get; set; }      = false;
     private SolidBrush YellowBrush              = new SolidBrush(Color.FromArgb(255, 232, 232, 74));
     public bool Colliding { get; set; }         = false;
     private System.Media.SoundPlayer player     = new System.Media.SoundPlayer();
@@ -115,9 +118,31 @@ public class PlayerSprite : GameSprite
         this.Height         = this.OgHeight;
         this.X              = this.OgX;
         this.Y              = this.OgY;
+        this.NORMAL_SPEED   = true;
+        this.HALF_SPEED     = false;
+        this.DOUBLE_SPEED   = false;
     }
 
-    public override void SetCollision(bool isPlayerCollision)
+    public override void SetCollision(bool isPlayerCollision) {}
+
+    internal void NormalSpeed()
     {
+        this.NORMAL_SPEED   = true;
+        this.HALF_SPEED     = false;
+        this.DOUBLE_SPEED   = false;
+    }
+
+    internal void HalfSpeed()
+    {
+        this.NORMAL_SPEED   = false;
+        this.HALF_SPEED     = true;
+        this.DOUBLE_SPEED   = false;
+    }
+
+    internal void DoubleSpeed()
+    {
+        this.NORMAL_SPEED   = false;
+        this.HALF_SPEED     = false;
+        this.DOUBLE_SPEED   = true;
     }
 }
