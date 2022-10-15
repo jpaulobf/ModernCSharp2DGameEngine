@@ -32,7 +32,7 @@ public class StaticSprite : GameSprite
 
         if (!this.Destroyed) 
         {
-            if (this.CollisionDetection(this.GameRef.GetPlayerSprite())) 
+            if (this.CollisionDetection(this.GameRef.GetPlayerController().GetPlayerSprite())) 
             {
                 Console.WriteLine("Fuel...");
             }
