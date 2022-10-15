@@ -44,7 +44,7 @@ public class GameController : IGame
     private Point PausePoint;
     private HUD Hud;
     private GameStages Stages;
-    private PlayerSprite PlayerSprite;
+    private PlayerController PlayerController;
 
     /**
      * Game constructor
@@ -76,10 +76,12 @@ public class GameController : IGame
         //screen center
         this.PausePoint = new Point((int)windowSize.Width/2 - 80, (int)windowSize.Height/2 - 50);
 
-        // Load new sprite class
-        this.Hud            = new HUD(this);
-        this.Stages         = new GameStages(this);
-        this.PlayerSprite   = new PlayerSprite(this, "img\\airplanetile.png", 32, 32, 350, 387, 100);
+        // Load the game classes
+        this.PlayerController   = new PlayerController(this);
+        this.Hud                = new HUD(this);
+        this.Stages             = new GameStages(this);
+        
+        Console.WriteLine("aqui...");
     }
 
     /**
@@ -87,59 +89,45 @@ public class GameController : IGame
      */
     public void Update(long frametime)
     {
-        if (!Paused && !this.PlayerSprite.Colliding) 
+        if (!Paused && !this.PlayerController.Colliding) 
         {
-            // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
-            float moveDistance = (float)(PlayerSprite.Velocity * ((double)frametime / 10_000_000));
-            PlayerSprite.Righting = false;
-            PlayerSprite.Lefting = false;
-            this.PlayerSprite.NormalSpeed();
+            this.PlayerController.GoStraight();
 
-            if (this.ShowPlayerSprite) {
+            if (this.ShowPlayerSprite) 
+            {
                 if (IS_LEFT_KEY_DOWN) 
                 {
-                    this.PlayerSprite.X -= moveDistance;
-                    this.PlayerSprite.Lefting = true;
+                    this.PlayerController.GoLeft(frametime);
                 }
 
                 if (IS_RIGHT_KEY_DOWN) 
                 {
-                    this.PlayerSprite.X += moveDistance;
-                    this.PlayerSprite.Righting = true;
+                    this.PlayerController.GoRight(frametime);
                 }
 
                 if (IS_DOWN_KEY_DOWN) 
                 {
-                    this.PlayerSprite.HalfSpeed();
+                    this.PlayerController.HalfSpeed();
                 }
 
                 if (IS_UP_KEY_DOWN)
                 {
-                    this.PlayerSprite.DoubleSpeed();
+                    this.PlayerController.DoubleSpeed();
                 }
 
                 if (IS_SHOT_KEY_DOWN) 
                 {
-                    this.PlayerSprite.Shooting();
-                }
-
-                if (PlayerSprite.X > this.InternalResolutionWidth) 
-                {
-                    PlayerSprite.X = 0;
-                } 
-                else if (PlayerSprite.X < 0) 
-                {
-                    PlayerSprite.X = this.InternalResolutionWidth;
+                    this.PlayerController.Shooting();
                 }
             }
             
             this.Hud.Update(frametime);
             this.Stages.Update(frametime);
-            this.PlayerSprite.Update(frametime);
+            this.PlayerController.Update(frametime);
         } 
-        else if (this.PlayerSprite.Colliding)
+        else if (this.PlayerController.Colliding)
         {
-            this.Stages.Update(frametime, this.PlayerSprite.Colliding);
+            this.Stages.Update(frametime, this.PlayerController.Colliding);
         }
 
         //if the player hit something, resetcounter will start
@@ -169,9 +157,10 @@ public class GameController : IGame
             //draw the HUD
             this.Hud.Draw(this.InternalGraphics);
 
-            if (this.ShowPlayerSprite) {
+            if (this.ShowPlayerSprite) 
+            {
                 // Draw Player Sprite
-                this.PlayerSprite.Draw(this.InternalGraphics);
+                this.PlayerController.Draw(this.InternalGraphics);
             }
 
             //draw pause message
@@ -339,9 +328,9 @@ public class GameController : IGame
     private void ResetAfterCollision()
     {
         this.Stages.Reset();
-        this.PlayerSprite.Reset();
-        this.PlayerSprite.Colliding = false;
-        this.ResetAfterDead         = false;
+        this.PlayerController.Reset();
+        this.PlayerController.Colliding = false;
+        this.ResetAfterDead             = false;
     }
 
     /**
@@ -375,16 +364,16 @@ public class GameController : IGame
         this.ResetCounter       = 0;
         this.Hud.Reset();
         this.Stages.Reset();
-        this.PlayerSprite.Reset();
+        this.PlayerController.Reset();
     }
 
     //Accessors
-    public Graphics GetGraphics()               {   return (this.InternalGraphics);         }
-    public int GetInternalResolutionWidth()     {   return (this.InternalResolutionWidth);  }
-    public int GetInternalResolutionHeight()    {   return (this.InternalResolutionHeight); }
-    public float getScaleW()                    {  return (this.ScaleW);                    }
-    public float getScaleH()                    {   return (this.ScaleH);                   }
-    public PlayerSprite GetPlayerSprite()       {   return (this.PlayerSprite);             }
+    public Graphics GetGraphics()                   {   return (this.InternalGraphics);         }
+    public int GetInternalResolutionWidth()         {   return (this.InternalResolutionWidth);  }
+    public int GetInternalResolutionHeight()        {   return (this.InternalResolutionHeight); }
+    public float getScaleW()                        {   return (this.ScaleW);                   }
+    public float getScaleH()                        {   return (this.ScaleH);                   }
+    public PlayerController GetPlayerController()   {   return (this.PlayerController);         }
 
     /**
      * return the current sprite list
