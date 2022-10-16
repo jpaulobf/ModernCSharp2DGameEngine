@@ -1,3 +1,5 @@
+using Util;
+
 namespace Game;
 
 /**
@@ -11,15 +13,15 @@ public class StaticSprite : GameSprite
     private volatile bool AnimateExplosion  = false;
     private long AnimationCounter           = 0;
     private Bitmap OgSprite;
-    private Bitmap Explosion1               = new Bitmap(@"img\\heli_explosion_frame1.png");
-    private Bitmap Explosion2               = new Bitmap(@"img\\heli_explosion_frame2.png");
+    private Bitmap Explosion1               = BitmapEx.New("img\\heli_explosion_frame1.png");
+    private Bitmap Explosion2               = BitmapEx.New("img\\heli_explosion_frame2.png");
 
     /**
      * Static Sprite constructor
      */
     public StaticSprite(IGame game, string imageFilePath, int width, int height, byte type, int X = 0, int Y = 0) : base(imageFilePath, width, height, X, Y, 0, type) {
         this.GameRef = game;
-        this.OgSprite = new Bitmap(@imageFilePath);
+        this.OgSprite = BitmapEx.New(@imageFilePath);
     }
 
     /**
