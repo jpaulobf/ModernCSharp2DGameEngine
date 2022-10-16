@@ -1,3 +1,5 @@
+using GameEngine;
+
 namespace Game;
 
 /**
@@ -17,10 +19,10 @@ public class EnemySprite : GameSprite
     protected bool DefaultRenderReverse     = false;
     private volatile bool AnimateExplosion  = false;
     private long AnimationCounter           = 0;
-    private Bitmap ShipExplosion1           = new Bitmap(@"img\\ship_explosion_frame1.png");
-    private Bitmap ShipExplosion2           = new Bitmap(@"img\\ship_explosion_frame2.png");
-    private Bitmap HeliExplosion1           = new Bitmap(@"img\\heli_explosion_frame1.png");
-    private Bitmap HeliExplosion2           = new Bitmap(@"img\\heli_explosion_frame2.png");
+    private Bitmap ShipExplosion1           = Util.BitmapEx.New("img\\ship_explosion_frame1.png");
+    private Bitmap ShipExplosion2           = Util.BitmapEx.New("img\\ship_explosion_frame2.png");
+    private Bitmap HeliExplosion1           = Util.BitmapEx.New("img\\heli_explosion_frame1.png");
+    private Bitmap HeliExplosion2           = Util.BitmapEx.New("img\\heli_explosion_frame2.png");
     private Bitmap DefaultBitmap;
 
     /**
@@ -52,7 +54,7 @@ public class EnemySprite : GameSprite
         this.MaxLeft                = maxLeft;
         this.MaxRight               = maxRight;
         this.Direction              = direction;
-        this.DefaultBitmap          = new Bitmap(@imageFilePath);
+        this.DefaultBitmap          = Util.BitmapEx.New(@imageFilePath);
         this.DefaultDirection       = direction;
         this.DefaultTilesNumber     = tilesNumber;
         this.DefaultRenderReverse   = reversed;
