@@ -80,8 +80,6 @@ public class GameController : IGame
         this.PlayerController   = new PlayerController(this);
         this.Hud                = new HUD(this);
         this.Stages             = new GameStages(this);
-        
-        Console.WriteLine("aqui...");
     }
 
     /**
@@ -378,7 +376,7 @@ public class GameController : IGame
     /**
      * return the current sprite list
      */
-    public IEnumerable<SpriteConstructor> GetCurrentScreenSprites()
+    public IEnumerable<GameSprite> GetCurrentScreenSprites()
     {
         return(this.Stages.GetCurrentScreenSprites());
     }
