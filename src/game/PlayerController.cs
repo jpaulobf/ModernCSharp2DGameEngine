@@ -1,5 +1,5 @@
 using Game;
-using Util;
+
 
 /**
  * Author: Joao P B Faria
@@ -11,7 +11,7 @@ public class PlayerController
     private PlayerSprite PlayerSprite;
     private GameSprite Shot;
     private IGame GameRef;
-    private SoundPlayerEx player                = new SoundPlayerEx("sfx\\shot.wav");
+    private Util.SoundPlayerEx player           = new Util.SoundPlayerEx(Util.Util.getCurrentPath() + "sfx\\shot.wav");
     public bool Colliding { get; set; }         = false;
     public bool NORMAL_SPEED { get; set; }      = true;
     public bool HALF_SPEED { get; set; }        = false;
