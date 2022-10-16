@@ -6,6 +6,14 @@ namespace Util;
  * Description: Util methods class
  */
 public sealed class Util {
+
+    /**
+     * Get the current project path
+     */
+    public static string getCurrentPath() 
+    {
+        return (GameEngine.Launcher.path);
+    }
     
     /**
      * Code from Microsoft.com
