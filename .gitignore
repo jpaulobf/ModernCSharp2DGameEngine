@@ -43,3 +43,4 @@ obj/GameEngine.csproj.nuget.dgspec.*
 .vs/GameEngine/FileContentIndex/74c357a6-86eb-4d91-ab7a-f9b1eef22307.vsidx
 *.vsidx
 *.sqlite
+.vs/VSWorkspaceState.json
