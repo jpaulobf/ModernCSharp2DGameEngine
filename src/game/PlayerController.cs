@@ -1,4 +1,5 @@
 using Game;
+using Util;
 
 /**
  * Author: Joao P B Faria
@@ -10,7 +11,7 @@ public class PlayerController
     private PlayerSprite PlayerSprite;
     private GameSprite Shot;
     private IGame GameRef;
-    private System.Media.SoundPlayer player     = new System.Media.SoundPlayer();
+    private SoundPlayerEx player                = new SoundPlayerEx("sfx\\shot.wav");
     public bool Colliding { get; set; }         = false;
     public bool NORMAL_SPEED { get; set; }      = true;
     public bool HALF_SPEED { get; set; }        = false;
@@ -28,7 +29,6 @@ public class PlayerController
         this.Velocity               = 100;
         this.PlayerSprite           = new PlayerSprite(gameRef, this, "img\\airplanetile.png", 32, 32, 350, 387, this.Velocity);
         this.Shot                   = new Shot(gameRef, "img\\shot_sprite.png", 5, 18, 0, 0, 600);
-        this.player.SoundLocation   = "sfx\\shot.wav";
     }
 
     /**
@@ -38,7 +38,7 @@ public class PlayerController
     {
         Shot shot = ((Shot)this.Shot);
         if (shot.IsShotAvailable()) {
-            player.Play();
+            player.PlayAsync();
             shot.TriggerShot(this.PlayerSprite.X, this.PlayerSprite.Y, this.PlayerSprite.Width);
             shot.DisableShot();
         }
