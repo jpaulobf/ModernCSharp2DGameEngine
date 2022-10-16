@@ -16,7 +16,9 @@ public abstract class GameSprite
     protected short SourceStartY        = 0;
     protected byte TilesNumber          = 1;
     protected uint MillisecsPerTile     = 0;
-    internal float DefaultX             = 0;
+    internal float OgX                  = 0;
+    internal float OgY                  = 0;
+    public byte Type                    { get; set; }
     public bool Destroyed               { get; set; } = false;
     public bool RenderReversed          { get; set; }
     public Bitmap SpriteImage           { get; set; }
@@ -29,10 +31,20 @@ public abstract class GameSprite
     protected Rectangle SourceRect;
     protected Rectangle DestineRect;
 
+    //sprite types
+    public static byte HOUSE            = 1;
+    public static byte HOUSE2           = 2;
+    public static byte FUEL             = 3;
+    public static byte HELI             = 4;
+    public static byte SHIP             = 5;
+    public static byte AIRPLANE         = 6;
+    public static byte LEFT             = 1;
+    public static byte RIGHT            = 2;
+
     /**
      * GameSprite constructor
      */
-    public GameSprite(string imageFilePath, int width, int height, int X, int Y, int velocity) 
+    public GameSprite(string imageFilePath, int width, int height, int X, int Y, int velocity, byte type) 
     {
         //Console.WriteLine(filepath);
         this.SpriteImage = new Bitmap(@imageFilePath);
@@ -40,11 +52,13 @@ public abstract class GameSprite
         // Set sprite height & width in pixels
         this.Width = width;
         this.Height = height;
+        this.Type = type;
 
         // Set sprite coodinates
         this.X = X;
         this.Y = Y;
-        this.DefaultX = X;
+        this.OgX = X;
+        this.OgY = Y;
         
         // Set sprite Velocity
         this.Velocity = velocity;
