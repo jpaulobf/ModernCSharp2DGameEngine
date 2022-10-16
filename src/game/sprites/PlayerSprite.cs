@@ -19,7 +19,8 @@ public class PlayerSprite : GameSprite
     /**
      * Player Sprite constructor
      */
-    public PlayerSprite(IGame game, PlayerController playerController, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity) {
+    public PlayerSprite(IGame game, PlayerController playerController, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity, 0) 
+    {
         this.GameRef            = game;
         this.PControllerRef     = playerController;
         this.LocalSpriteImage   = new Bitmap(@imageFilePath);
@@ -33,7 +34,8 @@ public class PlayerSprite : GameSprite
     /**
      * Player Sprite update method
      */
-    public override void Update(long timeframe, bool colliding = false) {
+    public override void Update(long timeframe, bool colliding = false) 
+    {
         if (!this.PControllerRef.Colliding) 
         {
             if (!this.PControllerRef.Lefting && !this.PControllerRef.Righting) 
