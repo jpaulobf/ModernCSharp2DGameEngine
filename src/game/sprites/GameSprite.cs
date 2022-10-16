@@ -1,5 +1,6 @@
 namespace Game;
 
+using Util;
 using System.Drawing;
 
 /**
@@ -47,8 +48,8 @@ public abstract class GameSprite
     public GameSprite(string imageFilePath, int width, int height, int X, int Y, int velocity, byte type) 
     {
         //Console.WriteLine(filepath);
-        this.SpriteImage = new Bitmap(@imageFilePath);
-        this.Pixel       = new Bitmap(@"img\\pixel.png");
+        this.SpriteImage = BitmapEx.New(imageFilePath);
+        this.Pixel       = BitmapEx.New("img\\pixel.png");
         // Set sprite height & width in pixels
         this.Width = width;
         this.Height = height;
