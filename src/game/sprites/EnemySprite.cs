@@ -15,10 +15,6 @@ public class EnemySprite : GameSprite
     protected byte DefaultDirection         = 0;
     protected byte DefaultTilesNumber       = 0;
     protected bool DefaultRenderReverse     = false;
-    protected byte Type                     = 0;
-    public static byte HELI                 = 4;
-    public static byte SHIP                 = 5;
-    public static byte AIRPLANE             = 6;
     private volatile bool AnimateExplosion  = false;
     private long AnimationCounter           = 0;
     private Bitmap ShipExplosion1           = new Bitmap(@"img\\ship_explosion_frame1.png");
@@ -45,7 +41,7 @@ public class EnemySprite : GameSprite
                        bool reversed = false, 
                        short maxLeft = 0,
                        short maxRight = 0, 
-                       byte direction = 0) : base(imageFilePath, width, height, X, Y, velocity) {
+                       byte direction = 0) : base(imageFilePath, width, height, X, Y, velocity, type) {
         //after base constructor
         this.Type                   = type;
         this.TilesNumber            = tilesNumber;
@@ -93,7 +89,7 @@ public class EnemySprite : GameSprite
         if (this.Direction != 0) 
         {
             float step = (float)(this.Velocity * ((double)frametime / 10_000_000));
-            if (this.Direction == SpriteConstructor.LEFT) 
+            if (this.Direction == LEFT) 
             {
                 if (this.X > this.MaxLeft) 
                 {
@@ -101,11 +97,11 @@ public class EnemySprite : GameSprite
                 } 
                 else 
                 {
-                    this.Direction = SpriteConstructor.RIGHT;
+                    this.Direction = RIGHT;
                     this.FlipX();
                 }
             } 
-            else if (this.Direction == SpriteConstructor.RIGHT) 
+            else if (this.Direction == RIGHT) 
             {
                 if (this.X < (this.MaxRight - this.Width-1)) 
                 {
@@ -113,7 +109,7 @@ public class EnemySprite : GameSprite
                 } 
                 else 
                 {
-                    this.Direction = SpriteConstructor.LEFT;
+                    this.Direction = LEFT;
                     this.FlipX();
                 }
             }
@@ -190,7 +186,7 @@ public class EnemySprite : GameSprite
         this.Direction          = this.DefaultDirection;
         this.AnimationCounter   = 0;
         this.RenderReversed     = this.DefaultRenderReverse;
-        this.X                  = this.DefaultX;
+        this.X                  = this.OgX;
         this.Status             = NORMAL;
         this.Destroyed          = false;
     }
