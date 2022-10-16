@@ -19,7 +19,7 @@ public class Shot : GameSprite
     /**
      * Constructor
      */
-    public Shot(IGame game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity)
+    public Shot(IGame game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity, 0)
     {
         this.GameRef = game;
     }
@@ -57,12 +57,11 @@ public class Shot : GameSprite
             {
                 foreach (var item in this.GameRef.GetCurrentScreenSprites()) 
                 {
-                    GameSprite gamesprite = item.GetGameSprite();
-                    if (this.CollisionDetection(gamesprite) && !gamesprite.Destroyed) 
+                    if (this.CollisionDetection(item) && !item.Destroyed) 
                     {
                         this.IsBulletDestroyed  = true;
                         this.StartDelay         = true;
-                        gamesprite.SetCollision(false);
+                        item.SetCollision(false);
                         break;
                     }
                 }
