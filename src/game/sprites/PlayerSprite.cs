@@ -1,3 +1,5 @@
+using Util;
+
 namespace Game;
 
 /**
@@ -10,11 +12,9 @@ public class PlayerSprite : GameSprite
     private IGame GameRef;
     private PlayerController PControllerRef;
     private Bitmap LocalSpriteImage;
-    private Bitmap SpriteSplosion               = new Bitmap(@"img\\sprite_splosion.png");
+    private Bitmap SpriteSplosion               = BitmapEx.New("img\\sprite_splosion.png");
     private float OgWidth                       = 0;
     private float OgHeight                      = 0;
-    private float OgX                           = 0;
-    private float OgY                           = 0;
 
     /**
      * Player Sprite constructor
@@ -23,7 +23,7 @@ public class PlayerSprite : GameSprite
     {
         this.GameRef            = game;
         this.PControllerRef     = playerController;
-        this.LocalSpriteImage   = new Bitmap(@imageFilePath);
+        this.LocalSpriteImage   = BitmapEx.New(@imageFilePath);
         
         this.OgWidth            = width;
         this.OgHeight           = height;
