@@ -17,7 +17,7 @@ public class StaticSprite : GameSprite
     /**
      * Static Sprite constructor
      */
-    public StaticSprite(IGame game, string imageFilePath, int width, int height, int X = 0, int Y = 0) : base(imageFilePath, width, height, X, Y, 0) {
+    public StaticSprite(IGame game, string imageFilePath, int width, int height, byte type, int X = 0, int Y = 0) : base(imageFilePath, width, height, X, Y, 0, type) {
         this.GameRef = game;
         this.OgSprite = new Bitmap(@imageFilePath);
     }
