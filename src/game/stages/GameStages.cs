@@ -40,9 +40,9 @@ public class GameStages : IStagesDef
     private volatile bool CanStartTheStage      = false;
     private volatile bool CanStartStageOpening  = true;
     private volatile bool RunStage              = false;
-    private Dictionary<int, SpriteConstructor> stage1_sprites = new Dictionary<int, SpriteConstructor>();
-    private List<SpriteConstructor> currentSprites;
-    private List<SpriteConstructor> nextSprites;
+    private Dictionary<int, GameSprite> stage1  = new Dictionary<int, GameSprite>();
+    private List<GameSprite> currentSprites;
+    //private List<GameSprite> nextSprites;
 
     /**
      * Constructor
@@ -71,40 +71,40 @@ public class GameStages : IStagesDef
         int key = 0;
 
         //add stage 1 sprites
-        this.stage1_sprites.Add(key = 2216, new SpriteConstructor(game, SpriteConstructor.HOUSE, 85, key));
-        this.stage1_sprites.Add(key = 2159, new SpriteConstructor(game, SpriteConstructor.SHIP, 325, key, 1, true));
-        this.stage1_sprites.Add(key = 2063, new SpriteConstructor(game, SpriteConstructor.FUEL, 417, key));
-        this.stage1_sprites.Add(key = 2012, new SpriteConstructor(game, SpriteConstructor.HELI, 302, key, 2));
-        this.stage1_sprites.Add(key = 1923, new SpriteConstructor(game, SpriteConstructor.FUEL, 372, key));
-        this.stage1_sprites.Add(key = 1850, new SpriteConstructor(game, SpriteConstructor.FUEL, 458, key));
-        this.stage1_sprites.Add(key = 1783, new SpriteConstructor(game, SpriteConstructor.HOUSE, 557, key));
-        this.stage1_sprites.Add(key = 1710, new SpriteConstructor(game, SpriteConstructor.HOUSE2, 81, key));
-        this.stage1_sprites.Add(key = 1637, new SpriteConstructor(game, SpriteConstructor.HOUSE2, 545, key));
-        this.stage1_sprites.Add(key = 1557, new SpriteConstructor(game, SpriteConstructor.FUEL, 394, key));
-        this.stage1_sprites.Add(key = 1499, new SpriteConstructor(game, SpriteConstructor.HELI, 261, key, 2));
-        this.stage1_sprites.Add(key = 1410, new SpriteConstructor(game, SpriteConstructor.FUEL, 288, key));
-        this.stage1_sprites.Add(key = 1353, new SpriteConstructor(game, SpriteConstructor.HELI, 339, key, 2));
-        this.stage1_sprites.Add(key = 1263, new SpriteConstructor(game, SpriteConstructor.FUEL, 439, key));
-        this.stage1_sprites.Add(key = 1197, new SpriteConstructor(game, SpriteConstructor.HOUSE, 581, key));
-        this.stage1_sprites.Add(key = 1140, new SpriteConstructor(game, SpriteConstructor.SHIP, 417, key));
-        this.stage1_sprites.Add(key = 1060, new SpriteConstructor(game, SpriteConstructor.HELI, 417, key, 2));
-        this.stage1_sprites.Add(key = 993,  new SpriteConstructor(game, SpriteConstructor.SHIP, 302, key));
-        this.stage1_sprites.Add(key = 897,  new SpriteConstructor(game, SpriteConstructor.FUEL, 371, key));
-        this.stage1_sprites.Add(key = 840,  new SpriteConstructor(game, SpriteConstructor.HELI, 458, key, 2));
-        this.stage1_sprites.Add(key = 757,  new SpriteConstructor(game, SpriteConstructor.HOUSE, 564, key));
-        this.stage1_sprites.Add(key = 684,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 94, key));
-        this.stage1_sprites.Add(key = 611,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 568, key));
-        this.stage1_sprites.Add(key = 547,  new SpriteConstructor(game, SpriteConstructor.HELI, 444, key, 2, true));
-        this.stage1_sprites.Add(key = 464,  new SpriteConstructor(game, SpriteConstructor.HOUSE, 586, key));
-        this.stage1_sprites.Add(key = 407,  new SpriteConstructor(game, SpriteConstructor.SHIP, 417, key));
-        this.stage1_sprites.Add(key = 327,  new SpriteConstructor(game, SpriteConstructor.HELI, 426, key, 2));
-        this.stage1_sprites.Add(key = 245,  new SpriteConstructor(game, SpriteConstructor.HOUSE2, 549, key));
-        this.stage1_sprites.Add(key = 164,  new SpriteConstructor(game, SpriteConstructor.FUEL, 407, key));
-        this.stage1_sprites.Add(key = 107,  new SpriteConstructor(game, SpriteConstructor.HELI, 288, key, 2, false, 198, 540, SpriteConstructor.RIGHT));
-        this.stage1_sprites.Add(key = 41,   new SpriteConstructor(game, SpriteConstructor.SHIP, 320, key, 1, false, 288, 450, SpriteConstructor.LEFT));
+        this.stage1.Add(key = 2216, SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 85, key));
+        this.stage1.Add(key = 2159, SpriteFactory.CreateSprite(game, GameSprite.SHIP, 325, key, 1, true));
+        this.stage1.Add(key = 2063, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 417, key));
+        this.stage1.Add(key = 2012, SpriteFactory.CreateSprite(game, GameSprite.HELI, 302, key, 2));
+        this.stage1.Add(key = 1923, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 372, key));
+        this.stage1.Add(key = 1850, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 458, key));
+        this.stage1.Add(key = 1783, SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 557, key));
+        this.stage1.Add(key = 1710, SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 81, key));
+        this.stage1.Add(key = 1637, SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 545, key));
+        this.stage1.Add(key = 1557, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 394, key));
+        this.stage1.Add(key = 1499, SpriteFactory.CreateSprite(game, GameSprite.HELI, 261, key, 2));
+        this.stage1.Add(key = 1410, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 288, key));
+        this.stage1.Add(key = 1353, SpriteFactory.CreateSprite(game, GameSprite.HELI, 339, key, 2));
+        this.stage1.Add(key = 1263, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 439, key));
+        this.stage1.Add(key = 1197, SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 581, key));
+        this.stage1.Add(key = 1140, SpriteFactory.CreateSprite(game, GameSprite.SHIP, 417, key));
+        this.stage1.Add(key = 1060, SpriteFactory.CreateSprite(game, GameSprite.HELI, 417, key, 2));
+        this.stage1.Add(key = 993,  SpriteFactory.CreateSprite(game, GameSprite.SHIP, 302, key));
+        this.stage1.Add(key = 897,  SpriteFactory.CreateSprite(game, GameSprite.FUEL, 371, key));
+        this.stage1.Add(key = 840,  SpriteFactory.CreateSprite(game, GameSprite.HELI, 458, key, 2));
+        this.stage1.Add(key = 757,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 564, key));
+        this.stage1.Add(key = 684,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 94, key));
+        this.stage1.Add(key = 611,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 568, key));
+        this.stage1.Add(key = 547,  SpriteFactory.CreateSprite(game, GameSprite.HELI, 444, key, 2, true));
+        this.stage1.Add(key = 464,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 586, key));
+        this.stage1.Add(key = 407,  SpriteFactory.CreateSprite(game, GameSprite.SHIP, 417, key));
+        this.stage1.Add(key = 327,  SpriteFactory.CreateSprite(game, GameSprite.HELI, 426, key, 2));
+        this.stage1.Add(key = 245,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 549, key));
+        this.stage1.Add(key = 164,  SpriteFactory.CreateSprite(game, GameSprite.FUEL, 407, key));
+        this.stage1.Add(key = 107,  SpriteFactory.CreateSprite(game, GameSprite.HELI, 288, key, 2, false, 198, 540, GameSprite.RIGHT));
+        this.stage1.Add(key = 41,   SpriteFactory.CreateSprite(game, GameSprite.SHIP, 320, key, 1, false, 288, 450, GameSprite.LEFT));
 
         //store the sprites of current stage
-        this.currentSprites = this.stage1_sprites.Values.Where(item => item.Type != SpriteConstructor.HOUSE && item.Type != SpriteConstructor.HOUSE2).ToList();
+        this.currentSprites = this.stage1.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
 
         //the offset starts negative for the opening animation
         this.Offset = PIXEL_HEIGHT * OPENING_LINES * -1;
@@ -188,9 +188,10 @@ public class GameStages : IStagesDef
         this.CurrentLineYPosition       = (current - 95)  * PIXEL_HEIGHT;
 
         //if exist an sprite in the current screen frame, render it
-        foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
+        foreach (var item in this.stage1.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
         {
-            item.Value.Update(frametime, this.CurrentLineYPosition, this.Offset, item.Key, colliding);
+            item.Value.Y = (item.Key - this.CurrentLineYPosition) + this.Offset;
+            item.Value.Update(frametime, colliding);
         }
     }
 
@@ -268,7 +269,7 @@ public class GameStages : IStagesDef
         }
 
         //Draw the sprites
-        foreach (var item in this.stage1_sprites.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
+        foreach (var item in this.stage1.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
         {
             item.Value.Draw(this.InternalGraphics);
         }
@@ -397,7 +398,7 @@ public class GameStages : IStagesDef
         this.GameRef.DisablePlayerSprite();
         this.Offset                 = PIXEL_HEIGHT * OPENING_LINES * -1; //the offset starts negative for the opening animation
 
-        foreach (var item in this.stage1_sprites) 
+        foreach (var item in this.stage1) 
         {
             item.Value.Reset();
         }
@@ -406,7 +407,11 @@ public class GameStages : IStagesDef
     /**
      * Return the current sprite list
      */
-    public IEnumerable<SpriteConstructor> GetCurrentScreenSprites() {
-        return (this.currentSprites.Where(item => this.StartScreenFrame < item.Y && this.EndScreenFrame > item.Y));
+    public IEnumerable<GameSprite> GetCurrentScreenSprites() {
+
+        return (this.currentSprites.Where(item => this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
+
+        //return (this.stage1.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2 && 
+        //                                 this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
     }
 }
