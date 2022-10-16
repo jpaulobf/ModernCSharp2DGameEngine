@@ -1,6 +1,5 @@
 using Game;
 
-
 /**
  * Author: Joao P B Faria
  * Date: Oct/2022
@@ -31,6 +30,18 @@ public class PlayerController
         this.Shot                   = new Shot(gameRef, "img\\shot_sprite.png", 5, 18, 0, 0, 600);
     }
 
+    private void shootPlay()
+    {
+        Task.Run(() =>
+            {
+                //WMPLib.WindowsMediaPlayer temp = new WMPLib.WindowsMediaPlayer();
+                //temp.URL = @"D:\Development\DotNet\ModernCSharp2DGameEngine\sfx\shot.wav";
+                player.PlayAsync();
+                Task.Yield();
+            }
+        );
+    }
+
     /**
      * Shot
      */
@@ -38,7 +49,7 @@ public class PlayerController
     {
         Shot shot = ((Shot)this.Shot);
         if (shot.IsShotAvailable()) {
-            player.PlayAsync();
+            shootPlay();
             shot.TriggerShot(this.PlayerSprite.X, this.PlayerSprite.Y, this.PlayerSprite.Width);
             shot.DisableShot();
         }
