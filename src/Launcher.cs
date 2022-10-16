@@ -12,7 +12,7 @@ static class Launcher
     private const string VS_CODE = ".\\";
     
     //current gamepath
-    public static string path = VISUAL_STUDIO;
+    public static string path = VS_CODE;
     
     /**
      * Just start the "Game" class, passing the desired FPS
