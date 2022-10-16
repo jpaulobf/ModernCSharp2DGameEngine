@@ -41,3 +41,5 @@ obj/GameEngine.csproj.nuget.dgspec.*
 .vs/ProjectEvaluation/gameengine.projects.v5.1
 .vs/GameEngine/FileContentIndex/1cd5db34-e51e-47f7-9b2b-56b29b159a3b.vsidx
 .vs/GameEngine/FileContentIndex/74c357a6-86eb-4d91-ab7a-f9b1eef22307.vsidx
+*.vsidx
+*.sqlite
