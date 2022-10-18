@@ -10,7 +10,8 @@ public class Player
     private PlayerSprite PlayerSprite;
     private GameSprite Shot;
     private IGame GameRef;
-    private Util.SoundPlayerEx player           = new Util.SoundPlayerEx(Util.Util.getCurrentPath() + "sfx\\shot.wav");
+    private Util.SoundPlayerEx ShotSFX          = new Util.SoundPlayerEx(Util.Util.getCurrentPath() + "sfx\\shot.wav");
+    private Util.SoundPlayerEx NoiseSFX         = new Util.SoundPlayerEx(Util.Util.getCurrentPath() + "sfx\\noise.wav");
     public bool Colliding { get; set; }         = false;
     public bool NORMAL_SPEED { get; set; }      = true;
     public bool HALF_SPEED { get; set; }        = false;
@@ -28,6 +29,7 @@ public class Player
         this.Velocity               = 100;
         this.PlayerSprite           = new PlayerSprite(gameRef, this, "img\\airplanetile.png", 32, 32, 350, 387, this.Velocity);
         this.Shot                   = new Shot(gameRef, "img\\shot_sprite.png", 5, 18, 0, 0, 600);
+        this.NoiseSFX.PlayLooping();
     }
 
     private void PlayShotSound()
@@ -36,7 +38,7 @@ public class Player
             {
                 //WMPLib.WindowsMediaPlayer temp = new WMPLib.WindowsMediaPlayer();
                 //temp.URL = @"D:\Development\DotNet\ModernCSharp2DGameEngine\sfx\shot.wav";
-                player.PlayAsync();
+                this.ShotSFX.PlayAsync();
                 Task.Yield();
             }
         );
