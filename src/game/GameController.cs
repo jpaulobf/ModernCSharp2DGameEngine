@@ -44,7 +44,7 @@ public class GameController : IGame
     private Point PausePoint;
     private HUD Hud;
     private GameStages Stages;
-    private PlayerController PlayerController;
+    private Player PlayerController;
 
     /**
      * Game constructor
@@ -77,7 +77,7 @@ public class GameController : IGame
         this.PausePoint = new Point((int)windowSize.Width/2 - 80, (int)windowSize.Height/2 - 50);
 
         // Load the game classes
-        this.PlayerController   = new PlayerController(this);
+        this.PlayerController   = new Player(this);
         this.Hud                = new HUD(this);
         this.Stages             = new GameStages(this);
     }
@@ -371,7 +371,7 @@ public class GameController : IGame
     public int GetInternalResolutionHeight()        {   return (this.InternalResolutionHeight); }
     public float getScaleW()                        {   return (this.ScaleW);                   }
     public float getScaleH()                        {   return (this.ScaleH);                   }
-    public PlayerController GetPlayerController()   {   return (this.PlayerController);         }
+    public Player GetPlayerController()   {   return (this.PlayerController);         }
 
     /**
      * return the current sprite list
