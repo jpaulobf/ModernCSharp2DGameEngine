@@ -45,5 +45,5 @@ public interface IGame
 
     public void DisablePlayerSprite();
     
-    public Player GetPlayerController();
+    public Player GetPlayer();
 }
