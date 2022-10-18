@@ -10,7 +10,7 @@ namespace Game;
 public class PlayerSprite : GameSprite 
 {
     private IGame GameRef;
-    private PlayerController PControllerRef;
+    private Player PControllerRef;
     private Bitmap LocalSpriteImage;
     private Bitmap SpriteSplosion               = BitmapEx.New("img\\sprite_splosion.png");
     private float OgWidth                       = 0;
@@ -19,7 +19,7 @@ public class PlayerSprite : GameSprite
     /**
      * Player Sprite constructor
      */
-    public PlayerSprite(IGame game, PlayerController playerController, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity, 0) 
+    public PlayerSprite(IGame game, Player playerController, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity, 0) 
     {
         this.GameRef            = game;
         this.PControllerRef     = playerController;
