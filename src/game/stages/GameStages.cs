@@ -119,11 +119,11 @@ public class GameStages : IStagesDef
         this.Framecount += frametime;
 
         int step = 90_000;
-        if (this.GameRef.GetPlayerController().DOUBLE_SPEED)
+        if (this.GameRef.GetPlayer().DOUBLE_SPEED)
         {
             step = 50_000;
         }
-        else if (this.GameRef.GetPlayerController().HALF_SPEED)
+        else if (this.GameRef.GetPlayer().HALF_SPEED)
         {
             step = 170_000;
         }
@@ -238,10 +238,10 @@ public class GameStages : IStagesDef
                 }
             }
 
-            if ((this.GameRef.GetPlayerController().GetXPosition() < (firstFromLeftToRight * PIXEL_WIDTH)) || 
-                (this.GameRef.GetPlayerController().GetXPosition() + this.GameRef.GetPlayerController().GetSpriteWidth() > (firstFromRightToLeft * PIXEL_WIDTH))) 
+            if ((this.GameRef.GetPlayer().GetXPosition() < (firstFromLeftToRight * PIXEL_WIDTH)) || 
+                (this.GameRef.GetPlayer().GetXPosition() + this.GameRef.GetPlayer().GetSpriteWidth() > (firstFromRightToLeft * PIXEL_WIDTH))) 
             {
-                this.GameRef.GetPlayerController().SetCollision();
+                this.GameRef.GetPlayer().SetCollision();
                 this.GameRef.SetCollidingWithAnEnemy();
                 break;
             } 
