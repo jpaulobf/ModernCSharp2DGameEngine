@@ -371,7 +371,7 @@ public class GameController : IGame
     public int GetInternalResolutionHeight()    {   return (this.InternalResolutionHeight); }
     public float getScaleW()                    {   return (this.ScaleW);                   }
     public float getScaleH()                    {   return (this.ScaleH);                   }
-    public Player GetPlayerController()         {   return (this.Player);         }
+    public Player GetPlayer()                   {   return (this.Player);                   }
 
     /**
      * return the current sprite list
