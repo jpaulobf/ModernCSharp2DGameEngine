@@ -18,6 +18,10 @@ public class StateMachine
         this.CurrentGameState = MENU;
     }
 
+    public void SetGameStateToOption()
+    {
+        this.CurrentGameState = OPTION;
+    }
     
 
 
