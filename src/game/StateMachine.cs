@@ -6,8 +6,20 @@ public class StateMachine
     public static int IN_GAME = 2;
     public static int EXITING = 3;
 
-    public int CurrentGameState {get; set;} = IN_GAME;
+    private int CurrentGameState = IN_GAME;
+
+    public int GetCurrentGameState() 
+    {
+        return (this.CurrentGameState);
+    }
+
+    public void SetStateToMenu()
+    {
+        this.CurrentGameState = MENU;
+    }
 
     
+
+
 
 }
