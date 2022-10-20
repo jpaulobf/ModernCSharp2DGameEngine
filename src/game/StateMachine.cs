@@ -6,7 +6,8 @@ public class StateMachine
     public static int IN_GAME = 2;
     public static int EXITING = 3;
 
-    private int CurrentGameState = IN_GAME;
+    public int CurrentGameState {get; set;} = IN_GAME;
 
+    
 
 }
