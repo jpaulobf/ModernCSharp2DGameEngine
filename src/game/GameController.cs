@@ -39,6 +39,7 @@ public class GameController : IGame
     private volatile bool Paused            = false;
     private volatile bool ResetAfterDead    = false;
     private volatile bool ShowPlayerSprite  = false;
+    private StateMachine GameStateMachine   = new StateMachine(StateMachine.IN_GAME);
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
     private Point PausePoint;
@@ -87,58 +88,71 @@ public class GameController : IGame
      */
     public void Update(long frametime)
     {
-        if (!Paused && !this.Player.Colliding) 
+        if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
         {
-            this.Player.GoStraight();
-
-            if (this.ShowPlayerSprite) 
+        }
+        else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
+        {
+        }
+        else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
+        {
+            if (!Paused && !this.Player.Colliding) 
             {
-                if (IS_LEFT_KEY_DOWN) 
-                {
-                    this.Player.GoLeft(frametime);
-                }
+                this.Player.GoStraight();
 
-                if (IS_RIGHT_KEY_DOWN) 
+                if (this.ShowPlayerSprite) 
                 {
-                    this.Player.GoRight(frametime);
-                }
+                    if (IS_LEFT_KEY_DOWN) 
+                    {
+                        this.Player.GoLeft(frametime);
+                    }
 
-                if (IS_DOWN_KEY_DOWN) 
-                {
-                    this.Player.HalfSpeed();
-                }
+                    if (IS_RIGHT_KEY_DOWN) 
+                    {
+                        this.Player.GoRight(frametime);
+                    }
 
-                if (IS_UP_KEY_DOWN)
-                {
-                    this.Player.DoubleSpeed();
-                }
+                    if (IS_DOWN_KEY_DOWN) 
+                    {
+                        this.Player.HalfSpeed();
+                    }
 
-                if (IS_SHOT_KEY_DOWN) 
-                {
-                    this.Player.Shooting();
+                    if (IS_UP_KEY_DOWN)
+                    {
+                        this.Player.DoubleSpeed();
+                    }
+
+                    if (IS_SHOT_KEY_DOWN) 
+                    {
+                        this.Player.Shooting();
+                    }
                 }
+                
+                this.Hud.Update(frametime);
+                this.Stages.Update(frametime);
+                this.Player.Update(frametime);
+            } 
+            else if (this.Player.Colliding)
+            {
+                this.Stages.Update(frametime, this.Player.Colliding);
             }
-            
-            this.Hud.Update(frametime);
-            this.Stages.Update(frametime);
-            this.Player.Update(frametime);
-        } 
-        else if (this.Player.Colliding)
-        {
-            this.Stages.Update(frametime, this.Player.Colliding);
-        }
 
-        //if the player hit something, resetcounter will start
-        if (this.ResetAfterDead) 
-        {
-            this.ResetCounter += frametime;
-        }
+            //if the player hit something, resetcounter will start
+            if (this.ResetAfterDead) 
+            {
+                this.ResetCounter += frametime;
+            }
 
-        //after 3 seconds, the game restart
-        if (this.ResetCounter >= 30_000_000) 
+            //after 3 seconds, the game restart
+            if (this.ResetCounter >= 30_000_000) 
+            {
+                this.ResetCounter = 0;
+                this.ResetAfterCollision();
+            }
+        }
+        else if (this.GameStateMachine.GetCurrentGameState() == StateMachine.GAME_OVER)
         {
-            this.ResetCounter = 0;
-            this.ResetAfterCollision();
+
         }
     }
 
@@ -149,25 +163,37 @@ public class GameController : IGame
     {
         if (!this.WindowResizing) 
         {
-            //draw the stage bg & enemies
-            this.Stages.Draw(this.InternalGraphics, frametime);
-
-            //draw the HUD
-            this.Hud.Draw(this.InternalGraphics);
-
-            if (this.ShowPlayerSprite) 
+            if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
             {
-                // Draw Player Sprite
-                this.Player.Draw(this.InternalGraphics);
             }
-
-            //draw pause message
-            if (this.Paused) 
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
             {
-                this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(180, 255, 255, 255)), 0, PausePoint.Y - 20, this.WindowSize.Width, 60);
-                this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y - 20, this.WindowSize.Width, 2);
-                this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y + 40, this.WindowSize.Width, 2);
-                this.InternalGraphics.DrawString("Game Paused!", PauseFont, Brushes.Black, PausePoint);
+            }
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
+            {
+                //draw the stage bg & enemies
+                this.Stages.Draw(this.InternalGraphics, frametime);
+
+                //draw the HUD
+                this.Hud.Draw(this.InternalGraphics);
+
+                if (this.ShowPlayerSprite) 
+                {
+                    // Draw Player Sprite
+                    this.Player.Draw(this.InternalGraphics);
+                }
+
+                //draw pause message
+                if (this.Paused) 
+                {
+                    this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(180, 255, 255, 255)), 0, PausePoint.Y - 20, this.WindowSize.Width, 60);
+                    this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y - 20, this.WindowSize.Width, 2);
+                    this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y + 40, this.WindowSize.Width, 2);
+                    this.InternalGraphics.DrawString("Game Paused!", PauseFont, Brushes.Black, PausePoint);
+                }
+            }
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.GAME_OVER)
+            {
             }
         }
     }
