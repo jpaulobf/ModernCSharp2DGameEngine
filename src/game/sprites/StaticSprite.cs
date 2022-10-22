@@ -12,16 +12,16 @@ public class StaticSprite : GameSprite
     private IGame GameRef;
     private volatile bool AnimateExplosion  = false;
     private long AnimationCounter           = 0;
-    private Bitmap OgSprite;
-    private Bitmap Explosion1               = BitmapEx.New("img\\heli_explosion_frame1.png");
-    private Bitmap Explosion2               = BitmapEx.New("img\\heli_explosion_frame2.png");
+    private Bitmap OGSpriteImage;
+    private Bitmap Explosion1               = LoadingStuffs.GetInstance().GetImage("heli-explosion-1");
+    private Bitmap Explosion2               = LoadingStuffs.GetInstance().GetImage("heli-explosion-2");
 
     /**
      * Static Sprite constructor
      */
-    public StaticSprite(IGame game, string imageFilePath, int width, int height, byte type, int X = 0, int Y = 0) : base(imageFilePath, width, height, X, Y, 0, type) {
-        this.GameRef = game;
-        this.OgSprite = BitmapEx.New(@imageFilePath);
+    public StaticSprite(IGame game, Bitmap spriteImage, int width, int height, byte type, int X = 0, int Y = 0) : base(spriteImage, width, height, X, Y, 0, type) {
+        this.GameRef        = game;
+        this.OGSpriteImage  = spriteImage;
     }
 
     /**
@@ -68,7 +68,7 @@ public class StaticSprite : GameSprite
      */
     public override void Reset()
     {
-        this.SpriteImage = this.OgSprite;
+        this.SpriteImage = this.OGSpriteImage;
         this.TilesNumber = 0;
         this.Destroyed = false;
         this.AnimateExplosion = false;
