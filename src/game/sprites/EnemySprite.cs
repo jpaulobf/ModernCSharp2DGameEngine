@@ -1,6 +1,6 @@
-using GameEngine;
-
 namespace Game;
+
+using Util;
 
 /**
  * Author: Joao P B Faria
@@ -19,10 +19,10 @@ public class EnemySprite : GameSprite
     protected bool DefaultRenderReverse     = false;
     private volatile bool AnimateExplosion  = false;
     private long AnimationCounter           = 0;
-    private Bitmap ShipExplosion1           = Util.BitmapEx.New("img\\ship_explosion_frame1.png");
-    private Bitmap ShipExplosion2           = Util.BitmapEx.New("img\\ship_explosion_frame2.png");
-    private Bitmap HeliExplosion1           = Util.BitmapEx.New("img\\heli_explosion_frame1.png");
-    private Bitmap HeliExplosion2           = Util.BitmapEx.New("img\\heli_explosion_frame2.png");
+    private Bitmap ShipExplosion1           = LoadingStuffs.GetInstance().GetImage("ship-explosion-1");
+    private Bitmap ShipExplosion2           = LoadingStuffs.GetInstance().GetImage("ship-explosion-2");
+    private Bitmap HeliExplosion1           = LoadingStuffs.GetInstance().GetImage("heli-explosion-1");
+    private Bitmap HeliExplosion2           = LoadingStuffs.GetInstance().GetImage("heli-explosion-2");
     private Bitmap DefaultBitmap;
 
     /**
@@ -32,7 +32,7 @@ public class EnemySprite : GameSprite
      */
     public EnemySprite(IGame game,
                        byte type,
-                       string imageFilePath, 
+                       Bitmap spriteImage, 
                        int width, 
                        int height, 
                        int X = 0, 
@@ -43,7 +43,7 @@ public class EnemySprite : GameSprite
                        bool reversed = false, 
                        short maxLeft = 0,
                        short maxRight = 0, 
-                       byte direction = 0) : base(imageFilePath, width, height, X, Y, velocity, type) {
+                       byte direction = 0) : base(spriteImage, width, height, X, Y, velocity, type) {
         //after base constructor
         this.Type                   = type;
         this.TilesNumber            = tilesNumber;
@@ -54,7 +54,7 @@ public class EnemySprite : GameSprite
         this.MaxLeft                = maxLeft;
         this.MaxRight               = maxRight;
         this.Direction              = direction;
-        this.DefaultBitmap          = Util.BitmapEx.New(@imageFilePath);
+        this.DefaultBitmap          = spriteImage;
         this.DefaultDirection       = direction;
         this.DefaultTilesNumber     = tilesNumber;
         this.DefaultRenderReverse   = reversed;
