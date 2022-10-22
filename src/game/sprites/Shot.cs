@@ -19,7 +19,7 @@ public class Shot : GameSprite
     /**
      * Constructor
      */
-    public Shot(IGame game, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity, 0)
+    public Shot(IGame game, Bitmap spriteImage, int width, int height, int X, int Y, int velocity) : base(spriteImage, width, height, X, Y, velocity, 0)
     {
         this.GameRef = game;
     }
@@ -102,11 +102,9 @@ public class Shot : GameSprite
      */
     public override void Reset()
     {
-
     }
 
     public override void SetCollision(bool isPlayerCollision)
     {
-        
     }
 }
