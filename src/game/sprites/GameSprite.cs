@@ -45,11 +45,12 @@ public abstract class GameSprite
     /**
      * GameSprite constructor
      */
-    public GameSprite(string imageFilePath, int width, int height, int X, int Y, int velocity, byte type) 
+    public GameSprite(Bitmap spriteImage, int width, int height, int X, int Y, int velocity, byte type) 
     {
         //Console.WriteLine(filepath);
-        this.SpriteImage = BitmapEx.New(imageFilePath);
-        this.Pixel       = BitmapEx.New("img\\pixel.png");
+        this.SpriteImage = spriteImage;
+        this.Pixel       = LoadingStuffs.GetInstance().GetImage("pixel");
+        
         // Set sprite height & width in pixels
         this.Width = width;
         this.Height = height;
