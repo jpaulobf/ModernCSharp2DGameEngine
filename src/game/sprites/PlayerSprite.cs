@@ -11,19 +11,19 @@ public class PlayerSprite : GameSprite
 {
     private IGame GameRef;
     private Player PControllerRef;
-    private Bitmap LocalSpriteImage;
-    private Bitmap SpriteSplosion               = BitmapEx.New("img\\sprite_splosion.png");
+    private Bitmap OGSpriteImage;
+    private Bitmap SpriteSplosion               = LoadingStuffs.GetInstance().GetImage("sprite-explosion");
     private float OgWidth                       = 0;
     private float OgHeight                      = 0;
 
     /**
      * Player Sprite constructor
      */
-    public PlayerSprite(IGame game, Player playerController, string imageFilePath, int width, int height, int X, int Y, int velocity) : base(imageFilePath, width, height, X, Y, velocity, 0) 
+    public PlayerSprite(IGame game, Player playerController, Bitmap spriteImage, int width, int height, int X, int Y, int velocity) : base(spriteImage, width, height, X, Y, velocity, 0) 
     {
         this.GameRef            = game;
         this.PControllerRef     = playerController;
-        this.LocalSpriteImage   = BitmapEx.New(@imageFilePath);
+        this.OGSpriteImage      = spriteImage;
         
         this.OgWidth            = width;
         this.OgHeight           = height;
@@ -78,7 +78,7 @@ public class PlayerSprite : GameSprite
      */
     public override void Reset()
     {
-        this.SpriteImage    = this.LocalSpriteImage;
+        this.SpriteImage    = this.OGSpriteImage;
         this.Width          = this.OgWidth;
         this.Height         = this.OgHeight;
         this.X              = this.OgX;
