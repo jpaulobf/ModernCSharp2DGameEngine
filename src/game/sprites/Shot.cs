@@ -1,5 +1,7 @@
 namespace Game;
 
+using Util;
+
 /**
  * Author: Joao P B Faria
  * Date: Oct/2022
@@ -19,9 +21,10 @@ public class Shot : GameSprite
     /**
      * Constructor
      */
-    public Shot(IGame game, Bitmap spriteImage, int width, int height, int X, int Y, int velocity) : base(spriteImage, width, height, X, Y, velocity, 0)
+    public Shot(IGame game, int width, int height, int X, int Y, int velocity) : base(width, height, X, Y, velocity, 0)
     {
         this.GameRef = game;
+        this.SpriteImage = LoadingStuffs.GetInstance().GetImage("shot");
     }
 
     public void TriggerShot(float airplaneX, float airplaneY, float airplaneWidth) 
@@ -81,9 +84,12 @@ public class Shot : GameSprite
 
     public override void Draw(Graphics gfx) 
     {
-        if (!this.IsBulletDestroyed)
+        if (this.SpriteImage != null)
         {
-            gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
+            if (!this.IsBulletDestroyed)
+            {
+                gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
+            }
         }
     }
 
