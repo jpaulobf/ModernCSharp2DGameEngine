@@ -23,7 +23,7 @@ public class EnemySprite : GameSprite
     private Bitmap ShipExplosion2           = LoadingStuffs.GetInstance().GetImage("ship-explosion-2");
     private Bitmap HeliExplosion1           = LoadingStuffs.GetInstance().GetImage("heli-explosion-1");
     private Bitmap HeliExplosion2           = LoadingStuffs.GetInstance().GetImage("heli-explosion-2");
-    private Bitmap DefaultBitmap;
+    private Bitmap? DefaultBitmap;
 
     /**
      * Author: Joao P B Faria
@@ -32,7 +32,6 @@ public class EnemySprite : GameSprite
      */
     public EnemySprite(IGame game,
                        byte type,
-                       Bitmap spriteImage, 
                        int width, 
                        int height, 
                        int X = 0, 
@@ -43,7 +42,7 @@ public class EnemySprite : GameSprite
                        bool reversed = false, 
                        short maxLeft = 0,
                        short maxRight = 0, 
-                       byte direction = 0) : base(spriteImage, width, height, X, Y, velocity, type) {
+                       byte direction = 0) : base(width, height, X, Y, velocity, type) {
         //after base constructor
         this.Type                   = type;
         this.TilesNumber            = tilesNumber;
@@ -54,10 +53,25 @@ public class EnemySprite : GameSprite
         this.MaxLeft                = maxLeft;
         this.MaxRight               = maxRight;
         this.Direction              = direction;
-        this.DefaultBitmap          = spriteImage;
         this.DefaultDirection       = direction;
         this.DefaultTilesNumber     = tilesNumber;
         this.DefaultRenderReverse   = reversed;
+
+        switch(type)
+        {
+            case HELI:
+                this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("heli-tile");
+                this.DefaultBitmap  = LoadingStuffs.GetInstance().GetImage("heli-tile");
+                break;
+            case SHIP:
+                this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("ship");
+                this.DefaultBitmap  = LoadingStuffs.GetInstance().GetImage("ship");
+                break;
+            case AIRPLANE:
+                //this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("house-2");
+                //this.DefaultBitmap  = LoadingStuffs.GetInstance().GetImage("house-2");
+                break;
+        }
     }
 
     /**
@@ -183,7 +197,10 @@ public class EnemySprite : GameSprite
     public override void Reset()
     {
         this.AnimateExplosion   = false;
-        this.SpriteImage        = new Bitmap(this.DefaultBitmap);
+        if (this.DefaultBitmap != null)
+        {
+            this.SpriteImage        = new Bitmap(this.DefaultBitmap);
+        }
         this.TilesNumber        = this.DefaultTilesNumber;
         this.Direction          = this.DefaultDirection;
         this.AnimationCounter   = 0;
