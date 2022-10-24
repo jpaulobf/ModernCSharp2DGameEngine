@@ -19,9 +19,27 @@ public class StaticSprite : GameSprite
     /**
      * Static Sprite constructor
      */
-    public StaticSprite(IGame game, Bitmap spriteImage, int width, int height, byte type, int X = 0, int Y = 0) : base(spriteImage, width, height, X, Y, 0, type) {
-        this.GameRef        = game;
-        this.OGSpriteImage  = spriteImage;
+    public StaticSprite(IGame game, int width, int height, byte type, int X = 0, int Y = 0) : base(width, height, X, Y, 0, type) {
+        this.GameRef = game;
+        switch(type)
+        {
+            case FUEL:
+                this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("fuel");
+                this.OGSpriteImage  = LoadingStuffs.GetInstance().GetImage("fuel");
+            break;
+            case HOUSE:
+                this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("house-1");
+                this.OGSpriteImage  = LoadingStuffs.GetInstance().GetImage("house-1");
+            break;
+            case HOUSE2:
+                this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("house-2");
+                this.OGSpriteImage  = LoadingStuffs.GetInstance().GetImage("house-2");
+            break;
+            default:
+                this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("pixel");
+                this.OGSpriteImage  = LoadingStuffs.GetInstance().GetImage("pixel");
+            break;
+        }
     }
 
     /**
