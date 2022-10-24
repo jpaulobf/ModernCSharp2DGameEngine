@@ -19,12 +19,12 @@ public class PlayerSprite : GameSprite
     /**
      * Player Sprite constructor
      */
-    public PlayerSprite(IGame game, Player playerController, Bitmap spriteImage, int width, int height, int X, int Y, int velocity) : base(spriteImage, width, height, X, Y, velocity, 0) 
+    public PlayerSprite(IGame game, Player playerController, int width, int height, int X, int Y, int velocity) : base(width, height, X, Y, velocity, 0) 
     {
+        this.SpriteImage        = LoadingStuffs.GetInstance().GetImage("airplane-tile");
+        this.OGSpriteImage      = LoadingStuffs.GetInstance().GetImage("airplane-tile");
         this.GameRef            = game;
         this.PControllerRef     = playerController;
-        this.OGSpriteImage      = spriteImage;
-        
         this.OgWidth            = width;
         this.OgHeight           = height;
         this.OgX                = X;
