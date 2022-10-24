@@ -22,7 +22,7 @@ public abstract class GameSprite
     public byte Type                    { get; set; }
     public bool Destroyed               { get; set; } = false;
     public bool RenderReversed          { get; set; }
-    public Bitmap SpriteImage           { get; set; }
+    internal Bitmap? SpriteImage        { get; set; }
     internal Bitmap Pixel               { get; set; }
     public float X                      { get; set; }
     public float Y                      { get; set; }
@@ -33,23 +33,21 @@ public abstract class GameSprite
     protected Rectangle DestineRect;
 
     //sprite types
-    public static byte HOUSE            = 1;
-    public static byte HOUSE2           = 2;
-    public static byte FUEL             = 3;
-    public static byte HELI             = 4;
-    public static byte SHIP             = 5;
-    public static byte AIRPLANE         = 6;
-    public static byte LEFT             = 1;
-    public static byte RIGHT            = 2;
+    public const byte HOUSE             = 1;
+    public const byte HOUSE2            = 2;
+    public const byte FUEL              = 3;
+    public const byte HELI              = 4;
+    public const byte SHIP              = 5;
+    public const byte AIRPLANE          = 6;
+    public const byte LEFT              = 1;
+    public const byte RIGHT             = 2;
 
     /**
      * GameSprite constructor
      */
-    public GameSprite(Bitmap spriteImage, int width, int height, int X, int Y, int velocity, byte type) 
+    public GameSprite(int width, int height, int X, int Y, int velocity, byte type) 
     {
-        //Console.WriteLine(filepath);
-        this.SpriteImage = spriteImage;
-        this.Pixel       = LoadingStuffs.GetInstance().GetImage("pixel");
+        this.Pixel = LoadingStuffs.GetInstance().GetImage("pixel");
         
         // Set sprite height & width in pixels
         this.Width = width;
@@ -76,14 +74,17 @@ public abstract class GameSprite
      */
     public virtual void Draw(Graphics gfx)
     {
-        if (this.RenderReversed && this.Status == NORMAL) 
+        if (this.SpriteImage != null)
         {
-            this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
-            this.Status = REVERSED;
-        }
+            if (this.RenderReversed && this.Status == NORMAL) 
+            {
+                this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                this.Status = REVERSED;
+            }
 
-        // Draw sprite image on screen
-        gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
+            // Draw sprite image on screen
+            gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
+        }
     }
 
     /**
