@@ -44,8 +44,14 @@ public class LoadingStuffs
             image = BitmapEx.New("img\\ship.png");
             Images.Add("ship", image);
 
+            image = BitmapEx.New("img\\ship_r.png");
+            Images.Add("ship-r", image);
+
             image = BitmapEx.New("img\\helitile.png");
             Images.Add("heli-tile", image);
+
+            image = BitmapEx.New("img\\helitile_r.png");
+            Images.Add("heli-tile-r", image);
 
             image = BitmapEx.New("img\\shot_sprite.png");
             Images.Add("shot", image);
