@@ -204,7 +204,6 @@ public class EnemySprite : GameSprite
         this.AnimationCounter   = 0;
         this.RenderReversed     = this.DefaultRenderReverse;
         this.X                  = this.OgX;
-        this.Status             = NORMAL;
         this.Destroyed          = false;
     }
 }
