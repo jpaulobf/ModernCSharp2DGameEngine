@@ -12,7 +12,7 @@ public abstract class GameSprite
 {
     protected const bool NORMAL         = true;
     protected const bool REVERSED       = false;
-    protected bool Status               = NORMAL;
+    protected volatile bool Status      = NORMAL;
     protected short SourceStartX        = 0;
     protected short SourceStartY        = 0;
     protected byte TilesNumber          = 1;
@@ -23,6 +23,7 @@ public abstract class GameSprite
     public bool Destroyed               { get; set; } = false;
     public bool RenderReversed          { get; set; }
     internal Bitmap? SpriteImage        { get; set; }
+    internal Bitmap? RSpriteImage       { get; set; }
     internal Bitmap Pixel               { get; set; }
     public float X                      { get; set; }
     public float Y                      { get; set; }
@@ -76,12 +77,6 @@ public abstract class GameSprite
     {
         if (this.SpriteImage != null)
         {
-            if (this.RenderReversed && this.Status == NORMAL) 
-            {
-                this.SpriteImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                this.Status = REVERSED;
-            }
-
             // Draw sprite image on screen
             gfx.DrawImage(this.SpriteImage, this.DestineRect, this.SourceRect, System.Drawing.GraphicsUnit.Pixel);
         }
