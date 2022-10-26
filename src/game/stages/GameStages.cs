@@ -27,8 +27,8 @@ public class GameStages : IStagesDef
     protected volatile short CurrentLine        = 574;
     private const byte OPENING_LINES            = 108;
     protected volatile short CurrentOpeningLine = 0;
-    private const byte STATE_DEC                = 1;
-    private short CURRENT_STAGE                 = 1 - STATE_DEC;
+    private const byte STAGE_OFFSET             = 1;
+    private short CURRENT_STAGE                 = 1 - STAGE_OFFSET;
     private volatile short Offset               = 0;
     private volatile byte OpeningOffset         = 0;
     private long Framecount                     = 0;
@@ -118,16 +118,6 @@ public class GameStages : IStagesDef
         //add the framecounter
         this.Framecount += frametime;
 
-        int step = 90_000;
-        if (this.GameRef.GetPlayer().DOUBLE_SPEED)
-        {
-            step = 50_000;
-        }
-        else if (this.GameRef.GetPlayer().HALF_SPEED)
-        {
-            step = 170_000;
-        }
-
         if (this.CanStartStageOpening) 
         {
             //control the BG vertical scroll
@@ -148,10 +138,23 @@ public class GameStages : IStagesDef
                 //update draw stage opening flag
                 this.CanDrawStageOpening = true;
             }
-        }
-
-        if (this.CanStartTheStage) 
+        } 
+        else if (this.CanStartTheStage) 
         {
+            int step = 0;
+            if (this.GameRef.GetPlayer().DOUBLE_SPEED)
+            {
+                step = 50_000;
+            }
+            else if (this.GameRef.GetPlayer().HALF_SPEED)
+            {
+                step = 170_000;
+            } 
+            else //default velocity
+            {
+                step = 90_000;
+            }
+
             //control the BG vertical scroll
             if (this.Framecount >= step) 
             {
@@ -174,7 +177,7 @@ public class GameStages : IStagesDef
             }
 
             //if not already dead, check for dead (w/ bg)
-            if (!colliding) 
+            if (!colliding && this.RunStage) 
             {
                 //Check if the Player is colliding with background
                 this.CheckBackgroundCollision();
