@@ -12,7 +12,6 @@ public abstract class GameSprite
 {
     protected const bool NORMAL         = true;
     protected const bool REVERSED       = false;
-    protected volatile bool Status      = NORMAL;
     protected short SourceStartX        = 0;
     protected short SourceStartY        = 0;
     protected byte TilesNumber          = 1;
