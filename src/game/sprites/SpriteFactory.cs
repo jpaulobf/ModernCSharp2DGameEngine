@@ -9,7 +9,7 @@ using Util;
  */
 public class SpriteFactory 
 {
-    public static GameSprite CreateSprite(IGame game, byte type, int x, int y, byte parameter = 1, bool flag = false, short maxLeft = 0, short maxRight = 0, byte direction = 0)
+    public static GameSprite CreateSprite(IGame game, byte type, int x, int y, byte tilesNumber = 1, bool renderReversed = false, short maxLeft = 0, short maxRight = 0, byte direction = 0)
     {
         if (type == GameSprite.HOUSE) 
         {
@@ -25,11 +25,11 @@ public class SpriteFactory
         } 
         else if (type == GameSprite.SHIP) 
         {
-            return (new EnemySprite(game, type, 73, 18, x, y, 100, parameter, 25, flag, maxLeft, maxRight, direction));
+            return (new EnemySprite(game, type, 73, 18, x, y, 100, tilesNumber, 0, renderReversed, maxLeft, maxRight, direction));
         } 
         else 
         {
-            return (new EnemySprite(game, type, 36, 23, x, y, 100, parameter, 25, flag, maxLeft, maxRight, direction));
+            return (new EnemySprite(game, type, 36, 23, x, y, 100, tilesNumber, 50, renderReversed, maxLeft, maxRight, direction));
         }
     }
 }
