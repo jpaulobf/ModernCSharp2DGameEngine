@@ -39,7 +39,7 @@ public class EnemySprite : GameSprite
                        int velocity = 0, 
                        byte tilesNumber = 1, 
                        uint millisecondsPerTile = 0, 
-                       bool reversed = false, 
+                       bool renderReversed = false, 
                        short maxLeft = 0,
                        short maxRight = 0, 
                        byte direction = 0) : base(width, height, X, Y, velocity, type) {
@@ -48,29 +48,36 @@ public class EnemySprite : GameSprite
         this.TilesNumber            = tilesNumber;
         this.MillisecsPerTile       = millisecondsPerTile;
         this.GameRef                = game;
-        this.RenderReversed         = reversed;
+        this.RenderReversed         = renderReversed;
+        this.DefaultRenderReverse   = renderReversed;
         this.FrameCounter           = 0;
         this.MaxLeft                = maxLeft;
         this.MaxRight               = maxRight;
         this.Direction              = direction;
         this.DefaultDirection       = direction;
         this.DefaultTilesNumber     = tilesNumber;
-        this.DefaultRenderReverse   = reversed;
 
         switch(type)
         {
             case HELI:
                 this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("heli-tile");
                 this.DefaultBitmap  = LoadingStuffs.GetInstance().GetImage("heli-tile");
+                this.RSpriteImage   = LoadingStuffs.GetInstance().GetImage("heli-tile-r");
                 break;
             case SHIP:
                 this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("ship");
                 this.DefaultBitmap  = LoadingStuffs.GetInstance().GetImage("ship");
+                this.RSpriteImage   = LoadingStuffs.GetInstance().GetImage("ship-r");
                 break;
             case AIRPLANE:
                 //this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("house-2");
                 //this.DefaultBitmap  = LoadingStuffs.GetInstance().GetImage("house-2");
                 break;
+        }
+
+        if (this.RenderReversed)
+        {
+            this.SpriteImage = this.RSpriteImage;
         }
     }
 
@@ -114,7 +121,7 @@ public class EnemySprite : GameSprite
                 else 
                 {
                     this.Direction = RIGHT;
-                    this.FlipX();
+                    this.SpriteImage = this.DefaultBitmap;
                 }
             } 
             else if (this.Direction == RIGHT) 
@@ -126,7 +133,7 @@ public class EnemySprite : GameSprite
                 else 
                 {
                     this.Direction = LEFT;
-                    this.FlipX();
+                    this.SpriteImage = this.RSpriteImage;
                 }
             }
         }
@@ -183,15 +190,6 @@ public class EnemySprite : GameSprite
     }
 
     /**
-     * Flip the sprite in X-axis
-     */
-    private void FlipX()
-    {
-       this.RenderReversed = true;
-       this.Status = NORMAL;
-    }
-
-    /**
      * Reset the sprite
      */
     public override void Reset()
@@ -199,7 +197,7 @@ public class EnemySprite : GameSprite
         this.AnimateExplosion   = false;
         if (this.DefaultBitmap != null)
         {
-            this.SpriteImage        = new Bitmap(this.DefaultBitmap);
+            this.SpriteImage    = new Bitmap(this.DefaultBitmap);
         }
         this.TilesNumber        = this.DefaultTilesNumber;
         this.Direction          = this.DefaultDirection;
