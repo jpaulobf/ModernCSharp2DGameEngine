@@ -58,6 +58,9 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\airplanetile.png");
             Images.Add("airplane-tile", image);
+
+            image = BitmapEx.New("img\\fuel_meter_frame.png");
+            Images.Add("fuel-frame", image);
         }
         catch (Exception ex)
         {
