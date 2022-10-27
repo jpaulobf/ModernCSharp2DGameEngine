@@ -14,9 +14,12 @@ public class HUD
     private IGame GameRef;
     public byte PlayerLives {get;set;} = 5;
     private Bitmap FuelFrame = LoadingStuffs.GetInstance().GetImage("fuel-frame");
+    private Bitmap FuelMeter = LoadingStuffs.GetInstance().GetImage("fuel-meter");
 
     private int FuelFrameX = 0;
     private int FuelFrameY = 0;
+    private int FuelMeterX = 0;
+    private int FuelMeterY = 0;
 
     /**
      * Constructor
@@ -29,6 +32,8 @@ public class HUD
 
         this.FuelFrameX     = (int)((this.HudRect.Size.Width / 2) - (this.FuelFrame.Width / 2));
         this.FuelFrameY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);
+        this.FuelMeterX     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);;
+        this.FuelMeterY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);;
     }
 
     /**
@@ -47,6 +52,7 @@ public class HUD
         gfx.FillRectangle(Brushes.Black, this.SeparatorRect);
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 144, 144, 144)), this.HudRect);
 
+        gfx.DrawImage(this.FuelMeter, this.FuelMeterX, this.FuelMeterY, this.FuelMeter.Width, this.FuelMeter.Height);
         gfx.DrawImage(this.FuelFrame, this.FuelFrameX, this.FuelFrameY, this.FuelFrame.Width, this.FuelFrame.Height);
     }
 
