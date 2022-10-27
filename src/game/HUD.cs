@@ -1,5 +1,7 @@
 namespace Game;
 
+using Util;
+
 /**
  * Author: Joao P B Faria
  * Date: Oct/2022
@@ -11,6 +13,10 @@ public class HUD
     private Rectangle HudRect;
     private IGame GameRef;
     public byte PlayerLives {get;set;} = 5;
+    private Bitmap FuelFrame = LoadingStuffs.GetInstance().GetImage("fuel-frame");
+
+    private int FuelFrameX = 0;
+    private int FuelFrameY = 0;
 
     /**
      * Constructor
@@ -20,6 +26,9 @@ public class HUD
         this.GameRef        = game;
         this.SeparatorRect  = new Rectangle(0, 428, 738, 3);
         this.HudRect        = new Rectangle(0, 431, 738, 85);
+
+        this.FuelFrameX     = (int)((this.HudRect.Size.Width / 2) - (this.FuelFrame.Width / 2));
+        this.FuelFrameY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);
     }
 
     /**
@@ -37,6 +46,8 @@ public class HUD
     {
         gfx.FillRectangle(Brushes.Black, this.SeparatorRect);
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 144, 144, 144)), this.HudRect);
+
+        gfx.DrawImage(this.FuelFrame, this.FuelFrameX, this.FuelFrameY, this.FuelFrame.Width, this.FuelFrame.Height);
     }
 
     /**
