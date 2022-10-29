@@ -338,13 +338,15 @@ public class GameController : IGame
     /**
      * Control the game to show the colision and reset the level
      */
-    public void SetCollidingWithAnEnemy()
+    public void PlayerCollided()
     {
-        if (this.Hud.PlayerIsAlive()) 
+        this.GetPlayer().SetCollision();
+
+        if (this.Player.PlayerIsAlive()) 
         {
-            this.Hud.PlayerDecreaseLive();
+            this.Player.PlayerDecreaseLive();
             this.ResetAfterDead = true;
-        } 
+        }
         else 
         {
             //GAMEOVER
@@ -357,7 +359,7 @@ public class GameController : IGame
     private void ResetAfterCollision()
     {
         this.Stages.Reset();
-        this.Player.Reset();
+        this.Player.Reset(false);
         this.Player.Colliding   = false;
         this.ResetAfterDead     = false;
     }
