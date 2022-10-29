@@ -18,6 +18,11 @@ public class Player
     public int Velocity { get; set; }
     public bool Lefting { get; set; }
     public bool Righting { get; set; }
+    public int FuelCounter { get; set; }        = 100;
+    private const int HALF_FUEL_SPENT           = 1;
+    private const int NORMAL_FUEL_SPENT         = 2;
+    private const int DOUBLE_FUEL_SPENT         = 4;
+    private int CurrentFuelSpent                = NORMAL_FUEL_SPENT;
 
     /**
      * Class constructor
@@ -67,9 +72,10 @@ public class Player
      */
     internal void NormalSpeed()
     {
-        this.NORMAL_SPEED   = true;
-        this.HALF_SPEED     = false;
-        this.DOUBLE_SPEED   = false;
+        this.NORMAL_SPEED       = true;
+        this.HALF_SPEED         = false;
+        this.DOUBLE_SPEED       = false;
+        this.CurrentFuelSpent   = NORMAL_FUEL_SPENT;
     }
 
     /**
@@ -77,9 +83,10 @@ public class Player
      */
     internal void HalfSpeed()
     {
-        this.NORMAL_SPEED   = false;
-        this.HALF_SPEED     = true;
-        this.DOUBLE_SPEED   = false;
+        this.NORMAL_SPEED       = false;
+        this.HALF_SPEED         = true;
+        this.DOUBLE_SPEED       = false;
+        this.CurrentFuelSpent   = HALF_FUEL_SPENT;
     }
 
     /**
@@ -87,9 +94,10 @@ public class Player
      */
     internal void DoubleSpeed()
     {
-        this.NORMAL_SPEED   = false;
-        this.HALF_SPEED     = false;
-        this.DOUBLE_SPEED   = true;
+        this.NORMAL_SPEED       = false;
+        this.HALF_SPEED         = false;
+        this.DOUBLE_SPEED       = true;
+        this.CurrentFuelSpent   = DOUBLE_FUEL_SPENT;
     }
 
     /**
@@ -102,6 +110,7 @@ public class Player
         this.NORMAL_SPEED   = true;
         this.HALF_SPEED     = false;
         this.DOUBLE_SPEED   = false;
+        this.FuelCounter    = 100;
     }
 
     /**
