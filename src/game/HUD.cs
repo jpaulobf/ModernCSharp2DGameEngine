@@ -20,6 +20,7 @@ public class HUD
     private int FuelFrameX                      = 0;
     private int FuelFrameY                      = 0;
     private int FuelMeterX                      = 0;
+    private int OGFuelMeterX                    = 0;
     private int FuelMeterY                      = 0;
     private const short LifeCounterX            = 250;
     private const short LifeCounterY            = 495;
@@ -35,8 +36,9 @@ public class HUD
 
         this.FuelFrameX     = (int)((this.HudRect.Size.Width / 2) - (this.FuelFrame.Width / 2));
         this.FuelFrameY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);
-        this.FuelMeterX     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);;
-        this.FuelMeterY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);;
+        this.OGFuelMeterX   = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) - 21;
+        this.FuelMeterX     = this.OGFuelMeterX;
+        this.FuelMeterY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) + 8;
     }
 
     /**
