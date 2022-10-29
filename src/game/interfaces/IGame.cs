@@ -46,4 +46,6 @@ public interface IGame
     public void DisablePlayerSprite();
     
     public Player GetPlayer();
+
+    public void UpdateFuelDecrease(int fuelSpent);
 }
