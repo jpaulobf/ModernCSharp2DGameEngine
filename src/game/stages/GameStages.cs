@@ -244,8 +244,7 @@ public class GameStages : IStagesDef
             if ((this.GameRef.GetPlayer().GetXPosition() < (firstFromLeftToRight * PIXEL_WIDTH)) || 
                 (this.GameRef.GetPlayer().GetXPosition() + this.GameRef.GetPlayer().GetSpriteWidth() > (firstFromRightToLeft * PIXEL_WIDTH))) 
             {
-                this.GameRef.GetPlayer().SetCollision();
-                this.GameRef.SetCollidingWithAnEnemy();
+                this.GameRef.PlayerCollided();
                 break;
             } 
         }
