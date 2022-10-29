@@ -19,11 +19,12 @@ public class HUD
     private Dictionary<byte, string> NumbersMap = new Dictionary<byte, string>() {{0, "number-0"}, {1, "number-1"}, {2, "number-2"}, {3, "number-3"}, {4, "number-4"}, {5, "number-5"}, {6, "number-6"}, {7, "number-7"}, {8, "number-8"}, {9, "number-9"}};
     private int FuelFrameX                      = 0;
     private int FuelFrameY                      = 0;
-    private int FuelMeterX                      = 0;
-    private int OGFuelMeterX                    = 0;
+    private float FuelMeterX                    = 0;
+    private float OGFuelMeterX                  = 0;
     private int FuelMeterY                      = 0;
     private const short LifeCounterX            = 250;
     private const short LifeCounterY            = 495;
+    private const float FuelSpentUnit           = 0.7f;
 
     /**
      * Constructor
@@ -37,11 +38,16 @@ public class HUD
 
         this.FuelFrameX     = (int)((this.HudRect.Size.Width / 2) - (this.FuelFrame.Width / 2));
         this.FuelFrameY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);
-        this.OGFuelMeterX   = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) - 21;
+        this.OGFuelMeterX   = (float)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) - 21;
         this.FuelMeterX     = this.OGFuelMeterX;
         this.FuelMeterY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) + 8;
 
         this.LifeCounter    = LoadingStuffs.GetInstance().GetImage(NumbersMap[this.PlayerRef.Lives]);
+    }
+
+    public void FuelDecrease(int fuelSpent)
+    {
+        this.FuelMeterX -= (fuelSpent * FuelSpentUnit);
     }
 
     /**
@@ -79,5 +85,6 @@ public class HUD
      */
     internal void Reset()
     {
+        this.FuelMeterX = this.OGFuelMeterX;
     }
 }
