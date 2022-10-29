@@ -273,15 +273,20 @@ public class GameController : IGame
             IS_DOWN_KEY_DOWN = true;
         }
 
-        if (e.KeyValue == 32) {
-            if (this.ShowPlayerSprite) {
+        if (e.KeyValue == 32) 
+        {
+            if (this.ShowPlayerSprite) 
+            {
                 IS_SHOT_KEY_DOWN = true;
             }
         }
 
-        if (e.KeyValue == 32 || e.KeyValue == 37 || e.KeyValue == 38 || e.KeyValue == 39 || e.KeyValue == 40) {
-            if (this.ShowPlayerSprite) {
+        if (e.KeyValue == 32 || e.KeyValue == 37 || e.KeyValue == 38 || e.KeyValue == 39 || e.KeyValue == 40) 
+        {
+            if (this.ShowPlayerSprite) 
+            {
                 this.Stages.Start();
+                this.Player.Flying = true;
             }
         }
     }
