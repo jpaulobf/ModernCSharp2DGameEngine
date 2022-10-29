@@ -89,7 +89,7 @@ public class Player
                 this.FuelCounter -= this.CurrentFuelSpent;
                 this.FrameCounter = 0;
 
-                Console.WriteLine(this.FuelCounter);
+                this.GameRef.UpdateFuelDecrease(this.CurrentFuelSpent);
                 
                 if (this.FuelCounter <= 0)
                 {
