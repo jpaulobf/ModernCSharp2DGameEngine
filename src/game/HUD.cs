@@ -12,8 +12,8 @@ public class HUD
     private Rectangle SeparatorRect;
     private Rectangle HudRect;
     private IGame GameRef;
+    private Player PlayerRef;
     private Bitmap LifeCounter;
-    public byte PlayerLives {get;set;}          = 5;
     private Bitmap FuelFrame                    = LoadingStuffs.GetInstance().GetImage("fuel-frame");
     private Bitmap FuelMeter                    = LoadingStuffs.GetInstance().GetImage("fuel-meter");
     private Dictionary<byte, string> NumbersMap = new Dictionary<byte, string>() {{0, "number-0"}, {1, "number-1"}, {2, "number-2"}, {3, "number-3"}, {4, "number-4"}, {5, "number-5"}, {6, "number-6"}, {7, "number-7"}, {8, "number-8"}, {9, "number-9"}};
@@ -31,6 +31,7 @@ public class HUD
     public HUD(IGame game) 
     {
         this.GameRef        = game;
+        this.PlayerRef      = this.GameRef.GetPlayer();
         this.SeparatorRect  = new Rectangle(0, 428, 738, 3);
         this.HudRect        = new Rectangle(0, 431, 738, 85);
 
@@ -39,6 +40,8 @@ public class HUD
         this.OGFuelMeterX   = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) - 21;
         this.FuelMeterX     = this.OGFuelMeterX;
         this.FuelMeterY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) + 8;
+
+        this.LifeCounter    = LoadingStuffs.GetInstance().GetImage(NumbersMap[this.PlayerRef.Lives]);
     }
 
     /**
@@ -54,7 +57,7 @@ public class HUD
      */
     private void GetCurrentLifeCounterImage()
     {
-        this.LifeCounter = LoadingStuffs.GetInstance().GetImage(NumbersMap[PlayerLives]);
+        this.LifeCounter = LoadingStuffs.GetInstance().GetImage(NumbersMap[this.PlayerRef.Lives]);
     }
 
     /**
@@ -68,7 +71,6 @@ public class HUD
         gfx.DrawImage(this.FuelMeter, this.FuelMeterX, this.FuelMeterY, this.FuelMeter.Width, this.FuelMeter.Height);
         gfx.DrawImage(this.FuelFrame, this.FuelFrameX, this.FuelFrameY, this.FuelFrame.Width, this.FuelFrame.Height);
 
-
         gfx.DrawImage(this.LifeCounter, LifeCounterX, LifeCounterY, this.LifeCounter.Width, this.LifeCounter.Height);
     }
 
@@ -77,22 +79,5 @@ public class HUD
      */
     internal void Reset()
     {
-       this.PlayerLives = 5;
-    }
-
-    /**
-     * Verify if player is still alive
-     */
-    internal bool PlayerIsAlive()
-    {
-        return (this.PlayerLives > 0);
-    }
-
-    /**
-     * Decrease the current player live number
-     */
-    internal void PlayerDecreaseLive()
-    {
-        this.PlayerLives--;
     }
 }
