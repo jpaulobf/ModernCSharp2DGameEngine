@@ -183,8 +183,7 @@ public class EnemySprite : GameSprite
         this.Destroyed = true;
         if (playerCollision) 
         {   
-            this.GameRef.GetPlayer().SetCollision();
-            this.GameRef.SetCollidingWithAnEnemy();
+            this.GameRef.PlayerCollided();
         }
         this.AnimateExplosion = true;
     }
