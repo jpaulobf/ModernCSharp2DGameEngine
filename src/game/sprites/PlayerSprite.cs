@@ -10,7 +10,7 @@ namespace Game;
 public class PlayerSprite : GameSprite 
 {
     private IGame GameRef;
-    private Player PControllerRef;
+    private Player PlayerRef;
     private Bitmap OGSpriteImage;
     private Bitmap SpriteSplosion               = LoadingStuffs.GetInstance().GetImage("sprite-explosion");
     private float OgWidth                       = 0;
@@ -19,12 +19,12 @@ public class PlayerSprite : GameSprite
     /**
      * Player Sprite constructor
      */
-    public PlayerSprite(IGame game, Player playerController, int width, int height, int X, int Y, int velocity) : base(width, height, X, Y, velocity, 0) 
+    public PlayerSprite(IGame game, Player player, int width, int height, int X, int Y, int velocity) : base(width, height, X, Y, velocity, 0) 
     {
         this.SpriteImage        = LoadingStuffs.GetInstance().GetImage("airplane-tile");
         this.OGSpriteImage      = LoadingStuffs.GetInstance().GetImage("airplane-tile");
         this.GameRef            = game;
-        this.PControllerRef     = playerController;
+        this.PlayerRef          = player;
         this.OgWidth            = width;
         this.OgHeight           = height;
         this.OgX                = X;
@@ -36,17 +36,17 @@ public class PlayerSprite : GameSprite
      */
     public override void Update(long timeframe, bool colliding = false) 
     {
-        if (!this.PControllerRef.Colliding) 
+        if (!this.PlayerRef.Colliding) 
         {
-            if (!this.PControllerRef.Lefting && !this.PControllerRef.Righting) 
+            if (!this.PlayerRef.Lefting && !this.PlayerRef.Righting) 
             {
                 this.SourceStartX = (short)Width; //Default
             } 
-            else if (this.PControllerRef.Lefting) 
+            else if (this.PlayerRef.Lefting) 
             {
                 this.SourceStartX = 0;
             } 
-            else if (this.PControllerRef.Righting) 
+            else if (this.PlayerRef.Righting) 
             { 
                 this.SourceStartX = (short)(Width * 2);
             }
