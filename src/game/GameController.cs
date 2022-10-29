@@ -360,6 +360,7 @@ public class GameController : IGame
     {
         this.Stages.Reset();
         this.Player.Reset(false);
+        this.Hud.Reset();
         this.Player.Colliding   = false;
         this.ResetAfterDead     = false;
     }
@@ -412,5 +413,10 @@ public class GameController : IGame
     public IEnumerable<GameSprite> GetCurrentScreenSprites()
     {
         return(this.Stages.GetCurrentScreenSprites());
+    }
+
+    public void UpdateFuelDecrease(int fuelSpent)
+    {
+        this.Hud.FuelDecrease(fuelSpent);
     }
 }
