@@ -64,6 +64,36 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\fuel_meter.png");
             Images.Add("fuel-meter", image);
+
+            image = BitmapEx.New("img\\n0.png");
+            Images.Add("number-0", image);
+
+            image = BitmapEx.New("img\\n1.png");
+            Images.Add("number-1", image);
+
+            image = BitmapEx.New("img\\n2.png");
+            Images.Add("number-2", image);
+
+            image = BitmapEx.New("img\\n3.png");
+            Images.Add("number-3", image);
+
+            image = BitmapEx.New("img\\n4.png");
+            Images.Add("number-4", image);
+
+            image = BitmapEx.New("img\\n5.png");
+            Images.Add("number-5", image);
+
+            image = BitmapEx.New("img\\n6.png");
+            Images.Add("number-6", image);
+
+            image = BitmapEx.New("img\\n7.png");
+            Images.Add("number-7", image);
+            
+            image = BitmapEx.New("img\\n8.png");
+            Images.Add("number-8", image);
+
+            image = BitmapEx.New("img\\n9.png");
+            Images.Add("number-9", image);
         }
         catch (Exception ex)
         {
