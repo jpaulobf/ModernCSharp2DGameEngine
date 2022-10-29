@@ -25,6 +25,8 @@ public class Player
     private const int DOUBLE_FUEL_SPENT         = 4;
     private int CurrentFuelSpent                = NORMAL_FUEL_SPENT;
     protected long FrameCounter                 = 0;
+    private const byte DefaultLives             = 5;
+    public byte Lives {get;set;}                = DefaultLives;
 
     /**
      * Class constructor
@@ -63,10 +65,69 @@ public class Player
     }
 
     /**
-     * Define as colliding
+     * Draw Method
      */
-    public void SetCollision() {
-        this.Colliding = true;
+    internal void Draw(Graphics internalGraphics)
+    {
+        this.PlayerSprite.Draw(internalGraphics);
+
+        //draw the shot object
+        this.Shot.Draw(internalGraphics);
+    }
+
+    /**
+     * Update Method
+     */
+    internal void Update(long frametime)
+    {
+        if (this.Flying)
+        {
+            this.FrameCounter += frametime;
+
+            if (this.FrameCounter >= 8_500_000)
+            {
+                this.FuelCounter -= this.CurrentFuelSpent;
+                this.FrameCounter = 0;
+
+                Console.WriteLine(this.FuelCounter);
+                
+                if (this.FuelCounter <= 0)
+                {
+                    this.GameRef.PlayerCollided();
+                }
+            }
+        }
+
+        this.PlayerSprite.Update(frametime);
+
+        //update the shot object
+        this.Shot.Update(frametime);
+    }
+
+    private float CalcDistance(long frametime) 
+    {
+        // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
+        return ((float)(this.Velocity * ((double)frametime / 10_000_000)));
+    }
+
+    public void GoLeft(long frametime)      
+    {
+        this.PlayerSprite.X -= this.CalcDistance(frametime);
+        this.Lefting = true;
+    }
+
+    public void GoRight(long frametime) 
+    {   
+        
+        this.PlayerSprite.X += this.CalcDistance(frametime);
+        this.Righting = true;
+    }
+
+    public void GoStraight() 
+    {
+        this.Righting = false;
+        this.Lefting = false;
+        this.NormalSpeed();
     }
 
     /**
@@ -103,9 +164,32 @@ public class Player
     }
 
     /**
+     * Define as colliding
+     */
+    public void SetCollision() {
+        this.Colliding = true;
+    }
+
+    /**
+     * Verify if player is still alive
+     */
+    internal bool PlayerIsAlive()
+    {
+        return (this.Lives > 0);
+    }
+
+    /**
+     * Decrease the current player live number
+     */
+    internal void PlayerDecreaseLive()
+    {
+        --this.Lives;
+    }
+
+    /**
      * Reset player sprite
      */
-    public void Reset()
+    public void Reset(bool resetLives = true)
     {
         this.PlayerSprite.Reset();
         this.Colliding          = false;
@@ -115,40 +199,10 @@ public class Player
         this.FuelCounter        = 100;
         this.CurrentFuelSpent   = NORMAL_FUEL_SPENT;
         this.Flying             = false;
-    }
-
-    /**
-     * Draw Method
-     */
-    internal void Draw(Graphics internalGraphics)
-    {
-        this.PlayerSprite.Draw(internalGraphics);
-
-        //draw the shot object
-        this.Shot.Draw(internalGraphics);
-    }
-
-    /**
-     * Update Method
-     */
-    internal void Update(long frametime)
-    {
-        if (this.Flying)
+        if (resetLives)
         {
-            this.FrameCounter += frametime;
-
-            if (this.FrameCounter >= 2_500_000)
-            {
-                this.FuelCounter -= this.CurrentFuelSpent;
-                this.FrameCounter = 0;
-                Console.WriteLine(this.FuelCounter);
-            }
+            this.Lives  = DefaultLives;
         }
-
-        this.PlayerSprite.Update(frametime);
-
-        //update the shot object
-        this.Shot.Update(frametime);
     }
 
     //Accessors
@@ -156,30 +210,4 @@ public class Player
     public float GetXPosition()             {   return (this.PlayerSprite.X);       }
     public float GetSpriteWidth()           {   return (this.PlayerSprite.Width);   }
     public void SetXPosition(int x)         {   this.PlayerSprite.X = x;            }
-
-    public void GoLeft(long frametime)      
-    {
-        this.PlayerSprite.X -= this.CalcDistance(frametime);
-        this.Lefting = true;
-    }
-
-    private float CalcDistance(long frametime) 
-    {
-        // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
-        return ((float)(this.Velocity * ((double)frametime / 10_000_000)));
-    }
-    
-    public void GoRight(long frametime) 
-    {   
-        
-        this.PlayerSprite.X += this.CalcDistance(frametime);
-        this.Righting = true;
-    }
-
-    public void GoStraight() 
-    {
-        this.Righting = false;
-        this.Lefting = false;
-        this.NormalSpeed();
-    }
 }
