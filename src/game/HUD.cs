@@ -12,14 +12,17 @@ public class HUD
     private Rectangle SeparatorRect;
     private Rectangle HudRect;
     private IGame GameRef;
-    public byte PlayerLives {get;set;} = 5;
-    private Bitmap FuelFrame = LoadingStuffs.GetInstance().GetImage("fuel-frame");
-    private Bitmap FuelMeter = LoadingStuffs.GetInstance().GetImage("fuel-meter");
-
-    private int FuelFrameX = 0;
-    private int FuelFrameY = 0;
-    private int FuelMeterX = 0;
-    private int FuelMeterY = 0;
+    private Bitmap LifeCounter;
+    public byte PlayerLives {get;set;}          = 5;
+    private Bitmap FuelFrame                    = LoadingStuffs.GetInstance().GetImage("fuel-frame");
+    private Bitmap FuelMeter                    = LoadingStuffs.GetInstance().GetImage("fuel-meter");
+    private Dictionary<byte, string> NumbersMap = new Dictionary<byte, string>() {{0, "number-0"}, {1, "number-1"}, {2, "number-2"}, {3, "number-3"}, {4, "number-4"}, {5, "number-5"}, {6, "number-6"}, {7, "number-7"}, {8, "number-8"}, {9, "number-9"}};
+    private int FuelFrameX                      = 0;
+    private int FuelFrameY                      = 0;
+    private int FuelMeterX                      = 0;
+    private int FuelMeterY                      = 0;
+    private const short LifeCounterX            = 250;
+    private const short LifeCounterY            = 495;
 
     /**
      * Constructor
@@ -41,7 +44,15 @@ public class HUD
      */
     public void Update(long frametime) 
     {
+        this.GetCurrentLifeCounterImage();
+    }
 
+    /**
+     * Get current life counter image
+     */
+    private void GetCurrentLifeCounterImage()
+    {
+        this.LifeCounter = LoadingStuffs.GetInstance().GetImage(NumbersMap[PlayerLives]);
     }
 
     /**
@@ -54,6 +65,9 @@ public class HUD
 
         gfx.DrawImage(this.FuelMeter, this.FuelMeterX, this.FuelMeterY, this.FuelMeter.Width, this.FuelMeter.Height);
         gfx.DrawImage(this.FuelFrame, this.FuelFrameX, this.FuelFrameY, this.FuelFrame.Width, this.FuelFrame.Height);
+
+
+        gfx.DrawImage(this.LifeCounter, LifeCounterX, LifeCounterY, this.LifeCounter.Width, this.LifeCounter.Height);
     }
 
     /**
