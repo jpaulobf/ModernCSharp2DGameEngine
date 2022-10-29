@@ -39,7 +39,7 @@ public interface IGame
 
     public Size WindowSize { get; }
 
-    public void SetCollidingWithAnEnemy();
+    public void PlayerCollided();
 
     public void TogglePlayerSprite();
 
