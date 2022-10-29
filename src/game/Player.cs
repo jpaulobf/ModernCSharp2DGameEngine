@@ -15,6 +15,7 @@ public class Player
     public bool NORMAL_SPEED { get; set; }      = true;
     public bool HALF_SPEED { get; set; }        = false;
     public bool DOUBLE_SPEED { get; set; }      = false;
+    public bool Flying { get; set; }            = false;
     public int Velocity { get; set; }
     public bool Lefting { get; set; }
     public bool Righting { get; set; }
@@ -23,6 +24,7 @@ public class Player
     private const int NORMAL_FUEL_SPENT         = 2;
     private const int DOUBLE_FUEL_SPENT         = 4;
     private int CurrentFuelSpent                = NORMAL_FUEL_SPENT;
+    protected long FrameCounter                 = 0;
 
     /**
      * Class constructor
@@ -106,11 +108,13 @@ public class Player
     public void Reset()
     {
         this.PlayerSprite.Reset();
-        this.Colliding      = false;
-        this.NORMAL_SPEED   = true;
-        this.HALF_SPEED     = false;
-        this.DOUBLE_SPEED   = false;
-        this.FuelCounter    = 100;
+        this.Colliding          = false;
+        this.NORMAL_SPEED       = true;
+        this.HALF_SPEED         = false;
+        this.DOUBLE_SPEED       = false;
+        this.FuelCounter        = 100;
+        this.CurrentFuelSpent   = NORMAL_FUEL_SPENT;
+        this.Flying             = false;
     }
 
     /**
@@ -129,6 +133,18 @@ public class Player
      */
     internal void Update(long frametime)
     {
+        if (this.Flying)
+        {
+            this.FrameCounter += frametime;
+
+            if (this.FrameCounter >= 2_500_000)
+            {
+                this.FuelCounter -= this.CurrentFuelSpent;
+                this.FrameCounter = 0;
+                Console.WriteLine(this.FuelCounter);
+            }
+        }
+
         this.PlayerSprite.Update(frametime);
 
         //update the shot object
