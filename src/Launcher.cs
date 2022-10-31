@@ -20,6 +20,6 @@ static class Launcher
      */
     static void Main()
     {
-        new MyGame(200);
+        new MyGame(0);
     } 
 }
