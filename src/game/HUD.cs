@@ -23,6 +23,7 @@ public class HUD
     private float OGFuelMeterX                  = 0;
     private int FuelMeterY                      = 0;
     private const short LifeCounterX            = 250;
+    private const short FuelZeroX               = 295;
     private const short LifeCounterY            = 495;
     private const float FuelSpentUnit           = 1.4f;
 
@@ -38,16 +39,16 @@ public class HUD
 
         this.FuelFrameX     = (int)((this.HudRect.Size.Width / 2) - (this.FuelFrame.Width / 2));
         this.FuelFrameY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);
-        this.OGFuelMeterX   = (float)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) - 21;
+        this.OGFuelMeterX   = (float)FuelZeroX + (100 * FuelSpentUnit);
         this.FuelMeterX     = this.OGFuelMeterX;
         this.FuelMeterY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) + 8;
 
         this.LifeCounter    = LoadingStuffs.GetInstance().GetImage(NumbersMap[this.PlayerRef.Lives]);
     }
 
-    public void FuelDecrease(int fuelSpent)
+    public void UpdateFuelMarker(float fuelCounter)
     {
-        this.FuelMeterX -= (fuelSpent * FuelSpentUnit);
+        this.FuelMeterX = ((float)FuelZeroX) + (FuelSpentUnit * fuelCounter);
     }
 
     /**
