@@ -47,5 +47,5 @@ public interface IGame
     
     public Player GetPlayer();
 
-    public void UpdateFuelDecrease(int fuelSpent);
+    public void UpdateFuelMarker();
 }
