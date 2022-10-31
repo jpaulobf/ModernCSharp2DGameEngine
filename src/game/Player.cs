@@ -88,7 +88,6 @@ public class Player
             if (this.FrameCounter >= 8_500_000)
             {
                 this.FuelCounter -= this.CurrentFuelSpent;
-                Console.WriteLine(this.FuelCounter);
                 this.FrameCounter = 0;
 
                 //Update the fuel decrease markup
