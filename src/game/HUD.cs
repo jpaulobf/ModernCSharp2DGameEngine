@@ -24,7 +24,7 @@ public class HUD
     private int FuelMeterY                      = 0;
     private const short LifeCounterX            = 250;
     private const short LifeCounterY            = 495;
-    private const float FuelSpentUnit           = 0.7f;
+    private const float FuelSpentUnit           = 1.4f;
 
     /**
      * Constructor
