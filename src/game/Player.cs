@@ -16,10 +16,12 @@ public class Player
     public bool HALF_SPEED { get; set; }        = false;
     public bool DOUBLE_SPEED { get; set; }      = false;
     public bool Flying { get; set; }            = false;
+    public bool AddingFuel                      = false;
     public int Velocity { get; set; }
     public bool Lefting { get; set; }
     public bool Righting { get; set; }
-    public int FuelCounter { get; set; }        = 100;
+    private const byte FUEL_COMPLETE            = 100;
+    public float FuelCounter { get; set; }      = FUEL_COMPLETE;
     private const int HALF_FUEL_SPENT           = 1;
     private const int NORMAL_FUEL_SPENT         = 2;
     private const int DOUBLE_FUEL_SPENT         = 4;
@@ -65,6 +67,19 @@ public class Player
     }
 
     /**
+     * Adding fuel
+     */
+    public void AddFuel(long frametime)
+    {
+        this.AddingFuel = true;
+        this.FuelCounter += (float)(((double)frametime / 10_000_000) * 20);
+        if (this.FuelCounter > FUEL_COMPLETE)
+        {
+            this.FuelCounter = FUEL_COMPLETE;
+        }
+    }
+
+    /**
      * Draw Method
      */
     internal void Draw(Graphics internalGraphics)
@@ -87,11 +102,14 @@ public class Player
             //from time to time, update the fuel counter
             if (this.FrameCounter >= 8_500_000)
             {
-                this.FuelCounter -= this.CurrentFuelSpent;
+                if (!this.AddingFuel)
+                {
+                    this.FuelCounter -= this.CurrentFuelSpent;
+                }
                 this.FrameCounter = 0;
 
                 //Update the fuel decrease markup
-                this.GameRef.UpdateFuelDecrease(this.CurrentFuelSpent);
+                this.GameRef.UpdateFuelMarker();
                 
                 //if fuel is empty, then die...
                 if (this.FuelCounter <= 0)
@@ -202,7 +220,7 @@ public class Player
         this.NORMAL_SPEED       = true;
         this.HALF_SPEED         = false;
         this.DOUBLE_SPEED       = false;
-        this.FuelCounter        = 100;
+        this.FuelCounter        = FUEL_COMPLETE;
         this.CurrentFuelSpent   = NORMAL_FUEL_SPENT;
         this.Flying             = false;
         if (resetLives)
