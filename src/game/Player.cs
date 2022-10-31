@@ -16,7 +16,7 @@ public class Player
     public bool HALF_SPEED { get; set; }        = false;
     public bool DOUBLE_SPEED { get; set; }      = false;
     public bool Flying { get; set; }            = false;
-    public bool AddingFuel                      = false;
+    public bool Refueling { get; set; }         = false;
     public int Velocity { get; set; }
     public bool Lefting { get; set; }
     public bool Righting { get; set; }
@@ -71,7 +71,7 @@ public class Player
      */
     public void AddFuel(long frametime)
     {
-        this.AddingFuel = true;
+        this.Refueling = true;
         this.FuelCounter += (float)(((double)frametime / 10_000_000) * 20);
         if (this.FuelCounter > FUEL_COMPLETE)
         {
@@ -103,7 +103,7 @@ public class Player
             //from time to time, update the fuel counter
             if (this.FrameCounter >= 8_500_000)
             {
-                if (!this.AddingFuel)
+                if (!this.Refueling)
                 {
                     this.FuelCounter -= this.CurrentFuelSpent;
                 }
