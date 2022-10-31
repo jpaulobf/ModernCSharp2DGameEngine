@@ -415,8 +415,11 @@ public class GameController : IGame
         return(this.Stages.GetCurrentScreenSprites());
     }
 
-    public void UpdateFuelDecrease(int fuelSpent)
+    /**
+     * Update the Fuel Marker in the HUD
+     */
+    public void UpdateFuelMarker()
     {
-        this.Hud.FuelDecrease(fuelSpent);
+        this.Hud.UpdateFuelMarker(this.Player.FuelCounter);
     }
 }
