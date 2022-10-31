@@ -50,11 +50,16 @@ public class StaticSprite : GameSprite
         this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
         this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
 
-        if (!this.Destroyed) 
+        if (!this.Destroyed && this.Type == FUEL) 
         {
+            //TODO: MELHORAR......
             if (this.CollisionDetection(this.GameRef.GetPlayer().GetPlayerSprite())) 
             {
-                Console.WriteLine("Fuel...");
+                this.GameRef.GetPlayer().AddFuel(frametime);
+            }
+            else
+            {
+                this.GameRef.GetPlayer().AddingFuel = false;
             }
         }
 
