@@ -84,6 +84,7 @@ public class Player
      */
     internal void Draw(Graphics internalGraphics)
     {
+        //draw the player sprite
         this.PlayerSprite.Draw(internalGraphics);
 
         //draw the shot object
