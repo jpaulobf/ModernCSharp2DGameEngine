@@ -84,13 +84,16 @@ public class Player
         {
             this.FrameCounter += frametime;
 
+            //from time to time, update the fuel counter
             if (this.FrameCounter >= 8_500_000)
             {
                 this.FuelCounter -= this.CurrentFuelSpent;
                 this.FrameCounter = 0;
 
+                //Update the fuel decrease markup
                 this.GameRef.UpdateFuelDecrease(this.CurrentFuelSpent);
                 
+                //if fuel is empty, then die...
                 if (this.FuelCounter <= 0)
                 {
                     this.GameRef.PlayerCollided();
@@ -104,6 +107,9 @@ public class Player
         this.Shot.Update(frametime);
     }
 
+    /**
+     * Calc movement distance based on frametime
+     */
     private float CalcDistance(long frametime) 
     {
         // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
