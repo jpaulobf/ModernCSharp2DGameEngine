@@ -59,7 +59,7 @@ public class StaticSprite : GameSprite
             }
             else
             {
-                this.GameRef.GetPlayer().AddingFuel = false;
+                this.GameRef.GetPlayer().Refueling = false;
             }
         }
 
