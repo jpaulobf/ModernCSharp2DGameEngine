@@ -63,4 +63,6 @@ public interface IGame
     public Player GetPlayer();
 
     public void UpdateFuelMarker();
+
+    public void UpdateScore(int type);
 }
