@@ -62,10 +62,10 @@ public class Shot : GameSprite
                 {
                     if (this.CollisionDetection(item) && !item.Destroyed) 
                     {
-                        this.IsBulletDestroyed  = true;
-                        this.StartDelay         = true;
                         item.SetCollision(false);
                         this.GameRef.UpdateScore(item.Type);
+                        this.IsBulletDestroyed  = true;
+                        this.StartDelay         = true;
                         break;
                     }
                 }
