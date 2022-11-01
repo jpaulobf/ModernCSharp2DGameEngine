@@ -1,4 +1,5 @@
 using Game;
+using Util;
 
 public class Score
 {
@@ -12,6 +13,20 @@ public class Score
     private string StPoints                 = "";
     private const short RightPosX           = 447;
     private const short TopPosY             = 434;
+
+    private Dictionary<char, Bitmap> NumbersImages = new Dictionary<char, Bitmap> 
+    {
+        {'0', LoadingStuffs.GetInstance().GetImage("number-0")},
+        {'1', LoadingStuffs.GetInstance().GetImage("number-1")},
+        {'2', LoadingStuffs.GetInstance().GetImage("number-2")},
+        {'3', LoadingStuffs.GetInstance().GetImage("number-3")},
+        {'4', LoadingStuffs.GetInstance().GetImage("number-4")},
+        {'5', LoadingStuffs.GetInstance().GetImage("number-5")},
+        {'6', LoadingStuffs.GetInstance().GetImage("number-6")},
+        {'7', LoadingStuffs.GetInstance().GetImage("number-7")},
+        {'8', LoadingStuffs.GetInstance().GetImage("number-8")},
+        {'9', LoadingStuffs.GetInstance().GetImage("number-9")}
+    };
 
     public Score(IGame gameRef)
     {
@@ -44,11 +59,16 @@ public class Score
 
     public void Draw(Graphics gfx)
     {
-
+        for (int i = (StPoints.Length - 1), j = 1; i >= 0; i--, j++)
+        {
+            var temp = NumbersImages[StPoints[i]];
+            gfx.DrawImage(temp, RightPosX - (j * temp.Width), TopPosY, temp.Width, temp.Height);
+        }
     }
 
     public void Reset()
     {
         this.Points = 0;
+        this.StPoints = "";
     }
 }
