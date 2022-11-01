@@ -3,11 +3,11 @@ using Game;
 public class Score
 {
     private IGame GameRef;
-    private const short HELI_POINTS         = 100;
-    private const short SHIP_POINTS         = 100;
-    private const short FUEL_POINTS         = 100;
+    private const short HELI_POINTS         = 60;
+    private const short SHIP_POINTS         = 30;
+    private const short FUEL_POINTS         = 80;
     private const short AIRPLANE_POINTS     = 100;
-    private const short BRIDGE_POINTS       = 1000;
+    private const short BRIDGE_POINTS       = 500;
     private int Points                      = 0;
     private string StPoints                 = "";
     private const short RightPosX           = 0;
