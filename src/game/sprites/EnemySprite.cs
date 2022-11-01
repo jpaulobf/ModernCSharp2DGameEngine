@@ -149,23 +149,35 @@ public class EnemySprite : GameSprite
         }
 
         //this will start after collision
-        if (this.AnimateExplosion) {
+        if (this.AnimateExplosion) 
+        {
             this.AnimationCounter += frametime;
 
             //this will start after explosion start
-            if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) {
-                if (this.Type == SHIP) {
+            if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) 
+            {
+                if (this.Type == SHIP) 
+                {
                     this.SpriteImage = this.ShipExplosion1;
-                } else if (this.Type == HELI) {
+                } 
+                else if (this.Type == HELI) 
+                {
                     this.SpriteImage = this.HeliExplosion1;
                 }
-            } else if (this.AnimationCounter >= 4_000_000 && this.AnimationCounter < 8_000_000) {
-                if (this.Type == SHIP) {
+            } 
+            else if (this.AnimationCounter >= 4_000_000 && this.AnimationCounter < 8_000_000) 
+            {
+                if (this.Type == SHIP) 
+                {
                     this.SpriteImage = this.ShipExplosion2;
-                } else if (this.Type == HELI) {
+                } 
+                else if (this.Type == HELI) 
+                {
                     this.SpriteImage = this.HeliExplosion2;
                 }
-            } else if (this.AnimationCounter >= 8_000_000) {
+            } 
+            else if (this.AnimationCounter >= 8_000_000) 
+            {
                 this.SpriteImage = this.Pixel;
                 this.AnimateExplosion = false;
                 this.AnimationCounter = 0;
@@ -194,10 +206,7 @@ public class EnemySprite : GameSprite
     public override void Reset()
     {
         this.AnimateExplosion   = false;
-        if (this.DefaultBitmap != null)
-        {
-            this.SpriteImage    = new Bitmap(this.DefaultBitmap);
-        }
+        this.SpriteImage        = (this.DefaultBitmap != null)?new Bitmap(this.DefaultBitmap):null;
         this.TilesNumber        = this.DefaultTilesNumber;
         this.Direction          = this.DefaultDirection;
         this.AnimationCounter   = 0;
