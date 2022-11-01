@@ -46,6 +46,7 @@ public class GameController : IGame
     private HUD Hud;
     private GameStages Stages;
     private Player Player;
+    private Score Score;
 
     /**
      * Game constructor
@@ -81,6 +82,7 @@ public class GameController : IGame
         this.Player     = new Player(this);
         this.Hud        = new HUD(this);
         this.Stages     = new GameStages(this);
+        this.Score      = new Score(this);
     }
 
     /**
@@ -131,6 +133,7 @@ public class GameController : IGame
                 this.Hud.Update(frametime);
                 this.Stages.Update(frametime);
                 this.Player.Update(frametime);
+                this.Score.Update(frametime);
             } 
             else if (this.Player.Colliding)
             {
@@ -176,6 +179,8 @@ public class GameController : IGame
 
                 //draw the HUD
                 this.Hud.Draw(this.InternalGraphics);
+
+                this.Score.Draw(this.InternalGraphics);
 
                 if (this.ShowPlayerSprite) 
                 {
@@ -395,6 +400,7 @@ public class GameController : IGame
         this.ResetAfterDead     = false;
         this.ResetCounter       = 0;
         this.Hud.Reset();
+        this.Score.Reset();
         this.Stages.Reset();
         this.Player.Reset();
     }
@@ -421,5 +427,10 @@ public class GameController : IGame
     public void UpdateFuelMarker()
     {
         this.Hud.UpdateFuelMarker(this.Player.FuelCounter);
+    }
+
+    public void UpdateScore(int type)
+    {
+        this.Score.ItemDestructed(type);
     }
 }
