@@ -65,6 +65,7 @@ public class Shot : GameSprite
                         this.IsBulletDestroyed  = true;
                         this.StartDelay         = true;
                         item.SetCollision(false);
+                        this.GameRef.UpdateScore(item.Type);
                         break;
                     }
                 }
