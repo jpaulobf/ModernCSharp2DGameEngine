@@ -10,8 +10,8 @@ public class Score
     private const short BRIDGE_POINTS       = 500;
     private int Points                      = 0;
     private string StPoints                 = "";
-    private const short RightPosX           = 0;
-    private const short TopPosY             = 0;
+    private const short RightPosX           = 447;
+    private const short TopPosY             = 434;
 
     public Score(IGame gameRef)
     {
@@ -20,7 +20,21 @@ public class Score
 
     public void ItemDestructed(int type)
     {
-        
+        switch (type)
+        {
+            case GameSprite.SHIP:
+                this.Points += SHIP_POINTS;
+                break;
+            case GameSprite.HELI:
+                this.Points += HELI_POINTS;
+                break;
+            case GameSprite.FUEL:
+                this.Points += FUEL_POINTS;
+                break;
+            case GameSprite.AIRPLANE:
+                this.Points += AIRPLANE_POINTS;
+                break;
+        }
     }
 
     public void Update(long frametime)
@@ -37,5 +51,4 @@ public class Score
     {
         this.Points = 0;
     }
-
 }
