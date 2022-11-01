@@ -7,14 +7,29 @@ namespace Game;
  */
 public interface IGame 
 {
+    /**
+     * Update Method, responsible for the game loop update process.
+     */
     public void Update(long frametime);
 
+    /**
+     * Draw Method, responsible for the game loop draw process.
+     */
     public void Draw(long frametime);
 
+    /**
+     * Get the instance of current Graphics object
+     */
     public Graphics GetGraphics();
 
+    /**
+     * Render is the method responsible for "printing" the backbuffer to the current buffer
+     */
     public void Render(Graphics targetGraphics);
 
+    /**
+     * Define the game Resolution (accessor)
+     */
     public Size Resolution { get; set; }
 
     public void KeyDown(object? sender, System.Windows.Forms.KeyEventArgs e);
