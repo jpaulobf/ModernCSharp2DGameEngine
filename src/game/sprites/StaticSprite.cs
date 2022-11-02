@@ -35,6 +35,10 @@ public class StaticSprite : GameSprite
                 this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("house-2");
                 this.OGSpriteImage  = LoadingStuffs.GetInstance().GetImage("house-2");
             break;
+            case BRIDGE:
+                this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("bridge");
+                this.OGSpriteImage  = LoadingStuffs.GetInstance().GetImage("bridge");
+            break;
             default:
                 this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("pixel");
                 this.OGSpriteImage  = LoadingStuffs.GetInstance().GetImage("pixel");
