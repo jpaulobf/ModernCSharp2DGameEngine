@@ -135,12 +135,18 @@ public class Player
         return ((float)(this.Velocity * ((double)frametime / 10_000_000)));
     }
 
+    /**
+     * Control the player to go left
+     */
     public void GoLeft(long frametime)      
     {
         this.PlayerSprite.X -= this.CalcDistance(frametime);
         this.Lefting = true;
     }
-
+    
+    /**
+     * Control the player to go right
+     */
     public void GoRight(long frametime) 
     {   
         
@@ -148,6 +154,9 @@ public class Player
         this.Righting = true;
     }
 
+    /**
+     * Define the player to go straight
+     */
     public void GoStraight() 
     {
         this.Righting = false;
