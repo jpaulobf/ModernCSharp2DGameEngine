@@ -1,9 +1,10 @@
 /**
- * 
+ * Author:      Joao P B Faria
+ * Date:        Oct/2022
+ * Description: Class representing the game state machine
  */
 public class StateMachine
 {
-
     public const int MENU = 0;
     public const int OPTION = 1;
     public const int IN_GAME = 2;
@@ -12,7 +13,7 @@ public class StateMachine
     private int CurrentGameState = IN_GAME;
 
     /**
-     *
+     * Public constructor (the default initial state is MENU)
      */
     public StateMachine(int initialState = StateMachine.MENU)
     {
@@ -31,7 +32,7 @@ public class StateMachine
     }
 
     /**
-     *
+     * Recovery the current game state
      */
     public int GetCurrentGameState() 
     {
@@ -39,7 +40,7 @@ public class StateMachine
     }
 
     /**
-     *
+     * Define the current game to the menu state
      */
     public void SetStateToMenu()
     {
@@ -47,7 +48,7 @@ public class StateMachine
     }
 
     /**
-     *
+     * Define the current game to the option state
      */
     public void SetGameStateToOption()
     {
