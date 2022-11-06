@@ -1,6 +1,11 @@
 using Game;
 using Util;
 
+/**
+ * Author:      Joao P B Faria
+ * Date:        Oct/2022
+ * Description: Class representing the Player Score
+ */
 public class Score
 {
     private IGame GameRef;
@@ -14,6 +19,17 @@ public class Score
     private const short RightPosX           = 447;
     private const short TopPosY             = 434;
 
+    /**
+     * Public constructor
+     */
+    public Score(IGame gameRef)
+    {
+        this.GameRef = gameRef;
+    }
+
+    /**
+     * Store the images from numbers 0 to 9
+     */
     private Dictionary<char, Bitmap> NumbersImages = new Dictionary<char, Bitmap> 
     {
         {'0', LoadingStuffs.GetInstance().GetImage("number-0")},
@@ -28,11 +44,9 @@ public class Score
         {'9', LoadingStuffs.GetInstance().GetImage("number-9")}
     };
 
-    public Score(IGame gameRef)
-    {
-        this.GameRef = gameRef;
-    }
-
+    /**
+     * Add points based on destructed item
+     */
     public void ItemDestructed(int type)
     {
         switch (type)
@@ -52,11 +66,17 @@ public class Score
         }
     }
 
+    /**
+     * Score update cycle
+     */
     public void Update(long frametime)
     {
         this.StPoints = Points.ToString();
     }
 
+    /**
+     * Score draw cycle
+     */
     public void Draw(Graphics gfx)
     {
         for (int i = (StPoints.Length - 1), j = 1; i >= 0; i--, j++)
@@ -66,6 +86,9 @@ public class Score
         }
     }
 
+    /**
+     * Reset the score
+     */
     public void Reset()
     {
         this.Points = 0;
