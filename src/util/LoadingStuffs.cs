@@ -1,14 +1,20 @@
 namespace Util;
 
 /**
- *
+ * Author:      Joao Paulo B Faria
+ * Date:        Oct/2022
+ * Description: Class utility to load all stuffs for the game (images, music & sfx)
  */
 public class LoadingStuffs
 {
-
     private static LoadingStuffs? Instance      = null;
     private Dictionary<string, Bitmap> Images   = new Dictionary<string, Bitmap>();
 
+    /**
+     * Author:      Joao Paulo B Faria
+     * Date:        Oct/2022
+     * Description: Private constructor, load all stuffs
+     */
     private LoadingStuffs()
     {
         try 
