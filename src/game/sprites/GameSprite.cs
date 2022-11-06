@@ -91,7 +91,13 @@ public abstract class GameSprite
                 new Rectangle((short)othersprite.X, (short)othersprite.Y, (short)othersprite.Width, (short)othersprite.Height)));
     }
 
+    /**
+     * Abstract method to set the current sprite as collided
+     */
     public abstract void SetCollision(bool isPlayerCollision);
 
+    /**
+     * Abstract method to reset
+     */
     public abstract void Reset();
 }
