@@ -429,6 +429,9 @@ public class GameController : IGame
         this.Hud.UpdateFuelMarker(this.Player.FuelCounter);
     }
 
+    /**
+     * Update the Score based on destroyed item
+     */
     public void UpdateScore(int type)
     {
         this.Score.ItemDestructed(type);
