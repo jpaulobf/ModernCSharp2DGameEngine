@@ -46,6 +46,9 @@ public class HUD
         this.LifeCounter    = LoadingStuffs.GetInstance().GetImage(NumbersMap[this.PlayerRef.Lives]);
     }
 
+    /**
+     * Update the fuel mark position X
+     */
     public void UpdateFuelMarker(float fuelCounter)
     {
         this.FuelMeterX = ((float)FuelZeroX) + (FuelSpentUnit * fuelCounter);
