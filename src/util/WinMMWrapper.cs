@@ -3,7 +3,8 @@ using System.Runtime.InteropServices;
 namespace HighResolutionTimer;
 
 /**
- * Thanks to Mike Zboray - https://github.com/mzboray/HighPrecisionTimer
+ * Author:      Mike Zboray - https://github.com/mzboray/HighPrecisionTimer
+ * Description: Class Wrapper for the WinMM.dll
  */
 public class WinMMWrapper
 {
