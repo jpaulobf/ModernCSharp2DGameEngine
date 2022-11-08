@@ -32,12 +32,24 @@ public interface IGame
      */
     public Size Resolution { get; set; }
 
+    /**
+     * Called when a key is 'down'
+     */
     public void KeyDown(object? sender, System.Windows.Forms.KeyEventArgs e);
 
+    /**
+     * Called when a key is 'pressed'
+     */
     public void KeyPress(object? sender, System.Windows.Forms.KeyPressEventArgs e);
 
+    /**
+     * Called when a key is 'up'
+     */
     public void KeyUp(object? sender, System.Windows.Forms.KeyEventArgs e);
     
+    /**
+     * Method to resize the game window.
+     */
     public void Resize(object? sender, System.EventArgs e);
 
     public System.Drawing.Drawing2D.InterpolationMode Interpolation { get; }
