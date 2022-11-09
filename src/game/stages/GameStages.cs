@@ -40,6 +40,8 @@ public class GameStages : IStagesDef
     private volatile bool CanStartTheStage      = false;
     private volatile bool CanStartStageOpening  = true;
     private volatile bool RunStage              = false;
+
+    //TODO: REFACTOR
     private Dictionary<int, GameSprite> stage1  = new Dictionary<int, GameSprite>();
     private List<GameSprite> currentSprites;
     //private List<GameSprite> nextSprites;
