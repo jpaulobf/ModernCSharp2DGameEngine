@@ -52,8 +52,14 @@ public interface IGame
      */
     public void Resize(object? sender, System.EventArgs e);
 
+    /**
+     * Accessor - Interpolation Mode
+     */
     public System.Drawing.Drawing2D.InterpolationMode Interpolation { get; }
 
+    /**
+     * Recover the current set of sprites presents in screen
+     */
     public IEnumerable<GameSprite> GetCurrentScreenSprites();
 
     public int GetInternalResolutionWidth();
