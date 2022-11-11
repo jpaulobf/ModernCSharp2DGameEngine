@@ -206,11 +206,33 @@ public class GameStages : IStagesDef
     }
 
     /**
-     * Start the stage
+     * Draw method
      */
-    internal void Start()
+    public void Draw(Graphics gfx, long frametime) 
     {
-        this.RunStage = true;
+        //draw the stage opening
+        if (this.CanDrawStageOpening) 
+        {
+            //draw the river
+            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+            this.DrawStageOpening();
+        }
+        
+        //after the opening, draw the background
+        if (this.CanDrawBackground) 
+        {
+            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+            this.DrawBackground();
+        }
+
+        //Draw the sprites
+        foreach (var item in this.stage1.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
+        {
+            item.Value.Draw(this.InternalGraphics);
+        }
+
+        //Render
+        this.BufferedGraphics.Render(gfx);
     }
 
     /**
@@ -258,36 +280,6 @@ public class GameStages : IStagesDef
     }
 
     /**
-     * Draw method
-     */
-    public void Draw(Graphics gfx, long frametime) 
-    {
-        //draw the stage opening
-        if (this.CanDrawStageOpening) 
-        {
-            //draw the river
-            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-            this.DrawStageOpening();
-        }
-        
-        //after the opening, draw the background
-        if (this.CanDrawBackground) 
-        {
-            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-            this.DrawBackground();
-        }
-
-        //Draw the sprites
-        foreach (var item in this.stage1.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
-        {
-            item.Value.Draw(this.InternalGraphics);
-        }
-
-        //Render
-        this.BufferedGraphics.Render(gfx);
-    }
-
-    /**
      * Draw the opening scene
      */
     private void DrawStageOpening()
@@ -302,10 +294,10 @@ public class GameStages : IStagesDef
             for (int j = 0; j < openingColumnsCount; j++) 
             {
                 byte renderBlock = IStagesDef.opening[CURRENT_STAGE, i, j];
-                if (renderBlock == 1) 
+                if (renderBlock == 1 || renderBlock == 2) 
                 {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
-                    this.DrawRect.Y =  (i * PIXEL_HEIGHT) + this.OpeningOffset - 3;
+                    this.DrawRect.Y =  (i * PIXEL_HEIGHT) + this.OpeningOffset - 4;
                     this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
                 }
             }
@@ -321,7 +313,7 @@ public class GameStages : IStagesDef
                 if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
                 {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
-                    this.DrawRect.Y =  (z * PIXEL_HEIGHT) + this.OpeningOffset - 3;
+                    this.DrawRect.Y =  (z * PIXEL_HEIGHT) + this.OpeningOffset - 4;
                     this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
                 }
             }
@@ -391,6 +383,14 @@ public class GameStages : IStagesDef
     }
 
     /**
+     * Start the stage
+     */
+    public void Start()
+    {
+        this.RunStage = true;
+    }
+
+    /**
      * Reset stages elements
      */
     public void Reset()
@@ -405,7 +405,7 @@ public class GameStages : IStagesDef
         this.CanStartStageOpening   = true;
         this.RunStage               = false;
         this.GameRef.DisablePlayerSprite();
-        this.Offset                 = PIXEL_HEIGHT * OPENING_LINES * -1; //the offset starts negative for the opening animation
+        this.Offset                 = -PIXEL_HEIGHT * OPENING_LINES; //the offset starts negative for the opening animation
 
         foreach (var item in this.stage1) 
         {
