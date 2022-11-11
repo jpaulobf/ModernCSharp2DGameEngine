@@ -42,6 +42,8 @@ public class GameStages : IStagesDef
     private volatile bool CanStartTheStage      = false;
     private volatile bool CanStartStageOpening  = true;
     private volatile bool RunStage              = false;
+
+    //TODO: REFACTOR
     private Dictionary<int, GameSprite> stage1  = new Dictionary<int, GameSprite>();
     private List<GameSprite> currentSprites;
     //private List<GameSprite> nextSprites;
@@ -56,6 +58,7 @@ public class GameStages : IStagesDef
 
         //create the imagebuffer
         this.BufferedImage      = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+        //the buffer will have the double of the screen size 
         this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height * 2));
         this.InternalGraphics   = BufferedGraphics.Graphics;
 
@@ -68,6 +71,10 @@ public class GameStages : IStagesDef
 
         //transform the image based on calc scale
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+
+        //TODO: REFACTOR
+
+        //Define a place holder for the Y-position of the objects sprites
         int spriteYPosition = 0;
 
         //add stage 1 sprites
@@ -107,7 +114,7 @@ public class GameStages : IStagesDef
         this.currentSprites = this.stage1.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
 
         //the offset starts negative for the opening animation
-        this.Offset = PIXEL_HEIGHT * OPENING_LINES * -1;
+        this.Offset = -PIXEL_HEIGHT * OPENING_LINES;
     }
 
     /**
