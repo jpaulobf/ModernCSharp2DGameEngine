@@ -58,8 +58,7 @@ public class GameStages : IStagesDef
 
         //create the imagebuffer
         this.BufferedImage      = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        //the buffer will have the double of the screen size 
-        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height * 2));
+        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
         this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //define the interpolation mode
@@ -131,12 +130,12 @@ public class GameStages : IStagesDef
             if (this.Framecount >= 160_000)
             {
                 //calc the offset
-                this.OpeningOffset += 4;
+                this.OpeningOffset  += PIXEL_HEIGHT;
+
                 if (this.OpeningOffset == PIXEL_HEIGHT) {
                     this.CurrentOpeningLine++;
                     this.OpeningOffset = 0;
-
-                    this.Offset += 4;
+                    this.Offset += PIXEL_HEIGHT;
                 }
 
                 //reset framecount
