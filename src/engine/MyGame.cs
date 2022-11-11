@@ -44,7 +44,7 @@ public class MyGame
         private const int FPS_MAX_ARRAY             = 10;
         private int[] FPS_AVERAGE                   = new int[FPS_MAX_ARRAY];
         private byte Fps_Aux_Counter                = 0;
-        private InterpolationMode InterpolationMode = InterpolationMode.HighQualityBicubic;
+        private InterpolationMode InterpolationMode = InterpolationMode.NearestNeighbor;
         
         /**
          * Canvas constructor
