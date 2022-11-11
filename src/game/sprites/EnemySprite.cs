@@ -37,7 +37,6 @@ public class EnemySprite : GameSprite
                        int X = 0, 
                        int Y = 0, 
                        int velocity = 0, 
-                       byte tilesNumber = 1, 
                        uint millisecondsPerTile = 0, 
                        bool renderReversed = false, 
                        short maxLeft = 0,
@@ -45,7 +44,7 @@ public class EnemySprite : GameSprite
                        byte direction = 0) : base(width, height, X, Y, velocity, type) {
         //after base constructor
         this.Type                   = type;
-        this.TilesNumber            = tilesNumber;
+        this.TilesNumber            = 1;
         this.MillisecsPerTile       = millisecondsPerTile;
         this.GameRef                = game;
         this.RenderReversed         = renderReversed;
@@ -55,14 +54,16 @@ public class EnemySprite : GameSprite
         this.MaxRight               = maxRight;
         this.Direction              = direction;
         this.DefaultDirection       = direction;
-        this.DefaultTilesNumber     = tilesNumber;
+        this.DefaultTilesNumber     = this.TilesNumber;
 
         switch(type)
         {
             case HELI:
-                this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("heli-tile");
-                this.DefaultBitmap  = LoadingStuffs.GetInstance().GetImage("heli-tile");
-                this.RSpriteImage   = LoadingStuffs.GetInstance().GetImage("heli-tile-r");
+                this.SpriteImage        = LoadingStuffs.GetInstance().GetImage("heli-tile");
+                this.DefaultBitmap      = LoadingStuffs.GetInstance().GetImage("heli-tile");
+                this.RSpriteImage       = LoadingStuffs.GetInstance().GetImage("heli-tile-r");
+                this.TilesNumber        = 2;
+                this.DefaultTilesNumber = 2;
                 break;
             case SHIP:
                 this.SpriteImage    = LoadingStuffs.GetInstance().GetImage("ship");
