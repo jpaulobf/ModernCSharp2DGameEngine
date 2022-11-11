@@ -11,109 +11,92 @@ public class GameStages : IStagesDef
     private BufferedGraphics BufferedGraphics;
     private Bitmap BufferedImage;
     private Graphics InternalGraphics;
-    private float ScaleW                        = 1.0F;
-    private float ScaleH                        = 1.0F;
-    private const byte PIXEL_WIDTH              = 18;
-    private const byte PIXEL_HEIGHT             = 4;
-    private SolidBrush [] Brushes               = new SolidBrush[] {   
-                                                    new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 
-                                                    new SolidBrush(Color.FromArgb(255, 110, 156, 66)), 
-                                                    new SolidBrush(Color.FromArgb(255, 53, 95, 24)), 
-                                                    new SolidBrush(Color.FromArgb(0, 0, 0, 0)), 
-                                                    new SolidBrush(Color.FromArgb(255, 255, 255, 255)), 
-                                                    new SolidBrush(Color.FromArgb(255, 111, 111, 111)), 
-                                                    new SolidBrush(Color.FromArgb(255, 170, 170, 170)), 
-                                                    new SolidBrush(Color.FromArgb(255, 234, 234, 70)), 
-                                                    new SolidBrush(Color.FromArgb(255, 45, 50, 184))};
-    private Rectangle DrawRect                  = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
-    protected volatile short CurrentLine        = 574;
-    private const byte OPENING_LINES            = 108;
-    protected volatile short CurrentOpeningLine = 0;
-    private const byte STAGE_OFFSET             = 1;
-    private short CURRENT_STAGE                 = 1 - STAGE_OFFSET;
-    private volatile short Offset               = 0;
-    private volatile byte OpeningOffset         = 0;
-    private long Framecount                     = 0;
-    private volatile int StartScreenFrame       = 0;
-    private volatile int EndScreenFrame         = 0;
-    private volatile int CurrentLineYPosition   = 0;
-    private volatile bool CanDrawBackground     = false;
-    private volatile bool CanDrawStageOpening   = true;
-    private volatile bool CanStartTheStage      = false;
-    private volatile bool CanStartStageOpening  = true;
-    private volatile bool RunStage              = false;
-
-    //TODO: REFACTOR
-    private Dictionary<int, GameSprite> stage1  = new Dictionary<int, GameSprite>();
-    private List<GameSprite> currentSprites;
-    //private List<GameSprite> nextSprites;
+    private float ScaleW                                = 1.0F;
+    private float ScaleH                                = 1.0F;
+    private const byte PIXEL_WIDTH                      = 18;
+    private const byte PIXEL_HEIGHT                     = 4;
+    private SolidBrush [] Brushes                       = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 
+                                                                            new SolidBrush(Color.FromArgb(255, 110, 156, 66)), 
+                                                                            new SolidBrush(Color.FromArgb(255, 53, 95, 24)), 
+                                                                            new SolidBrush(Color.FromArgb(0, 0, 0, 0)), 
+                                                                            new SolidBrush(Color.FromArgb(255, 255, 255, 255)), 
+                                                                            new SolidBrush(Color.FromArgb(255, 111, 111, 111)), 
+                                                                            new SolidBrush(Color.FromArgb(255, 170, 170, 170)), 
+                                                                            new SolidBrush(Color.FromArgb(255, 234, 234, 70)), 
+                                                                            new SolidBrush(Color.FromArgb(255, 45, 50, 184))};
+    private Rectangle DrawRect                          = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
+    protected volatile short CurrentLine                = 574;
+    private const byte OPENING_LINES                    = 108;
+    protected volatile short CurrentOpeningLine         = 0;
+    private const byte STAGE_OFFSET                     = 1;
+    private short CURRENT_STAGE                         = 1 - STAGE_OFFSET;
+    private volatile short Offset                       = 0;
+    private volatile byte OpeningOffset                 = 0;
+    private long Framecount                             = 0;
+    private volatile int StartScreenFrame               = 0;
+    private volatile int EndScreenFrame                 = 0;
+    private volatile int CurrentLineYPosition           = 0;
+    private volatile bool CanDrawBackground             = false;
+    private volatile bool CanDrawStageOpening           = true;
+    private volatile bool CanStartTheStage              = false;
+    private volatile bool CanStartStageOpening          = true;
+    private volatile bool RunStage                      = false;
+    private List<GameSprite> CurrentStageSprites;
+    //private List<GameSprite> NextStageSprites;
+    private Dictionary<int, GameSprite> CurrentStageDef = new Dictionary<int, GameSprite>();
+    private Dictionary<int, GameSprite> NextStageDef    = new Dictionary<int, GameSprite>();
 
     /**
      * Constructor
      */
-    public GameStages(IGame game) 
+    public GameStages(IGame game)
     {
         //store the game reference
         this.GameRef = game;
 
         //create the imagebuffer
-        this.BufferedImage      = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
-        this.InternalGraphics   = BufferedGraphics.Graphics;
+        this.BufferedImage = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+        this.BufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
+        this.InternalGraphics = BufferedGraphics.Graphics;
 
         //define the interpolation mode
         this.InternalGraphics.InterpolationMode = this.GameRef.Interpolation;
 
         //calc the scale
-        this.ScaleW = (float)((float)this.GameRef.WindowSize.Width/(float)this.GameRef.GetInternalResolutionWidth());
-        this.ScaleH = (float)((float)this.GameRef.WindowSize.Height/(float)this.GameRef.GetInternalResolutionHeight());
+        this.ScaleW = (float)((float)this.GameRef.WindowSize.Width / (float)this.GameRef.GetInternalResolutionWidth());
+        this.ScaleH = (float)((float)this.GameRef.WindowSize.Height / (float)this.GameRef.GetInternalResolutionHeight());
 
         //transform the image based on calc scale
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
 
-        //TODO: REFACTOR
-
-        //Define a place holder for the Y-position of the objects sprites
-        int spriteYPosition = 0;
-
-        //add stage 1 sprites
-        this.stage1.Add(spriteYPosition = 2216, SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 85, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 2159, SpriteFactory.CreateSprite(game, GameSprite.SHIP, 325, spriteYPosition, 1, true));
-        this.stage1.Add(spriteYPosition = 2063, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 417, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 2012, SpriteFactory.CreateSprite(game, GameSprite.HELI, 302, spriteYPosition, 2));
-        this.stage1.Add(spriteYPosition = 1923, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 372, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1850, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 458, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1783, SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 557, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1710, SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 81, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1637, SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 545, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1557, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 394, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1499, SpriteFactory.CreateSprite(game, GameSprite.HELI, 261, spriteYPosition, 2));
-        this.stage1.Add(spriteYPosition = 1410, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 288, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1353, SpriteFactory.CreateSprite(game, GameSprite.HELI, 339, spriteYPosition, 2));
-        this.stage1.Add(spriteYPosition = 1263, SpriteFactory.CreateSprite(game, GameSprite.FUEL, 439, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1197, SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 581, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1140, SpriteFactory.CreateSprite(game, GameSprite.SHIP, 417, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 1060, SpriteFactory.CreateSprite(game, GameSprite.HELI, 417, spriteYPosition, 2));
-        this.stage1.Add(spriteYPosition = 993,  SpriteFactory.CreateSprite(game, GameSprite.SHIP, 302, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 897,  SpriteFactory.CreateSprite(game, GameSprite.FUEL, 371, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 840,  SpriteFactory.CreateSprite(game, GameSprite.HELI, 458, spriteYPosition, 2));
-        this.stage1.Add(spriteYPosition = 757,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 564, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 684,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 94, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 611,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 568, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 547,  SpriteFactory.CreateSprite(game, GameSprite.HELI, 444, spriteYPosition, 2, true));
-        this.stage1.Add(spriteYPosition = 464,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE, 586, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 407,  SpriteFactory.CreateSprite(game, GameSprite.SHIP, 417, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 327,  SpriteFactory.CreateSprite(game, GameSprite.HELI, 426, spriteYPosition, 2));
-        this.stage1.Add(spriteYPosition = 245,  SpriteFactory.CreateSprite(game, GameSprite.HOUSE2, 549, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 164,  SpriteFactory.CreateSprite(game, GameSprite.FUEL, 407, spriteYPosition));
-        this.stage1.Add(spriteYPosition = 107,  SpriteFactory.CreateSprite(game, GameSprite.HELI, 288, spriteYPosition, 2, false, 198, 540, GameSprite.RIGHT));
-        this.stage1.Add(spriteYPosition = 41,   SpriteFactory.CreateSprite(game, GameSprite.SHIP, 320, spriteYPosition, 1, false, 288, 450, GameSprite.LEFT));
+        //Load the Sprite List for the current stage
+        this.LoadSpriteListForSpecifiedStage(CURRENT_STAGE);
 
         //store the sprites of current stage
-        this.currentSprites = this.stage1.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
+        this.CurrentStageSprites = this.CurrentStageDef.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
 
         //the offset starts negative for the opening animation
         this.Offset = -PIXEL_HEIGHT * OPENING_LINES;
+    }
+
+    /**
+     * Load the Sprite List for the Specified Stage
+     */ 
+    private void LoadSpriteListForSpecifiedStage(short stage)
+    {
+        Dictionary<int, GameSprite> temp = (stage == CURRENT_STAGE)?this.CurrentStageDef:this.NextStageDef;
+        for (short i = 0; i < IStagesDef.StagesSpritesConfig.GetLength(1); i++)
+        {
+            temp.Add(IStagesDef.StagesSpritesConfig[stage, i, 0],
+                     SpriteFactory.CreateSprite(this.GameRef,
+                     (byte)IStagesDef.StagesSpritesConfig[stage, i, 1],
+                     IStagesDef.StagesSpritesConfig[stage, i, 2],
+                     IStagesDef.StagesSpritesConfig[stage, i, 0],
+                     (IStagesDef.StagesSpritesConfig[stage, i, 3] == 0) ? false : true,
+                     IStagesDef.StagesSpritesConfig[stage, i, 4],
+                     IStagesDef.StagesSpritesConfig[stage, i, 5],
+                     (byte)IStagesDef.StagesSpritesConfig[stage, i, 6]));
+        }
     }
 
     /**
@@ -197,7 +180,7 @@ public class GameStages : IStagesDef
         this.CurrentLineYPosition       = (current - 95)  * PIXEL_HEIGHT;
 
         //if exist an sprite in the current screen frame, render it
-        foreach (var item in this.stage1.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
+        foreach (var item in this.CurrentStageDef.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
         {
             item.Value.Y = (item.Key - this.CurrentLineYPosition) + this.Offset;
             item.Value.Update(frametime, colliding);
@@ -225,7 +208,7 @@ public class GameStages : IStagesDef
         }
 
         //Draw the sprites
-        foreach (var item in this.stage1.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
+        foreach (var item in this.CurrentStageDef.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
         {
             item.Value.Draw(this.InternalGraphics);
         }
@@ -307,7 +290,7 @@ public class GameStages : IStagesDef
         {
             for (int j = 0; j < openingColumnsCount; j++) 
             {
-                byte renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
+                short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
                
                 if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
                 {
@@ -341,7 +324,7 @@ public class GameStages : IStagesDef
         {
             for (int j = 0; j < stagesColumns; j++) 
             {
-                byte renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
+                short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
                 if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
                 {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
@@ -406,7 +389,7 @@ public class GameStages : IStagesDef
         this.GameRef.DisablePlayerSprite();
         this.Offset                 = -PIXEL_HEIGHT * OPENING_LINES; //the offset starts negative for the opening animation
 
-        foreach (var item in this.stage1) 
+        foreach (var item in this.CurrentStageDef) 
         {
             item.Value.Reset();
         }
@@ -417,7 +400,7 @@ public class GameStages : IStagesDef
      */
     public IEnumerable<GameSprite> GetCurrentScreenSprites() {
 
-        return (this.currentSprites.Where(item => this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
+        return (this.CurrentStageSprites.Where(item => this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
 
         //return (this.stage1.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2 && 
         //                                 this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
