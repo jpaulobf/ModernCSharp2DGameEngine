@@ -15,14 +15,16 @@ public class GameStages : IStagesDef
     private float ScaleH                        = 1.0F;
     private const byte PIXEL_WIDTH              = 18;
     private const byte PIXEL_HEIGHT             = 4;
-    private SolidBrush [] Brushes;
-    private SolidBrush Black                    = new SolidBrush(Color.FromArgb(255, 0, 0, 0));
-    private SolidBrush Green1                   = new SolidBrush(Color.FromArgb(255, 110, 156, 66));
-    private SolidBrush Green2                   = new SolidBrush(Color.FromArgb(255, 53, 95, 24));
-    private SolidBrush Gray1                    = new SolidBrush(Color.FromArgb(255, 111, 111, 111));
-    private SolidBrush Gray2                    = new SolidBrush(Color.FromArgb(255, 170, 170, 170));
-    private SolidBrush Blue                     = new SolidBrush(Color.FromArgb(255, 45, 50, 184));
-    private SolidBrush Yellow                   = new SolidBrush(Color.FromArgb(255, 234, 234, 70));
+    private SolidBrush [] Brushes               = new SolidBrush[] {   
+                                                    new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 
+                                                    new SolidBrush(Color.FromArgb(255, 110, 156, 66)), 
+                                                    new SolidBrush(Color.FromArgb(255, 53, 95, 24)), 
+                                                    new SolidBrush(Color.FromArgb(0, 0, 0, 0)), 
+                                                    new SolidBrush(Color.FromArgb(255, 255, 255, 255)), 
+                                                    new SolidBrush(Color.FromArgb(255, 111, 111, 111)), 
+                                                    new SolidBrush(Color.FromArgb(255, 170, 170, 170)), 
+                                                    new SolidBrush(Color.FromArgb(255, 234, 234, 70)), 
+                                                    new SolidBrush(Color.FromArgb(255, 45, 50, 184))};
     private Rectangle DrawRect                  = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
     protected volatile short CurrentLine        = 574;
     private const byte OPENING_LINES            = 108;
@@ -66,8 +68,6 @@ public class GameStages : IStagesDef
 
         //transform the image based on calc scale
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
-        this.Brushes = new SolidBrush[] {this.Black, this.Green1, this.Green2, this.Black, this.Black, this.Gray1, this.Gray2, this.Yellow, this.Blue };
-
         int spriteYPosition = 0;
 
         //add stage 1 sprites
@@ -259,14 +259,14 @@ public class GameStages : IStagesDef
         if (this.CanDrawStageOpening) 
         {
             //draw the river
-            this.InternalGraphics.FillRectangle(Blue, 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
             this.DrawStageOpening();
         }
         
         //after the opening, draw the background
         if (this.CanDrawBackground) 
         {
-            this.InternalGraphics.FillRectangle(Blue, 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
             this.DrawBackground();
         }
 
