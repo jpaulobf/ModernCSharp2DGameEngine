@@ -26,12 +26,14 @@ public class GameStages : IStagesDef
                                                                             new SolidBrush(Color.FromArgb(255, 45, 50, 184))};
     private Rectangle DrawRect                          = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
     protected volatile short CurrentLine                = 574;
+    private const short SCREEN_LINES                    = 107 + 1; //one extra buffer line
     private const byte OPENING_LINES                    = 108;
     protected volatile short CurrentOpeningLine         = 0;
     private const byte STAGE_OFFSET                     = 1;
     private short CURRENT_STAGE                         = 1 - STAGE_OFFSET;
     private volatile short Offset                       = 0;
     private volatile byte OpeningOffset                 = 0;
+    private volatile short TransitionOffset             = 0;
     private long Framecount                             = 0;
     private volatile int StartScreenFrame               = 0;
     private volatile int EndScreenFrame                 = 0;
@@ -41,6 +43,7 @@ public class GameStages : IStagesDef
     private volatile bool CanStartTheStage              = false;
     private volatile bool CanStartStageOpening          = true;
     private volatile bool RunStage                      = false;
+    private volatile bool TransitionBtwStages           = false;
     private List<GameSprite> CurrentStageSprites;
     //private List<GameSprite> NextStageSprites;
     private Dictionary<int, GameSprite> CurrentStageDef = new Dictionary<int, GameSprite>();
@@ -55,9 +58,9 @@ public class GameStages : IStagesDef
         this.GameRef = game;
 
         //create the imagebuffer
-        this.BufferedImage = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        this.BufferedGraphics = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
-        this.InternalGraphics = BufferedGraphics.Graphics;
+        this.BufferedImage      = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
+        this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //define the interpolation mode
         this.InternalGraphics.InterpolationMode = this.GameRef.Interpolation;
@@ -153,11 +156,16 @@ public class GameStages : IStagesDef
                 //scroll down if not collided
                 if (!colliding && this.RunStage) 
                 {
-                    //calc the offset
-                    this.Offset++;
-                    if (this.Offset == PIXEL_HEIGHT) {
-                        this.CurrentLine--;
-                        this.Offset = 0;
+                    if (this.CurrentLine > 95) {
+                        //calc the offset
+                        this.Offset++;
+                        if (this.Offset == PIXEL_HEIGHT) {
+                            this.CurrentLine--;
+                            this.Offset = 0;
+                        }
+                    } else {
+                        this.TransitionBtwStages = true;
+                        this.TransitionOffset++;
                     }
                 }
 
@@ -320,19 +328,46 @@ public class GameStages : IStagesDef
         int currentMinus95  = this.CurrentLine - 95;
         int currentPlus13   = currentMinus95 + 108;
         int stagesColumns   = IStagesDef.stages.GetLength(2);
-        for (int i = currentMinus95, c = -1; i < currentPlus13; i++, c++) 
+        
+        if (!this.TransitionBtwStages)
         {
-            for (int j = 0; j < stagesColumns; j++) 
+            for (int i = currentMinus95, c = -1; i < currentPlus13; i++, c++) 
             {
-                short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
-                if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
+                for (int j = 0; j < stagesColumns; j++) 
                 {
-                    this.DrawRect.X =  j * PIXEL_WIDTH;
-                    this.DrawRect.Y = (c * PIXEL_HEIGHT) + this.Offset;
-                    this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
+                    short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
+                    if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
+                    {
+                        this.DrawRect.X =  j * PIXEL_WIDTH;
+                        this.DrawRect.Y = (c * PIXEL_HEIGHT) + this.Offset;
+                        this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
+                    }
                 }
             }
         }
+        else
+        {
+            for (int i = currentMinus95; i < currentPlus13; i++) 
+            {
+                for (int j = 0; j < stagesColumns; j++) 
+                {
+                    short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
+                    if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
+                    {
+                        this.DrawRect.X =  j * PIXEL_WIDTH;
+                        this.DrawRect.Y = (i * PIXEL_HEIGHT) + this.TransitionOffset;
+                        this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
+                    }
+                }
+            }
+
+            //Draw the next stage
+            //...
+            
+
+        }
+        
+        
         this.CanDrawBackground = false;
     }
 
@@ -387,6 +422,8 @@ public class GameStages : IStagesDef
         this.CanStartStageOpening   = true;
         this.RunStage               = false;
         this.GameRef.DisablePlayerSprite();
+        this.TransitionBtwStages    = false;
+        this.TransitionOffset       = 0;
         this.Offset                 = -PIXEL_HEIGHT * OPENING_LINES; //the offset starts negative for the opening animation
 
         foreach (var item in this.CurrentStageDef) 
