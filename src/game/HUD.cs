@@ -26,6 +26,9 @@ public class HUD
     private const short FuelZeroX               = 295;
     private const short LifeCounterY            = 495;
     private const float FuelSpentUnit           = 1.4f;
+    private const byte SEPARATOR_HEIGHT         = 3; //px
+    private const byte HUD_HEIGHT               = 85; //px
+    private const short HUD_WIDTH               = 738; //px
 
     /**
      * Constructor
@@ -34,8 +37,8 @@ public class HUD
     {
         this.GameRef        = game;
         this.PlayerRef      = this.GameRef.GetPlayer();
-        this.SeparatorRect  = new Rectangle(0, 428, 738, 3);
-        this.HudRect        = new Rectangle(0, 431, 738, 85);
+        this.SeparatorRect  = new Rectangle(0, 428, HUD_WIDTH, SEPARATOR_HEIGHT);
+        this.HudRect        = new Rectangle(0, 431, HUD_WIDTH, HUD_HEIGHT);
 
         this.FuelFrameX     = (int)((this.HudRect.Size.Width / 2) - (this.FuelFrame.Width / 2));
         this.FuelFrameY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);
