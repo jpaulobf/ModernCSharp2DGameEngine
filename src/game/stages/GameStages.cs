@@ -190,7 +190,7 @@ public class GameStages : IStagesDef
         //if exist an sprite in the current screen frame, render it
         foreach (var item in this.CurrentStageDef.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
         {
-            item.Value.Y = (item.Key - this.CurrentLineYPosition) + this.Offset;
+            item.Value.Y = (item.Key - this.CurrentLineYPosition) + this.Offset + this.TransitionOffset;
             item.Value.Update(frametime, colliding);
         }
     }
