@@ -15,15 +15,15 @@ public class GameStages : IStagesDef
     private float ScaleH                                = 1.0F;
     private const byte PIXEL_WIDTH                      = 18;
     private const byte PIXEL_HEIGHT                     = 4;
-    private SolidBrush [] Brushes                       = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 0, 0, 0)), 
-                                                                            new SolidBrush(Color.FromArgb(255, 110, 156, 66)), 
-                                                                            new SolidBrush(Color.FromArgb(255, 53, 95, 24)), 
-                                                                            new SolidBrush(Color.FromArgb(0, 0, 0, 0)), 
-                                                                            new SolidBrush(Color.FromArgb(255, 255, 255, 255)), 
-                                                                            new SolidBrush(Color.FromArgb(255, 111, 111, 111)), 
-                                                                            new SolidBrush(Color.FromArgb(255, 170, 170, 170)), 
-                                                                            new SolidBrush(Color.FromArgb(255, 234, 234, 70)), 
-                                                                            new SolidBrush(Color.FromArgb(255, 45, 50, 184))};
+    private SolidBrush [] Brushes                       = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 0, 0, 0)),       //black
+                                                                            new SolidBrush(Color.FromArgb(255, 110, 156, 66)),  //green
+                                                                            new SolidBrush(Color.FromArgb(255, 53, 95, 24)),    //dark green
+                                                                            new SolidBrush(Color.FromArgb(0, 0, 0, 0)),         //transparent black
+                                                                            new SolidBrush(Color.FromArgb(255, 255, 255, 255)), //white
+                                                                            new SolidBrush(Color.FromArgb(255, 111, 111, 111)), //silver
+                                                                            new SolidBrush(Color.FromArgb(255, 170, 170, 170)), //dark gray
+                                                                            new SolidBrush(Color.FromArgb(255, 234, 234, 70)),  //yellow
+                                                                            new SolidBrush(Color.FromArgb(255, 45, 50, 184))};  //dark blue
     private Rectangle DrawRect                          = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
     protected volatile short CurrentLine                = 574;
     private const short SCREEN_LINES                    = 107 + 1; //one extra buffer line
