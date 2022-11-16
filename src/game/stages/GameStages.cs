@@ -30,7 +30,7 @@ public class GameStages : IStagesDef
     private const byte OPENING_LINES                    = 108;
     protected volatile short CurrentOpeningLine         = 0;
     private const byte STAGE_OFFSET                     = 1;
-    private short CURRENT_STAGE                         = 2 - STAGE_OFFSET;
+    private short CURRENT_STAGE                         = 1 - STAGE_OFFSET;
     private volatile short Offset                       = 0;
     private volatile byte OpeningOffset                 = 0;
     private volatile short TransitionOffset             = 0;
@@ -73,7 +73,7 @@ public class GameStages : IStagesDef
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
 
         //Load the Sprite List for the current stage
-        //this.LoadSpriteListForSpecifiedStage(CURRENT_STAGE);
+        this.LoadSpriteListForSpecifiedStage(CURRENT_STAGE);
 
         //store the sprites of current stage
         this.CurrentStageSprites = this.CurrentStageDef.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
