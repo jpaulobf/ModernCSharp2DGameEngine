@@ -30,7 +30,8 @@ public class GameStages : IStagesDef
     private const byte OPENING_LINES                    = 108;
     protected volatile short CurrentOpeningLine         = 0;
     private const byte STAGE_OFFSET                     = 1;
-    private short CURRENT_STAGE                         = 1 - STAGE_OFFSET;
+    private short CURRENT_STAGE                         = 2 - STAGE_OFFSET;
+    private short CURRENT_STAGE_LINES_DIFF              = 0;
     private volatile short Offset                       = 0;
     private volatile byte OpeningOffset                 = 0;
     private volatile short TransitionOffset             = 0;
@@ -73,7 +74,7 @@ public class GameStages : IStagesDef
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
 
         //Load the Sprite List for the current stage
-        this.LoadSpriteListForSpecifiedStage(CURRENT_STAGE);
+        //this.LoadSpriteListForSpecifiedStage(CURRENT_STAGE);
 
         //store the sprites of current stage
         this.CurrentStageSprites = this.CurrentStageDef.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
@@ -186,6 +187,7 @@ public class GameStages : IStagesDef
         this.StartScreenFrame           = (current - 115) * PIXEL_HEIGHT;
         this.EndScreenFrame             = (current + 13)  * PIXEL_HEIGHT;
         this.CurrentLineYPosition       = (current - 95)  * PIXEL_HEIGHT;
+        CURRENT_STAGE_LINES_DIFF        = (short)((CURRENT_STAGE % 2 == 0)?29:0);
 
         //if exist an sprite in the current screen frame, render it
         foreach (var item in this.CurrentStageDef.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
@@ -275,11 +277,10 @@ public class GameStages : IStagesDef
     private void DrawStageOpening()
     {
         int currentOpeningLine  = this.CurrentOpeningLine;
-        int maxOpeningLines     = OPENING_LINES;
         int stageLinesCount     = IStagesDef.stages.GetLength(1);
         int openingColumnsCount = IStagesDef.opening.GetLength(2);
 
-        for (int i = currentOpeningLine; i < maxOpeningLines; i++) 
+        for (int i = currentOpeningLine; i < OPENING_LINES; i++) 
         {
             for (int j = 0; j < openingColumnsCount; j++) 
             {
@@ -293,7 +294,7 @@ public class GameStages : IStagesDef
             }
         }
 
-        int sceneBeginning = stageLinesCount - currentOpeningLine;
+        int sceneBeginning = stageLinesCount - currentOpeningLine - CURRENT_STAGE_LINES_DIFF;
         for (int i = sceneBeginning, z = 0; i < stageLinesCount; i++, z++) 
         {
             for (int j = 0; j < openingColumnsCount; j++) 
@@ -309,7 +310,7 @@ public class GameStages : IStagesDef
             }
         }
 
-        if (currentOpeningLine == maxOpeningLines) 
+        if (currentOpeningLine == OPENING_LINES) 
         {
             this.Offset = 0;
             this.CanStartStageOpening   = false;
