@@ -30,7 +30,7 @@ public class GameStages : IStagesDef
     private const byte OPENING_LINES                    = 108;
     protected volatile short CurrentOpeningLine         = 0;
     private const byte STAGE_OFFSET                     = 1;
-    private short CURRENT_STAGE                         = 1 - STAGE_OFFSET;
+    private short CURRENT_STAGE                         = 2 - STAGE_OFFSET;
     private short CURRENT_STAGE_LINES_DIFF              = 0;
     private volatile short Offset                       = 0;
     private volatile byte OpeningOffset                 = 0;
@@ -62,6 +62,9 @@ public class GameStages : IStagesDef
         this.BufferedImage      = new Bitmap(GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
         this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
         this.InternalGraphics   = BufferedGraphics.Graphics;
+
+        //temp
+        NextStage();
 
         //define the interpolation mode
         this.InternalGraphics.InterpolationMode = this.GameRef.Interpolation;
@@ -187,7 +190,6 @@ public class GameStages : IStagesDef
         this.StartScreenFrame           = (current - 115) * PIXEL_HEIGHT;
         this.EndScreenFrame             = (current + 13)  * PIXEL_HEIGHT;
         this.CurrentLineYPosition       = (current - 95)  * PIXEL_HEIGHT;
-        CURRENT_STAGE_LINES_DIFF        = (short)((CURRENT_STAGE % 2 == 0)?29:0);
 
         //if exist an sprite in the current screen frame, render it
         foreach (var item in this.CurrentStageDef.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
@@ -406,6 +408,13 @@ public class GameStages : IStagesDef
     public void Start()
     {
         this.RunStage = true;
+    }
+
+    public void NextStage()
+    {
+        //CURRENT_STAGE++;
+        CURRENT_STAGE_LINES_DIFF = (short)((CURRENT_STAGE % 2 == 0)?29:0);
+        CurrentLine = (short)((CURRENT_STAGE % 2 == 0)?574:603);
     }
 
     /**
