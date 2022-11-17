@@ -338,6 +338,11 @@ public class GameController : IGame
         {
             this.Reset();
         }
+
+        if (e.KeyValue == 78)
+        {
+            this.NextStage();
+        }
     }
 
     /**
@@ -403,6 +408,12 @@ public class GameController : IGame
         this.Score.Reset();
         this.Stages.Reset();
         this.Player.Reset();
+    }
+
+    private void NextStage()
+    {
+        this.Reset();
+        this.Stages.NextStage();
     }
 
     //Accessors
