@@ -35,8 +35,40 @@ public interface IStagesDef
                                                                       {245, GameSprite.HOUSE2,  549, 0, 0, 0, 0},
                                                                       {164, GameSprite.FUEL,    407, 0, 0, 0, 0},
                                                                       {107, GameSprite.HELI,    288, 0, 198, 540, GameSprite.RIGHT},
-                                                                      {41, GameSprite.SHIP,     320, 0, 288, 450, GameSprite.LEFT},
-    }};
+                                                                      {41, GameSprite.SHIP,     320, 0, 288, 450, GameSprite.LEFT}},
+                                                                    
+                                                                    {{2216, GameSprite.HOUSE,  85, 0, 0, 0, 0},
+                                                                      {2159, GameSprite.SHIP,   325, 1, 0, 0, 0},
+                                                                      {2063, GameSprite.FUEL,   417, 0, 0, 0, 0},
+                                                                      {2012, GameSprite.HELI,   302, 0, 0, 0, 0},
+                                                                      {1923, GameSprite.FUEL,   372, 0, 0, 0, 0},
+                                                                      {1850, GameSprite.FUEL,   458, 0, 0, 0, 0},
+                                                                      {1783, GameSprite.HOUSE,  557, 0, 0, 0, 0},
+                                                                      {1710, GameSprite.HOUSE2, 81, 0, 0, 0, 0},
+                                                                      {1637, GameSprite.HOUSE2, 545, 0, 0, 0, 0},
+                                                                      {1557, GameSprite.FUEL,   394, 0, 0, 0, 0},
+                                                                      {1499, GameSprite.HELI,   261, 0, 0, 0, 0},
+                                                                      {1410, GameSprite.FUEL,   288, 0, 0, 0, 0},
+                                                                      {1353, GameSprite.HELI,   339, 0, 0, 0, 0},
+                                                                      {1263, GameSprite.FUEL,   439, 0, 0, 0, 0},
+                                                                      {1197, GameSprite.HOUSE,  581, 0, 0, 0, 0},
+                                                                      {1140, GameSprite.SHIP,   417, 0, 0, 0, 0},
+                                                                      {1060, GameSprite.HELI,   417, 0, 0, 0, 0},
+                                                                      {993, GameSprite.SHIP,    302, 0, 0, 0, 0},
+                                                                      {897, GameSprite.FUEL,    371, 0, 0, 0, 0},
+                                                                      {840, GameSprite.HELI,    458, 0, 0, 0, 0},
+                                                                      {757, GameSprite.HOUSE,   564, 0, 0, 0, 0},
+                                                                      {684, GameSprite.HOUSE2,  94, 0, 0, 0, 0},
+                                                                      {611, GameSprite.HOUSE2,  568, 0, 0, 0, 0},
+                                                                      {547, GameSprite.HELI,    444, 1, 0, 0, 0},
+                                                                      {464, GameSprite.HOUSE,   586, 0, 0, 0, 0},
+                                                                      {407, GameSprite.SHIP,    417, 0, 0, 0, 0},
+                                                                      {327, GameSprite.HELI,    426, 0, 0, 0, 0},
+                                                                      {245, GameSprite.HOUSE2,  549, 0, 0, 0, 0},
+                                                                      {164, GameSprite.FUEL,    407, 0, 0, 0, 0},
+                                                                      {107, GameSprite.HELI,    288, 0, 198, 540, 0},
+                                                                      {41, GameSprite.SHIP,     320, 0, 288, 450, 0}}
+    };
 
     protected static byte [,,] opening = new byte[,,] {{{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                                                         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -881,9 +913,7 @@ public interface IStagesDef
                                                         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                                                         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                                                         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-                                                        
-                                                        
-                                                        }, //end stage 1
+                                                       }, //end stage 1
                                                         
                                                         
                                                        {{5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5},
