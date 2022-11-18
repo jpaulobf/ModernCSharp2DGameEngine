@@ -40,6 +40,7 @@ public abstract class GameSprite
     public const byte SHIP              = 5;
     public const byte AIRPLANE          = 6;
     public const byte BRIDGE            = 7;
+    public const byte NONE              = 8;
     public const byte LEFT              = 1;
     public const byte RIGHT             = 2;
 
