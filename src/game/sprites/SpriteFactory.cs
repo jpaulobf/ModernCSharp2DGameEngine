@@ -27,9 +27,17 @@ public class SpriteFactory
         {
             return (new EnemySprite(game, type, 73, 18, x, y, 100, 0, renderReversed, maxLeft, maxRight, direction));
         } 
-        else 
+        else if (type == GameSprite.HELI)
         {
             return (new EnemySprite(game, type, 36, 23, x, y, 100, 50, renderReversed, maxLeft, maxRight, direction));
+        }
+        else if (type == GameSprite.BRIDGE)
+        {
+            return (new StaticSprite(game, 162, 50, GameSprite.BRIDGE, x, y));
+        }
+        else
+        {
+            return (new StaticSprite(game, 0, 0, GameSprite.NONE, 0, 0));
         }
     }
 }
