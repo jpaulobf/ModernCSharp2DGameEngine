@@ -44,9 +44,9 @@ public interface IStagesDef
                                                                       {2124, GameSprite.SHIP,   415, 0, 0, 0, 0},
                                                                       {2039, GameSprite.HELI,   424, 0, 0, 0, 0},
                                                                       {1945, GameSprite.FUEL,   429, 0, 0, 0, 0},
+                                                                      {1885, GameSprite.HELI,   232, 0, 0, 0, 0},
+                                                                      {1798, GameSprite.HOUSE2, 0, 0, 0, 0, 0},
                                                                       
-                                                                      {1710, GameSprite.HELI,   81, 0, 0, 0, 0},
-                                                                      {1637, GameSprite.HOUSE2, 545, 0, 0, 0, 0},
                                                                       {1557, GameSprite.FUEL,   394, 0, 0, 0, 0},
                                                                       {1499, GameSprite.HELI,   261, 0, 0, 0, 0},
                                                                       {1410, GameSprite.FUEL,   288, 0, 0, 0, 0},
