@@ -3,7 +3,7 @@ namespace Game.Stages;
 public interface IStagesDef 
 {
     /**
-     * Y, type, X, reverted (0 = false, 1 = true), maxLeft, maxRight, direction
+     * Y, type, X, reversed (0 = false, 1 = true), maxLeft, maxRight, direction
      */
     protected static short[,,] StagesSpritesConfig = new short[,,] {{ {2216, GameSprite.HOUSE,  85, 0, 0, 0, 0},
                                                                       {2159, GameSprite.SHIP,   325, 1, 0, 0, 0},
@@ -39,19 +39,19 @@ public interface IStagesDef
                                                                     
                                                                      {{2338, GameSprite.HOUSE,  559, 0, 0, 0, 0},
                                                                       {2300, GameSprite.HOUSE2, 80,  0, 0, 0, 0},
-                                                                      {2278, GameSprite.SHIP,   376, 0, 0, 0, 0},
+                                                                      {2278, GameSprite.SHIP,   376, 1, 0, 0, 0},
                                                                       {2184, GameSprite.HOUSE,  578, 0, 0, 0, 0},
-                                                                      {2124, GameSprite.SHIP,   415, 0, 0, 0, 0},
+                                                                      {2124, GameSprite.SHIP,   415, 1, 0, 0, 0},
                                                                       {2039, GameSprite.HELI,   424, 0, 0, 0, 0},
                                                                       {1945, GameSprite.FUEL,   429, 0, 0, 0, 0},
                                                                       {1885, GameSprite.HELI,   232, 0, 0, 0, 0},
                                                                       {1798, GameSprite.HOUSE2, 0, 0, 0, 0, 0},
-                                                                      
-                                                                      {1557, GameSprite.FUEL,   394, 0, 0, 0, 0},
-                                                                      {1499, GameSprite.HELI,   261, 0, 0, 0, 0},
-                                                                      {1410, GameSprite.FUEL,   288, 0, 0, 0, 0},
-                                                                      {1353, GameSprite.SHIP,   339, 0, 0, 0, 0},
-                                                                      {1263, GameSprite.SHIP,   439, 0, 0, 0, 0},
+                                                                      {1714, GameSprite.FUEL,   545, 0, 0, 0, 0},
+                                                                      {1654, GameSprite.HELI,   78, 0, 0, 0, 0},
+                                                                      {1560, GameSprite.FUEL,   236, 0, 0, 0, 0},
+                                                                      {1507, GameSprite.SHIP,   183, 1, 0, 0, 0},
+                                                                      {1430, GameSprite.SHIP,   424, 0, 0, 0, 0},
+
                                                                       {1197, GameSprite.HELI,   581, 0, 0, 0, 0},
                                                                       {1140, GameSprite.FUEL,   417, 0, 0, 0, 0},
                                                                       {1060, GameSprite.SHIP,   417, 0, 0, 0, 0},
