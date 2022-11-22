@@ -60,15 +60,14 @@ public interface IStagesDef
                                                                       {866, GameSprite.FUEL,    583, 0, 0, 0, 0},
                                                                       {806, GameSprite.HELI,    116, 0, 0, 0, 0},
                                                                       {712, GameSprite.FUEL,    121, 0, 0, 0, 0},
-                                                                      {641, GameSprite.HOUSE,   304, 1, 0, 0, 0},
-
-                                                                      {464, GameSprite.HOUSE2,  586, 0, 0, 0, 0},
-                                                                      {407, GameSprite.HELI,    417, 0, 0, 0, 0},
-                                                                      {327, GameSprite.FUEL,    426, 0, 0, 0, 0},
-                                                                      {245, GameSprite.HELI,    549, 0, 0, 0, 0},
-                                                                      {164, GameSprite.SHIP,    407, 0, 0, 0, 0},
-                                                                      {107, GameSprite.HOUSE2,  288, 0, 0, 0, 0},
-                                                                      {41, GameSprite.FUEL,     320, 0, 0, 0, 0}}
+                                                                      {642, GameSprite.HOUSE,   304, 1, 0, 0, 0},
+                                                                      {565, GameSprite.HOUSE2,  304, 0, 0, 0, 0},
+                                                                      {498, GameSprite.HELI,    444, 0, 0, 0, 0},
+                                                                      {404, GameSprite.FUEL,    583, 0, 0, 0, 0},
+                                                                      {344, GameSprite.HELI,    155, 0, 0, 0, 0},
+                                                                      {274, GameSprite.SHIP,    155, 0, 0, 0, 0},
+                                                                      {180, GameSprite.HOUSE2,  10, 0, 0, 0, 0},
+                                                                      {96, GameSprite.FUEL,     525, 0, 0, 0, 0}}
     };
 
     protected static byte [,,] opening = new byte[,,] {{{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
