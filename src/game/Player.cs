@@ -11,6 +11,8 @@ public class Player
     private GameSprite Shot;
     private IGame GameRef;
     private Util.SoundPlayerEx ShotSFX          = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "sfx\\shot.wav");
+    public float AirplaneNoseX                  = 0f;
+    public float AirplaneNoseW                  = 0f;
     public bool Colliding { get; set; }         = false;
     public bool NORMAL_SPEED { get; set; }      = true;
     public bool HALF_SPEED { get; set; }        = false;
@@ -240,8 +242,12 @@ public class Player
     }
 
     //Accessors
-    public GameSprite GetPlayerSprite()     {   return (this.PlayerSprite);         }
-    public float GetXPosition()             {   return (this.PlayerSprite.X);       }
-    public float GetSpriteWidth()           {   return (this.PlayerSprite.Width);   }
-    public void SetXPosition(int x)         {   this.PlayerSprite.X = x;            }
+    public GameSprite GetPlayerSprite()     {   return (this.PlayerSprite);             }
+    public float GetXPosition()             {   return (this.PlayerSprite.X);           }
+    public float GetSpriteWidth()           {   return (this.PlayerSprite.Width);       }
+    public void SetXPosition(float x)       {   this.PlayerSprite.X = x;                }
+    public float GetYPosition()             {   return (this.PlayerSprite.Y);           }
+    public void SetYPosition(float y)       {   this.PlayerSprite.Y = y;                }
+    public float GetAirplaneNoseX()         {   return (this.GetXPosition() + 14);      }
+    public float GetAirplaneNoseW()         {   return (this.GetAirplaneNoseX() + 6);   }
 }
