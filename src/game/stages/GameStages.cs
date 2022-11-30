@@ -271,6 +271,19 @@ public class GameStages : IStagesDef
                 break;
             } 
         }
+
+        //calc airplane nose position (begining and ending)
+        short columnP1 = (short)(this.GameRef.GetPlayer().GetAirplaneNoseX() / PIXEL_WIDTH);
+        short columnP2 = (short)(this.GameRef.GetPlayer().GetAirplaneNoseW() / PIXEL_WIDTH);
+
+        //check if the pixel in front of the nose is an obstacle.
+        short p1Value = IStagesDef.stages[CURRENT_STAGE, this.CurrentLine + 1, columnP1];
+        short p2Value = IStagesDef.stages[CURRENT_STAGE, this.CurrentLine + 1, columnP2];
+        if (p1Value != 0 || p2Value != 0)
+        {
+            //if it's an obstacle, collide
+            this.GameRef.PlayerCollided();
+        }
     }
 
     /**
@@ -445,11 +458,8 @@ public class GameStages : IStagesDef
     /**
      * Return the current sprite list
      */
-    public IEnumerable<GameSprite> GetCurrentScreenSprites() {
-
+    public IEnumerable<GameSprite> GetCurrentScreenSprites() 
+    {
         return (this.CurrentStageSprites.Where(item => this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
-
-        //return (this.stage1.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2 && 
-        //                                 this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
     }
 }
