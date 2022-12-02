@@ -30,7 +30,7 @@ public class GameStages : IStagesDef
     private const byte OPENING_LINES                    = 108;
     protected volatile short CurrentOpeningLine         = 0;
     private const byte STAGE_OFFSET                     = 1;
-    private short CURRENT_STAGE                         = 2 - STAGE_OFFSET;
+    private short CURRENT_STAGE                         = 1 - STAGE_OFFSET;
     private short CURRENT_STAGE_LINES_DIFF              = 0;
     private volatile short Offset                       = 0;
     private volatile byte OpeningOffset                 = 0;
