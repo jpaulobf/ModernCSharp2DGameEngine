@@ -1,3 +1,5 @@
+using Game.Stages;
+
 namespace Game;
 
 /**
@@ -65,4 +67,5 @@ public interface IGame
     public void UpdateFuelMarker();
 
     public void UpdateScore(int type);
+    public GameStages GetStages();
 }
