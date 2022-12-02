@@ -52,17 +52,17 @@ public class Shot : GameSprite
             this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
             this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
 
-            //todo...
-            float backgroundPositionY = this.GameRef.GetStages().GetNextBackgroundType(this.X, this.Y);
-
-            if (this.Y == backgroundPositionY)
+            //check if bullet collides with bg
+            if (this.Y == this.GameRef.GetStages().GetNextBackgroundType(this.X, this.Y))
             {
                 this.UpdateShotToHitOrLoose();
             }
+            //check if bullet is out of screen
             else if (this.Y + 20 < 0) 
             {
                 this.UpdateShotToHitOrLoose();
             } 
+            //check if bullet collides with one sprite
             else 
             {
                 foreach (var item in this.GameRef.GetCurrentScreenSprites()) 
