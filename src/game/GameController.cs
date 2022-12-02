@@ -447,4 +447,9 @@ public class GameController : IGame
     {
         this.Score.ItemDestructed(type);
     }
+
+    public GameStages GetStages()
+    {
+        return (this.Stages);
+    }
 }
