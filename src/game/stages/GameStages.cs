@@ -462,4 +462,9 @@ public class GameStages : IStagesDef
     {
         return (this.CurrentStageSprites.Where(item => this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
     }
+
+    internal float GetNextBackgroundType(float x, float y)
+    {
+        return (0);
+    }
 }
