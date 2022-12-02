@@ -383,7 +383,6 @@ public class GameStages : IStagesDef
 
         }
         
-        
         this.CanDrawBackground = false;
     }
 
@@ -463,8 +462,33 @@ public class GameStages : IStagesDef
         return (this.CurrentStageSprites.Where(item => this.StartScreenFrame < item.OgY && this.EndScreenFrame > item.OgY));
     }
 
-    internal float GetNextBackgroundType(float x, float y)
+    /**
+     * Check if bullet is colliding with the background
+     */
+    internal bool IsSpriteCollidingWithBackground(GameSprite sprite)
     {
-        return (0);
+        //an offset to improve the visual impact of bullet with the background
+        byte offset         = 1;
+        
+        //get the column of the left side of the bullet
+        int column1         = (int)(sprite.X / PIXEL_WIDTH);
+
+        //get the column of the right side of the bullet (can be the same)
+        int column2         = (int)((sprite.X + sprite.Width) / PIXEL_WIDTH);
+
+        //get the line of the top of the bullet
+        int lineTop         = (int)(sprite.Y / PIXEL_HEIGHT);
+        int pixelToCheck    = this.CurrentLine - 95 + lineTop + offset;
+
+        //like this:
+        //-----------////-----------
+        //-----------/  /-----------
+
+        //check the current value of both pixels (column1 & line) && (column2 && line)
+        short currentValue1 = IStagesDef.stages[CURRENT_STAGE, pixelToCheck, column1];
+        short currentValue2 = IStagesDef.stages[CURRENT_STAGE, pixelToCheck, column2];
+        
+        //if both are 0, way to go, otherwise, destroy
+        return (!(currentValue1 == 0 && currentValue2 == 0));
     }
 }
