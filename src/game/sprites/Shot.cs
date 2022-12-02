@@ -52,7 +52,14 @@ public class Shot : GameSprite
             this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
             this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
 
-            if (this.Y + 20 < 0) 
+            //todo...
+            float backgroundPositionY = this.GameRef.GetStages().GetNextBackgroundType(this.X, this.Y);
+
+            if (this.Y == backgroundPositionY)
+            {
+                this.UpdateShotToHitOrLoose();
+            }
+            else if (this.Y + 20 < 0) 
             {
                 this.UpdateShotToHitOrLoose();
             } 
