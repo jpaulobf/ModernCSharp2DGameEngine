@@ -53,7 +53,7 @@ public class Shot : GameSprite
             this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
 
             //check if bullet collides with bg
-            if (this.GameRef.GetStages().IsSpriteCollidingWithBackground(this))
+            if (this.GameRef.GetStages().IsShotCollidingWithBackground(this))
             {
                 this.UpdateShotToHitOrLoose();
             }
