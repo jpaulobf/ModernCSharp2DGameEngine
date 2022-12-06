@@ -63,8 +63,8 @@ public class GameStages : IStagesDef
         this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.GameRef.WindowSize.Width, this.GameRef.WindowSize.Height));
         this.InternalGraphics   = BufferedGraphics.Graphics;
 
-        //temp
-        NextStage();
+        //control the current stage lines count
+        this.ControlStageLinesCount();
 
         //define the interpolation mode
         this.InternalGraphics.InterpolationMode = this.GameRef.Interpolation;
@@ -452,7 +452,7 @@ public class GameStages : IStagesDef
         this.RunStage = true;
     }
 
-    public void NextStage()
+    public void ControlStageLinesCount()
     {
         //CURRENT_STAGE++;
         CURRENT_STAGE_LINES_DIFF = (short)((CURRENT_STAGE % 2 == 0)?29:0);
@@ -477,6 +477,7 @@ public class GameStages : IStagesDef
         this.TransitionBtwStages    = false;
         this.TransitionOffset       = 0;
         this.Offset                 = -PIXEL_HEIGHT * OPENING_LINES; //the offset starts negative for the opening animation
+        this.ControlStageLinesCount();
 
         foreach (var item in this.CurrentStageDef) 
         {
