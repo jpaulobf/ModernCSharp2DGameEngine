@@ -413,7 +413,7 @@ public class GameController : IGame
     private void NextStage()
     {
         this.Reset();
-        this.Stages.NextStage();
+        this.Stages.ControlStageLinesCount();
     }
 
     //Accessors
