@@ -214,18 +214,28 @@ public class GameStages : IStagesDef
             this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
             this.DrawStageOpening();
         }
-        
-        //after the opening, draw the background
-        if (this.CanDrawBackground) 
+        else
         {
-            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-            this.DrawBackground();
-        }
+            //after the opening, draw the background
+            if (this.CanDrawBackground) 
+            {
+                this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+                this.DrawBackground();
+            }
 
-        //Draw the sprites
-        foreach (var item in this.CurrentStageSpritesDefition.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
-        {
-            item.Value.Draw(this.InternalGraphics);
+            //Draw the sprites
+            foreach (var item in this.CurrentStageSpritesDefition.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
+            {
+                item.Value.Draw(this.InternalGraphics);
+            }
+            
+            if (this.TransitionBtwStages)
+            {
+                foreach (var item in this.NextStageSpritesDefition.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
+                {
+                    item.Value.Draw(this.InternalGraphics);
+                }   
+            }
         }
 
         //Render
