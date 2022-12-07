@@ -214,5 +214,9 @@ public class EnemySprite : GameSprite
         this.RenderReversed     = this.DefaultRenderReverse;
         this.X                  = this.OgX;
         this.Destroyed          = false;
+        if (this.RenderReversed)
+        {
+            this.SpriteImage = this.RSpriteImage;
+        }
     }
 }
