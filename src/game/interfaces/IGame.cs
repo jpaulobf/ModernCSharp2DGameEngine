@@ -49,8 +49,14 @@ public interface IGame
      */
     public void KeyUp(object? sender, System.Windows.Forms.KeyEventArgs e);
     
+    /**
+     * Window Resize event control
+     */
     public void Resize(object? sender, System.EventArgs e);
 
+    /**
+     * Accessor Interpolation mode
+     */
     public System.Drawing.Drawing2D.InterpolationMode Interpolation { get; }
 
     public IEnumerable<GameSprite> GetCurrentScreenSprites();
