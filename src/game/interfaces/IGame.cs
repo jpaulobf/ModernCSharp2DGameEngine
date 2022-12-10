@@ -80,6 +80,9 @@ public interface IGame
      */
     public Size WindowSize { get; }
 
+    /**
+     * Define the current player as Collided
+     */
     public void PlayerCollided();
 
     public void TogglePlayerSprite();
