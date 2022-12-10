@@ -34,10 +34,19 @@ public interface IGame
      */
     public Size Resolution { get; set; }
 
+    /**
+     * Key Down event control
+     */
     public void KeyDown(object? sender, System.Windows.Forms.KeyEventArgs e);
 
+    /**
+     * Key Press event control
+     */
     public void KeyPress(object? sender, System.Windows.Forms.KeyPressEventArgs e);
 
+    /**
+     * Key Up event control
+     */
     public void KeyUp(object? sender, System.Windows.Forms.KeyEventArgs e);
     
     public void Resize(object? sender, System.EventArgs e);
