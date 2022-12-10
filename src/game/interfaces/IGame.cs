@@ -75,6 +75,9 @@ public interface IGame
      */
     public float getScaleH();
 
+    /**
+     * Get the current Window Size
+     */
     public Size WindowSize { get; }
 
     public void PlayerCollided();
