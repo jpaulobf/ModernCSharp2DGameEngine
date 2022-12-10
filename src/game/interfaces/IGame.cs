@@ -65,8 +65,14 @@ public interface IGame
 
     public int GetInternalResolutionHeight();
 
+    /**
+     * Get the current scaled width
+     */
     public float getScaleW();
     
+    /**
+     * Get the current scaled height
+     */
     public float getScaleH();
 
     public Size WindowSize { get; }
