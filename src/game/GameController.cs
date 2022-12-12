@@ -39,6 +39,8 @@ public class GameController : IGame
     private volatile bool Paused            = false;
     private volatile bool ResetAfterDead    = false;
     private volatile bool ShowPlayerSprite  = false;
+    private long Framecounter               = 0;
+    private Util.SoundPlayerEx GameMusic    = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "sfx\\main.wav");
     private StateMachine GameStateMachine   = new StateMachine(StateMachine.IN_GAME);
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
@@ -98,6 +100,13 @@ public class GameController : IGame
         }
         else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
         {
+            this.Framecounter += frametime;
+
+            if (this.Framecounter == frametime)
+            {
+                this.PlayMusic();
+            }
+
             if (!Paused && !this.Player.Colliding) 
             {
                 this.Player.GoStraight();
@@ -201,6 +210,16 @@ public class GameController : IGame
             {
             }
         }
+    }
+
+    private void PlayMusic()
+    {
+        Task.Run(() =>
+            {
+                GameMusic.Stop();
+                GameMusic.PlayLooping();
+            }
+        );
     }
 
     /**
@@ -404,6 +423,7 @@ public class GameController : IGame
         this.Paused             = false;
         this.ResetAfterDead     = false;
         this.ResetCounter       = 0;
+        this.Framecounter       = 0;
         this.Hud.Reset();
         this.Score.Reset();
         this.Stages.Reset();
