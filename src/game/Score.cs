@@ -1,4 +1,5 @@
-using Game;
+namespace Game;
+
 using Util;
 
 /**
