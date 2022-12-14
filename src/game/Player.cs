@@ -1,4 +1,4 @@
-using Game;
+namespace Game;
 
 /**
  * Author: Joao P B Faria
