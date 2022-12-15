@@ -47,10 +47,7 @@ public class Player
     {
         Task.Run(() =>
             {
-                //WMPLib.WindowsMediaPlayer temp = new WMPLib.WindowsMediaPlayer();
-                //temp.URL = @"D:\Development\DotNet\ModernCSharp2DGameEngine\sfx\shot.wav";
-                //this.ShotSFX.PlayAsync();
-                //Task.Yield();
+                //ShotSFX.PlayAsync();
             }
         );
     }
