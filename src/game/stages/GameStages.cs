@@ -119,7 +119,7 @@ public class GameStages : IStagesDef
         if (this.CanStartStageOpening) 
         {
             //control the BG vertical scroll
-            if (this.Framecount >= 160_000)
+            if (this.Framecount >= 166_000)
             {
                 //calc the offset
                 this.OpeningOffset  += PIXEL_HEIGHT;
@@ -223,12 +223,6 @@ public class GameStages : IStagesDef
                 this.DrawBackground();
             }
 
-            //Draw the sprites
-            foreach (var item in this.CurrentStageSpritesDefition.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
-            {
-                item.Value.Draw(this.InternalGraphics);
-            }
-            
             if (this.TransitionBtwStages)
             {
                 foreach (var item in this.NextStageSpritesDefition.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
@@ -236,6 +230,12 @@ public class GameStages : IStagesDef
                     item.Value.Draw(this.InternalGraphics);
                 }   
             }
+        }
+
+        //Draw the sprites
+        foreach (var item in this.CurrentStageSpritesDefition.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key))
+        {
+            item.Value.Draw(this.InternalGraphics);
         }
 
         //Render
