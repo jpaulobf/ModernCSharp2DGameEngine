@@ -12,7 +12,7 @@ public sealed class Utility {
      */
     public static string getCurrentPath() 
     {
-        return (GameEngine.Launcher.path);
+        return (Directory.GetCurrentDirectory());
     }
     
     /**
