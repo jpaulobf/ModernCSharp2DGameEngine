@@ -40,8 +40,7 @@ public class GameController : IGame
     private volatile bool ResetAfterDead    = false;
     private volatile bool ShowPlayerSprite  = false;
     private long Framecounter               = 0;
-    //WMPLib.WindowsMediaPlayer GameMusic     = new WMPLib.WindowsMediaPlayer();
-    private Util.SoundPlayerEx GameMusic    = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "sfx\\main.wav");
+    private Util.SoundPlayerEx GameMusic    = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "\\sfx\\main.wav");
     private StateMachine GameStateMachine   = new StateMachine(StateMachine.IN_GAME);
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
