@@ -80,15 +80,15 @@ public class MyGame
             {
                 //init the game class
                 this.Game = new GameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                                   new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                                   InterpolationMode);
+                                               new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                                               InterpolationMode);
             } 
             else 
             {
                 //init the game class
                 this.Game = new GameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
-                                                   new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
-                                                   InterpolationMode);
+                                               new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
+                                               InterpolationMode);
             }
 
             //add resize method to the Resize event
@@ -275,15 +275,6 @@ public class MyGame
         {
             if (this.UseThread) 
             {
-                /*
-                alternative:
-                */
-                /*
-                this.thread = new Thread(new ThreadStart(Run));    
-                this.thread.Priority = ThreadPriority.Highest;
-                this.thread.IsBackground = true;
-                this.thread.Start();
-                */
                 this.Task = new Task(Run, TaskCreationOptions.LongRunning);
                 this.Task.Start();
             } 
@@ -330,7 +321,7 @@ public class MyGame
                 beforeUpdate = Stopwatch.GetTimestamp();
 
                 //update the game (gathering input from user, and processing the necessary games updates)
-                this.update(LastframeTimer);
+                this.Update(LastframeTimer);
 
                 //get the timestamp after the update
                 afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
@@ -339,8 +330,8 @@ public class MyGame
                 //only draw if there is some (any) enough time
                 if ((TARGET_FRAMETIME - afterUpdate) > 0) {
                     //draw
-                    this.draw(LastframeTimer);
-                    this.render();
+                    this.Draw(LastframeTimer);
+                    this.Render();
                 }
 
                 this.LastframeTimer = (Stopwatch.GetTimestamp() - BeforeTimer) * frequencyCalc;
@@ -382,13 +373,13 @@ public class MyGame
                     timeElapsed *= frequencyCalc;
     
                     //update the game (gathering input from user, and processing the necessary games updates)
-                    this.update(timeElapsed);
+                    this.Update(timeElapsed);
     
                     //draw
-                    this.draw(timeElapsed);
+                    this.Draw(timeElapsed);
 
                     //render
-                    this.render();
+                    this.Render();
 
                     //Yield
                     Thread.Yield();
@@ -408,7 +399,7 @@ public class MyGame
                     beforeUpdate = Stopwatch.GetTimestamp();
 
                     //update the game (gathering input from user, and processing the necessary games updates)
-                    this.update(lastframetime);
+                    this.Update(lastframetime);
 
                     //get the timestamp after the update
                     afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
@@ -420,10 +411,10 @@ public class MyGame
                         beforeDraw = Stopwatch.GetTimestamp();
 
                         //draw
-                        this.draw(lastframetime);
+                        this.Draw(lastframetime);
 
                         //render
-                        this.render();
+                        this.Render();
                         
                         //and than, store the time spent
                         afterDraw = Stopwatch.GetTimestamp() - beforeDraw;
@@ -460,7 +451,7 @@ public class MyGame
                         //System.out.println("Skip 1 frame... " + ++counter + " time(s)");
                         if (accumulator < 0) 
                         {
-                            this.update(TARGET_FRAMETIME);
+                            this.Update(TARGET_FRAMETIME);
                         }
                     }
 
@@ -474,7 +465,7 @@ public class MyGame
         /**
          * Render the canvas
          */
-        private void render()
+        private void Render()
         {
            this.Canvas.Render();
         }
@@ -482,7 +473,7 @@ public class MyGame
         /** 
          * Update game logic
          */
-        public void update(long frametime) 
+        public void Update(long frametime) 
         {
             this.Canvas.Update(frametime);
         }
@@ -490,7 +481,7 @@ public class MyGame
         /** 
          * Draw
          */
-        public void draw(long frametime) 
+        public void Draw(long frametime) 
         {
             this.Canvas.Draw(frametime);
         }
