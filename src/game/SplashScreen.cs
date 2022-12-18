@@ -4,9 +4,8 @@ using Util;
 using Engine;
 using System.Drawing;
 using System.Windows.Forms;
+using System.ComponentModel;
 using System.Diagnostics;
-using Game;
-using System.Drawing.Drawing2D;
 
 /**
  *
@@ -14,23 +13,27 @@ using System.Drawing.Drawing2D;
 public class SplashScreen : Form, ICanvasEngine 
 {
     //this window properties
-    private int PositionX                       = 0;
-    private int PositionY                       = 0;
     private int WindowWidth                     = 800;
     private int WindowHeight                    = 500;
     private int W, H, X, Y                      = 0;
+    private IContainer Components;
 
     //desktop properties
     private int ResolutionH                     = 0;
     private int ResolutionW                     = 0;
 
-    //splash screen image
-    private Bitmap SplashImage = LoadingStuffs.GetInstance().GetImage("splash");
+    //Game FPS
+    private int FPS                             = 0;
+
+    //Splash Screen Image
+    private Bitmap SplashImage;
+    private Graphics Graphics;
+    private Task? Task;
 
     /**
      * Constructor
      */
-    public SplashScreen()
+    public SplashScreen(int FPS)
     {
         //////////////////////////////////////////////////////////////////////
         // ->>>  for the window
@@ -38,72 +41,151 @@ public class SplashScreen : Form, ICanvasEngine
         LoadingStuffs.GetInstance();
 
         //set some properties for this window
-        Dimension basic = new Dimension(this.windowWidth, this.windowHeight);
-        this.setPreferredSize(basic);
-        this.setMinimumSize(basic);
-        this.setUndecorated(true);
+        this.Components                 = new System.ComponentModel.Container();
+        this.AutoScaleMode              = System.Windows.Forms.AutoScaleMode.Font;
+        this.ClientSize                 = new Size(WindowWidth, WindowHeight);
+        this.StartPosition              = FormStartPosition.CenterScreen;
+        this.Text                       = string.Empty;
+        this.ControlBox                 = false;
+        this.FormBorderStyle            = FormBorderStyle.None;
 
-        //default operation on close (exit in this case)
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        //recover the desktop resolution
-        Dimension size = Toolkit.getDefaultToolkit(). getScreenSize();
+        //double buffered
+        this.DoubleBuffered             = true;
 
         //and save this values
-        this.resolutionH = (int)size.getHeight();
-        this.resolutionW = (int)size.getWidth();
+        this.ResolutionH                = (int)Screen.PrimaryScreen.Bounds.Height;
+        this.ResolutionW                = (int)Screen.PrimaryScreen.Bounds.Width;
 
-        //center the current window regards the desktop resolution
-        this.positionX = (int)((size.getWidth() / 2) - (this.windowWidth / 2));
-        this.positionY = (int)((size.getHeight() / 2) - (this.windowHeight / 2));
-        this.setLocation(this.positionX, this.positionY);
-
-        //create the backbuffer from the size of screen resolution to avoid any resize process penalty
-        this.ge             = GraphicsEnvironment.getLocalGraphicsEnvironment();
-        this.dsd            = ge.getDefaultScreenDevice();
-        this.bufferImage    = dsd.getDefaultConfiguration().createCompatibleVolatileImage(this.resolutionW, this.resolutionH);
-        this.g2d            = (Graphics2D)bufferImage.getGraphics();
-        
         //Get the already loaded image from loader
-        this.splashImage    = LoadingStuffs.getInstance().getImage("splashImage");
+        this.SplashImage                = LoadingStuffs.GetInstance().GetImage("splash");
+
+        //create the backbuffer image
+        this.Graphics                   = this.CreateGraphics();
+
+        //foward the key control
+        this.FowardKeyboard();
 
         //////////////////////////////////////////////////////////////////////
         // ->>>  now, for the canvas
         //////////////////////////////////////////////////////////////////////
-        this.w      = this.splashImage.getWidth();
-        this.h      = this.splashImage.getHeight();
-        this.x      = (this.windowWidth - this.w) / 2;
-        this.y      = (this.windowHeight - this.h) / 2;
+        this.W      = this.SplashImage.Width;
+        this.H      = this.SplashImage.Height;
+        this.X      = (this.ResolutionW - this.W) / 2;
+        this.Y      = (this.ResolutionH - this.H) / 2;
         this.FPS    = FPS;
 
-        //initialize the canvas
-        this.canvas = new JPanel(null);
-        this.canvas.setSize(windowWidth, windowHeight);
-        this.canvas.setBackground(Color.BLACK);
-        this.setVisible(true);
-        this.canvas.setOpaque(true);
-        
-        //final parameters for the window
-        this.add(canvas);
-        this.pack();
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-        this.requestFocus();
+        this.Visible = true;
+        this.Focus();
+
+        //loop
+        this.Task = new Task(Render, TaskCreationOptions.LongRunning);
+        this.Task.Start();
     }
 
-    public void Draw(long frametime)
+    /**
+     * Foward the keyboard actions
+     */
+    private void FowardKeyboard()
     {
+        this.KeyPreview = true;
+        this.KeyUp      += Canvas_KeyUp;
     }
 
-    public void GraphicDispose()
+    /**
+     * On keyUp
+     */
+    void Canvas_KeyUp(object? sender, KeyEventArgs e) 
     {
+        if (e.KeyValue == 27)
+        {
+            //exit....
+        }
     }
 
     public void Render()
     {
+        long timeReference      = Stopwatch.GetTimestamp();
+        long beforeUpdate       = 0;
+        long afterUpdate        = 0;
+        long beforeDraw         = 0;
+        long afterDraw          = 0;
+        long beforeSleep        = 0;
+        long afterSleep         = 0;
+        long accumulator        = 0;
+        long lastframetime      = 60;
+        int TARGET_FRAMETIME    = 60;
+        long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
+
+        while (true)
+        {
+            accumulator = 0;
+
+            //calc the update time
+            beforeUpdate = Stopwatch.GetTimestamp();
+
+            //update the game (gathering input from user, and processing the necessary games updates)
+            this.Update(lastframetime);
+
+            //get the timestamp after the update
+            afterUpdate = Stopwatch.GetTimestamp() - beforeUpdate;
+            
+            //only draw if there is some (any) enough time
+            if ((TARGET_FRAMETIME - afterUpdate) > 0) 
+            {
+                
+                beforeDraw = Stopwatch.GetTimestamp();
+
+                //draw
+                this.Draw(lastframetime);
+
+                //render
+                this.Render();
+                
+                //and than, store the time spent
+                afterDraw = Stopwatch.GetTimestamp() - beforeDraw;
+            }
+
+            //correct the timing by the stopwatch frequency (and using the same variable "afterdraw")
+            afterDraw = ((afterUpdate + afterDraw) * frequencyCalc);
+            accumulator = TARGET_FRAMETIME - afterDraw;
+
+            if (accumulator > 0) 
+            {
+                
+                beforeSleep = Stopwatch.GetTimestamp();
+
+                //This method is imprecise... Timer Resolution in .Net Takes 12~14 ms to tick 
+                //Use, if possible, max power (target-fps: 0)
+                //Or utilize the Timer Resolution mode (useThread = false [default])
+                Thread.Sleep((short)(accumulator * 0.0001));
+                Thread.Yield();
+
+                afterSleep = Stopwatch.GetTimestamp() - beforeSleep;
+
+            } 
+            else 
+            {
+                if (accumulator < 0) 
+                {
+                    this.Update(TARGET_FRAMETIME);
+                }
+            }
+
+            lastframetime = afterDraw + (afterSleep * frequencyCalc);
+        }
     }
 
     public void Update(long frametime)
     {
+    }
+    
+    public void Draw(long frametime)
+    {
+        this.Graphics.DrawImage(this.SplashImage, 0, 0, this.SplashImage.Width, this.SplashImage.Height);
+    }
+
+    public void GraphicDispose()
+    {
+        this.Graphics.Dispose();
     }
 }
