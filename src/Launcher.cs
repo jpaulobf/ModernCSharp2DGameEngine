@@ -1,4 +1,4 @@
-using Engine;
+using Game;
 
 namespace GameEngine;
 
@@ -20,6 +20,6 @@ static class Launcher
      */
     static void Main()
     {
-        new MyGame(0);
+        Application.Run(new SplashScreen(0));
     } 
 }
