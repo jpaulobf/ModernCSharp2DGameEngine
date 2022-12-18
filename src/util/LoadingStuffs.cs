@@ -100,6 +100,9 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\n9.png");
             Images.Add("number-9", image);
+
+            image = BitmapEx.New("img\\splash.png");
+            Images.Add("splash", image);
         }
         catch (Exception ex)
         {
