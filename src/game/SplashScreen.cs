@@ -29,6 +29,8 @@ public class SplashScreen : Form, ICanvasEngine
     private Bitmap SplashImage;
     private Graphics Graphics;
     private Task? Task;
+    private long Framecounter                   = 0;
+    private volatile bool ContinueLoop          = true;
 
     /**
      * Constructor
@@ -116,7 +118,7 @@ public class SplashScreen : Form, ICanvasEngine
         int TARGET_FRAMETIME    = 60;
         long frequencyCalc      = (10_000_000 / Stopwatch.Frequency);
 
-        while (true)
+        while (this.ContinueLoop)
         {
             accumulator = 0;
 
@@ -177,6 +179,11 @@ public class SplashScreen : Form, ICanvasEngine
 
     public void Update(long frametime)
     {
+        this.Framecounter += frametime;
+        if (this.Framecounter >= 40_000)
+        {
+            this.CloseAndGoToGame();
+        }
     }
     
     public void Draw(long frametime)
@@ -186,6 +193,15 @@ public class SplashScreen : Form, ICanvasEngine
 
     public void GraphicDispose()
     {
-        this.Graphics.Dispose();
+    }
+
+    private void CloseAndGoToGame()
+    {
+        this.Framecounter   = 0;
+        this.ContinueLoop   = false;
+        this.Invoke(new Action(()=> this.Hide()));
+
+        //Go to the Game
+        new MyGame(this.FPS);
     }
 }
