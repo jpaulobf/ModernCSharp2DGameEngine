@@ -41,7 +41,7 @@ public class GameController : IGame
     private volatile bool ShowPlayerSprite  = false;
     private long Framecounter               = 0;
     private Util.SoundPlayerEx GameMusic    = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "\\sfx\\main.wav");
-    private StateMachine GameStateMachine   = new StateMachine(StateMachine.IN_GAME);
+    private StateMachine GameStateMachine   = new StateMachine();
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
     private Point PausePoint;
@@ -49,6 +49,9 @@ public class GameController : IGame
     private GameStages Stages;
     private Player Player;
     private Score Score;
+    private Menu Menu;
+    private Options Options;
+    private GameOver GameOver;
 
     /**
      * Game constructor
@@ -85,6 +88,9 @@ public class GameController : IGame
         this.Hud        = new HUD(this);
         this.Stages     = new GameStages(this);
         this.Score      = new Score(this);
+        this.Menu       = new Menu(this);
+        this.Options    = new Options(this);
+        this.GameOver   = new GameOver(this);
     }
 
     /**
@@ -94,9 +100,11 @@ public class GameController : IGame
     {
         if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
         {
+            this.Menu.Update(frametime);
         }
         else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
         {
+            this.Options.Update(frametime);
         }
         else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
         {
@@ -164,7 +172,15 @@ public class GameController : IGame
         }
         else if (this.GameStateMachine.GetCurrentGameState() == StateMachine.GAME_OVER)
         {
+            this.Framecounter += frametime;
 
+            this.GameOver.Update(frametime);
+
+            if (this.Framecounter == 10_000_000)
+            {
+                this.Framecounter = 0;
+                this.GameStateMachine.SetStateToMenu();
+            }
         }
     }
 
@@ -177,9 +193,11 @@ public class GameController : IGame
         {
             if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
             {
+                this.Menu.Draw(this.InternalGraphics);
             }
             else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
             {
+                this.Options.Draw(this.InternalGraphics);
             }
             else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
             {
@@ -208,6 +226,7 @@ public class GameController : IGame
             }
             else if (GameStateMachine.GetCurrentGameState() == StateMachine.GAME_OVER)
             {
+                this.GameOver.Draw(this.InternalGraphics);
             }
         }
     }
