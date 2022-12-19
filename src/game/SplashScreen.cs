@@ -15,7 +15,6 @@ public class SplashScreen : Form, ICanvasEngine
     //this window properties
     private int WindowWidth                     = 800;
     private int WindowHeight                    = 500;
-    private int W, H, X, Y                      = 0;
     private IContainer Components;
 
     //desktop properties
@@ -70,10 +69,6 @@ public class SplashScreen : Form, ICanvasEngine
         //////////////////////////////////////////////////////////////////////
         // ->>>  now, for the canvas
         //////////////////////////////////////////////////////////////////////
-        this.W      = this.SplashImage.Width;
-        this.H      = this.SplashImage.Height;
-        this.X      = (this.ResolutionW - this.W) / 2;
-        this.Y      = (this.ResolutionH - this.H) / 2;
         this.FPS    = FPS;
 
         this.Visible = true;
