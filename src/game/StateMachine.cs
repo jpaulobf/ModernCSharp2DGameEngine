@@ -56,4 +56,12 @@ public class StateMachine
     {
         this.CurrentGameState = OPTION;
     }
+
+    /**
+     * Define the current game to the GameOver state
+     */
+    public void SetGameStateToGameOver()
+    {
+        this.CurrentGameState = GAME_OVER;
+    }
 }
