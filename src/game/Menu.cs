@@ -1,8 +1,11 @@
 namespace Game;
 
+using Util;
+
 public class Menu
 {
     private IGame GameRef;
+    private Bitmap MainLogo;
 
     /**
      * Constructor
@@ -10,6 +13,7 @@ public class Menu
     public Menu(IGame game) 
     {
         this.GameRef        = game;
+        this.MainLogo       = LoadingStuffs.GetInstance().GetImage("main-logo");
     }
 
     /**
@@ -25,8 +29,8 @@ public class Menu
      */
     public void Draw(Graphics gfx) 
     {
-        //gfx.FillRectangle(Brushes.Black, this.SeparatorRect);
-        //gfx.DrawImage(this.FuelMeter, this.FuelMeterX, this.FuelMeterY, this.FuelMeter.Width, this.FuelMeter.Height);
+        gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 58, 80, 74)), 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+        gfx.DrawImage(this.MainLogo, 0, 0, this.MainLogo.Width, this.MainLogo.Height);
         //TODO
     }
 
