@@ -106,6 +106,10 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\river_logo.png");
             Images.Add("main-logo", image);
+
+            image = BitmapEx.New("img\\selector.png");
+            Images.Add("selector", image);
+            
         }
         catch (Exception ex)
         {
