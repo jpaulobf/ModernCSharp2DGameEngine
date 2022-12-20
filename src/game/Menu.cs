@@ -6,6 +6,14 @@ public class Menu
 {
     private IGame GameRef;
     private Bitmap MainLogo;
+    private Bitmap Selector;
+    private int MainLogoX = 372;
+    private int MainLogoY = 40;
+
+    private int SelectorX = 78;
+    private int SelectorY = 484;
+
+
 
     /**
      * Constructor
@@ -30,7 +38,7 @@ public class Menu
     public void Draw(Graphics gfx) 
     {
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 58, 80, 74)), 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        gfx.DrawImage(this.MainLogo, 0, 0, this.MainLogo.Width, this.MainLogo.Height);
+        gfx.DrawImage(this.MainLogo, this.MainLogoX, this.MainLogoY, this.MainLogo.Width, this.MainLogo.Height);
         //TODO
     }
 
