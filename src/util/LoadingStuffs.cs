@@ -109,6 +109,16 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\selector.png");
             Images.Add("selector", image);
+
+            image = BitmapEx.New("img\\lb_play.png");
+            Images.Add("label-start", image);
+
+            image = BitmapEx.New("img\\lb_option.png");
+            Images.Add("label-options", image);
+
+            image = BitmapEx.New("img\\lb_exit.png");
+            Images.Add("label-exit", image);
+
             
         }
         catch (Exception ex)
