@@ -175,7 +175,7 @@ public class SplashScreen : Form, ICanvasEngine
     public void Update(long frametime)
     {
         this.Framecounter += frametime;
-        if (this.Framecounter >= 40_000)
+        if (this.Framecounter >= 30_000)
         {
             this.CloseAndGoToGame();
         }
