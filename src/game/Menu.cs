@@ -10,16 +10,19 @@ public class Menu
     private Bitmap LabelStart;
     private Bitmap LabelOptions;
     private Bitmap LabelExit;
-    private int MainLogoX       = 372;
-    private int MainLogoY       = 40;
-    private int SelectorX       = 78;
-    private int SelectorY       = 484;
-    private int LabelStartX     = 545;
-    private int LabelStartY     = 498;
-    private int LabelOptionsX   = 611;
-    private int LabelOptionsY   = 574;
-    private int LabelExitX      = 592;
-    private int LabelExitY      = 650;
+    private int MainLogoX           = 372;
+    private int MainLogoY           = 40;
+    private int SelectorX           = 78;
+    private const int SelectorYBase = 484;
+    private const int SelectorYDiff = 76;
+    private int SelectorY           = SelectorYBase;
+    private int LabelStartX         = 545;
+    private int LabelStartY         = 498;
+    private int LabelOptionsX       = 611;
+    private int LabelOptionsY       = 574;
+    private int LabelExitX          = 592;
+    private int LabelExitY          = 650;
+    private byte currentPosition    = 0;
 
     /**
      * Constructor
@@ -39,7 +42,7 @@ public class Menu
      */
     public void Update(long frametime) 
     {
-        //TODO
+        this.SelectorY = SelectorYBase + (this.currentPosition * SelectorYDiff);
     }
 
     /**
@@ -60,5 +63,38 @@ public class Menu
      */
     internal void Reset()
     {
+    }
+
+    public void KeyUp(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyValue == 38) //up
+        {
+            if (this.currentPosition == 0)
+            {
+                this.currentPosition = 2;
+            }
+            else 
+            {
+                this.currentPosition--;
+            }
+        }
+        else if (e.KeyValue == 40) //down
+        {
+            if (this.currentPosition == 2)
+            {
+                this.currentPosition = 0;
+            }
+            else 
+            {
+                this.currentPosition++;
+            }
+        }
+        else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
+        {
+            if (this.currentPosition == 0)
+            {
+                this.GameRef.SetGameStateToInGame();
+            }
+        }
     }
 }
