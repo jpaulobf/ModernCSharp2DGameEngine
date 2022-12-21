@@ -118,8 +118,6 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\lb_exit.png");
             Images.Add("label-exit", image);
-
-            
         }
         catch (Exception ex)
         {
