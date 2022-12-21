@@ -345,42 +345,49 @@ public class GameController : IGame
      */
     public void KeyUp(object? sender, KeyEventArgs e)
     {
-        if (e.KeyValue == 37) 
+        if (this.GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
         {
-            IS_LEFT_KEY_DOWN = false;
-        } 
-        else if (e.KeyValue == 39) 
-        {
-            IS_RIGHT_KEY_DOWN = false;
+            this.Menu.KeyUp(sender, e);
         }
-        
-        if (e.KeyValue == 38)
+        else if (this.GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
         {
-            IS_UP_KEY_DOWN = false;
-        }
-        else if (e.KeyValue == 40)
-        {
-            IS_DOWN_KEY_DOWN = false;
-        }
+            if (e.KeyValue == 37) 
+            {
+                IS_LEFT_KEY_DOWN = false;
+            } 
+            else if (e.KeyValue == 39) 
+            {
+                IS_RIGHT_KEY_DOWN = false;
+            }
+            
+            if (e.KeyValue == 38)
+            {
+                IS_UP_KEY_DOWN = false;
+            }
+            else if (e.KeyValue == 40)
+            {
+                IS_DOWN_KEY_DOWN = false;
+            }
 
-        if (e.KeyValue == 32)
-        {
-            IS_SHOT_KEY_DOWN = false;
-        }
+            if (e.KeyValue == 32)
+            {
+                IS_SHOT_KEY_DOWN = false;
+            }
 
-        if (e.KeyValue == 80 || e.KeyValue == 19) 
-        {
-            this.PauseGame();
-        }
+            if (e.KeyValue == 80 || e.KeyValue == 19) 
+            {
+                this.PauseGame();
+            }
 
-        if (e.KeyValue == 82) 
-        {
-            this.Reset();
-        }
+            if (e.KeyValue == 82) 
+            {
+                this.Reset();
+            }
 
-        if (e.KeyValue == 78)
-        {
-            this.NextStage();
+            if (e.KeyValue == 78)
+            {
+                this.NextStage();
+            }
         }
     }
 
@@ -491,5 +498,10 @@ public class GameController : IGame
     public GameStages GetStages()
     {
         return (this.Stages);
+    }
+
+    public void SetGameStateToInGame()
+    {
+        this.GameStateMachine.SetStateToInGame();
     }
 }
