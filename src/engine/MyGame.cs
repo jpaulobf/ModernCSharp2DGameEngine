@@ -181,6 +181,10 @@ public class MyGame
         public void Render() 
         {
             this.Game.Render(this.Graphics);
+            if (this.Game.GetTerminateStatus())
+            {
+                this.Invoke(new Action(()=> this.Close()));
+            }
         }
 
         /**
