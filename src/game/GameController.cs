@@ -27,6 +27,7 @@ public class GameController : IGame
     private float ScaleW                    = 1.0F;
     private float ScaleH                    = 1.0F;
     private bool WindowResizing             = false;
+    private bool Terminate                  = false;
 
     //-----------------------------------------------------//
     //--- Game Elements control                         ---//
@@ -503,5 +504,15 @@ public class GameController : IGame
     public void SetGameStateToInGame()
     {
         this.GameStateMachine.SetStateToInGame();
+    }
+
+    public void ExitGame()
+    {
+        this.Terminate = true;
+    }
+
+    public bool GetTerminateStatus()
+    {
+        return (this.Terminate);
     }
 }
