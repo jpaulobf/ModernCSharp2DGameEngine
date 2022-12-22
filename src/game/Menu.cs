@@ -95,6 +95,10 @@ public class Menu
             {
                 this.GameRef.SetGameStateToInGame();
             }
+            else if (this.currentPosition == 2)
+            {
+                this.GameRef.ExitGame();
+            }
         }
     }
 }
