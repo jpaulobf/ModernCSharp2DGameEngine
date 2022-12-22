@@ -96,4 +96,6 @@ public interface IGame
     public void UpdateScore(int type);
     public GameStages GetStages();
     public void SetGameStateToInGame();
+    public void ExitGame();
+    public bool GetTerminateStatus();
 }
