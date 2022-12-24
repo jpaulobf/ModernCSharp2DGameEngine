@@ -67,9 +67,6 @@ public class MyGame
             //no resizible
             this.FormBorderStyle            = FormBorderStyle.FixedSingle;
 
-            //double buffered
-            this.DoubleBuffered             = true;
-            
             //go fullscreen
             this.ToggleFullScreen(GoFullscreen);
 
