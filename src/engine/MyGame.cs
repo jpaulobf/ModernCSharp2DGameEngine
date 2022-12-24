@@ -192,8 +192,11 @@ public class MyGame
          */
         private void RenderFPS(Graphics graphics, long frametime) 
         {
-            FPS_AVERAGE[Fps_Aux_Counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
-            graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.White, 0, 0);
+            if (frametime > 0)
+            {
+                FPS_AVERAGE[Fps_Aux_Counter++%FPS_MAX_ARRAY] = (int)(10_000_000 / frametime);
+                graphics.DrawString(("FPS: " + (FPS_AVERAGE.Sum() / FPS_MAX_ARRAY)), this.Font, Brushes.White, 0, 0);
+            }
         }
 
         /**
