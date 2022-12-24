@@ -39,8 +39,8 @@ public class MyGame
         private System.ComponentModel.IContainer Components;
         private bool GoFullscreen                   = false;
         private bool ShowFPS                        = true;
-        private int ExternalResolutionWidth         = 1366;//738;
-        private int ExternalResolutionHeight        = 768;//516;
+        private int ExternalResolutionWidth         = 738; //1366
+        private int ExternalResolutionHeight        = 516; //768
         private const int FPS_MAX_ARRAY             = 10;
         private int[] FPS_AVERAGE                   = new int[FPS_MAX_ARRAY];
         private byte Fps_Aux_Counter                = 0;

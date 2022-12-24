@@ -22,8 +22,8 @@ public class GameController : IGame
     public Size Resolution                  { get; set; }
     public Size WindowSize                  { get; }
     public InterpolationMode Interpolation  { get; }
-    protected int InternalResolutionWidth   = 1366; //738;
-    protected int InternalResolutionHeight  = 768; //516;
+    protected int InternalResolutionWidth   = 738; //1366;
+    protected int InternalResolutionHeight  = 516; //768
     private float ScaleW                    = 1.0F;
     private float ScaleH                    = 1.0F;
     private bool WindowResizing             = false;
@@ -102,6 +102,7 @@ public class GameController : IGame
         if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
         {
             this.Menu.Update(frametime);
+            this.SetGameStateToInGame();
         }
         else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
         {
