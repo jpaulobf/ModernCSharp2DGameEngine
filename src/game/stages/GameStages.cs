@@ -24,7 +24,7 @@ public class GameStages : IStagesDef
                                                                             new SolidBrush(Color.FromArgb(255, 170, 170, 170)), //dark gray
                                                                             new SolidBrush(Color.FromArgb(255, 234, 234, 70)),  //yellow
                                                                             new SolidBrush(Color.FromArgb(255, 45, 50, 184))};  //dark blue
-    private Rectangle DrawRect                          = new Rectangle(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
+    private RectangleF DrawRect                          = new RectangleF(0, 0, PIXEL_WIDTH, PIXEL_HEIGHT);
     protected volatile short CurrentLine                = 574;
     private const short SCREEN_LINES                    = 107 + 1; //one extra buffer line
     private const byte OPENING_LINES                    = 108;
@@ -32,10 +32,9 @@ public class GameStages : IStagesDef
     private const byte STAGE_OFFSET                     = 1;
     private short CURRENT_STAGE                         = 1 - STAGE_OFFSET;
     private short CURRENT_STAGE_LINES_DIFF              = 0;
-    private volatile short Offset                       = 0;
-    private volatile byte OpeningOffset                 = 0;
+    private volatile float Offset                       = 0;
+    private volatile float OpeningOffset                = 0;
     private volatile short TransitionOffset             = 0;
-    private long Framecount                             = 0;
     private volatile int StartScreenFrame               = 0;
     private volatile int EndScreenFrame                 = 0;
     private volatile int CurrentLineYPosition           = 0;
@@ -112,72 +111,59 @@ public class GameStages : IStagesDef
      */
     public void Update(long frametime, bool colliding = false) 
     {
-        //add the framecounter
-        this.Framecount += frametime;
-
         //if the game is opening the stage (just an animation)
         if (this.CanStartStageOpening) 
         {
-            //control the BG vertical scroll
-            if (this.Framecount >= 166_000)
-            {
-                //calc the offset
-                this.OpeningOffset  += PIXEL_HEIGHT;
+            //calc the offset
+            float velocity = ((float)(400 * ((double)frametime / 10_000_000)));
+            this.OpeningOffset  += velocity;
+            this.Offset         += velocity;
 
-                if (this.OpeningOffset == PIXEL_HEIGHT) {
-                    this.CurrentOpeningLine++;
-                    this.OpeningOffset = 0;
-                    this.Offset += PIXEL_HEIGHT;
-                }
-
-                //reset framecount
-                this.Framecount = 0;
-
-                //update draw stage opening flag
-                this.CanDrawStageOpening = true;
+            if (this.OpeningOffset >= PIXEL_HEIGHT) {
+                this.CurrentOpeningLine++;
+                this.Offset -= (this.OpeningOffset - PIXEL_HEIGHT);
+                this.OpeningOffset = 0;
             }
+
+            //update draw stage opening flag
+            this.CanDrawStageOpening = true;
         }
         //if the game is running
         else if (this.CanStartTheStage) 
         {
-            int step = 0;
+            float step = 0;
             if (this.GameRef.GetPlayer().DOUBLE_SPEED)
             {
-                step = 50_000;
+                step = 2;
             }
             else if (this.GameRef.GetPlayer().HALF_SPEED)
             {
-                step = 170_000;
+                step = 0.5f;
             } 
             else //default velocity
             {
-                step = 90_000;
+                step = 1;
             }
 
-            //control the BG vertical scroll
-            if (this.Framecount >= step) 
+            float velocity = ((float)(100 * ((double)frametime / 10_000_000))) * step;
+
+            //flag the draw
+            this.CanDrawBackground = true;
+
+            //scroll down if not collided
+            if (!colliding && this.RunStage) 
             {
-                //flag the draw
-                this.CanDrawBackground = true;
-
-                //scroll down if not collided
-                if (!colliding && this.RunStage) 
-                {
-                    if (this.CurrentLine > 95) {
-                        //calc the offset
-                        this.Offset++;
-                        if (this.Offset == PIXEL_HEIGHT) {
-                            this.CurrentLine--;
-                            this.Offset = 0;
-                        }
-                    } else {
-                        this.TransitionBtwStages = true;
-                        this.TransitionOffset++;
+                if (this.CurrentLine > 95) {
+                    //calc the offset
+                    this.Offset += velocity;
+                    if (this.Offset >= PIXEL_HEIGHT) {
+                        this.CurrentLine--;
+                        this.Offset = 0;
                     }
+                } else {
+                    this.TransitionBtwStages = true;
+                    this.TransitionOffset++;
                 }
-
-                //reset framecount
-                this.Framecount = 0;
             }
 
             //if not already dead, check for dead (w/ bg)
@@ -355,7 +341,7 @@ public class GameStages : IStagesDef
         }
 
         int sceneBeginning = stageLinesCount - currentOpeningLine - CURRENT_STAGE_LINES_DIFF;
-        for (int i = sceneBeginning, z = 0; i < stageLinesCount; i++, z++) 
+        for (int i = sceneBeginning, z = 0; i < (stageLinesCount - CURRENT_STAGE_LINES_DIFF); i++, z++) 
         {
             for (int j = 0; j < openingColumnsCount; j++) 
             {
@@ -364,7 +350,7 @@ public class GameStages : IStagesDef
                 if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
                 {
                     this.DrawRect.X =  j * PIXEL_WIDTH;
-                    this.DrawRect.Y =  (z * PIXEL_HEIGHT) + this.OpeningOffset - 4;
+                    this.DrawRect.Y = (z * PIXEL_HEIGHT) + this.OpeningOffset - 4;
                     this.InternalGraphics.FillRectangle(this.Brushes[renderBlock], this.DrawRect);
                 }
             }
@@ -480,7 +466,6 @@ public class GameStages : IStagesDef
     public void Reset()
     {
         this.CurrentLine            = 574;
-        this.Framecount             = 0;
         this.OpeningOffset          = 0;
         this.CurrentOpeningLine     = 0;
         this.CanDrawBackground      = false;
