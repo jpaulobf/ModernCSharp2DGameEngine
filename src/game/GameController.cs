@@ -102,7 +102,6 @@ public class GameController : IGame
         if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
         {
             this.Menu.Update(frametime);
-            //this.GameStateMachine.SetStateToInGame();
         }
         else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
         {
