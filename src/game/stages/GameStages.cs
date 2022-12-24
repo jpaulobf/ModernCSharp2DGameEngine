@@ -211,7 +211,8 @@ public class GameStages : IStagesDef
         if (this.CanDrawStageOpening) 
         {
             //draw the river
-            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+            this.InternalGraphics.FillRectangle(Brushes[0], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+            this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, 738, 516);
             this.DrawStageOpening();
         }
         else
@@ -219,7 +220,8 @@ public class GameStages : IStagesDef
             //after the opening, draw the background
             if (this.CanDrawBackground) 
             {
-                this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+                this.InternalGraphics.FillRectangle(Brushes[0], 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+                this.InternalGraphics.FillRectangle(Brushes[8], 0, 0, 738, 516);
                 this.DrawBackground();
             }
 
