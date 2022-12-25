@@ -40,7 +40,7 @@ public class Player
         this.GameRef                = gameRef;
         this.Velocity               = 100;
         this.PlayerSprite           = new PlayerSprite(gameRef, this, 32, 32, 350, 387, this.Velocity);
-        this.Shot                   = new Shot(gameRef, 5, 18, 0, 0, 600);
+        this.Shot                   = new Shot(gameRef, 5, 18, 0, 0);
     }
 
     private void PlayShotSound()
@@ -71,7 +71,7 @@ public class Player
     public void AddFuel(long frametime)
     {
         this.Refueling = true;
-        this.FuelCounter += (float)(((double)frametime / 10_000_000) * 20);
+        this.FuelCounter += (float)(((double)frametime * 0.000002)); //(float)(((double)frametime / 10_000_000) * 20);
         if (this.FuelCounter > FUEL_COMPLETE)
         {
             this.FuelCounter = FUEL_COMPLETE;
@@ -131,7 +131,7 @@ public class Player
     private float CalcDistance(long frametime) 
     {
         // Calculate sprite movement based on Sprite Velocity and GameTimeElapsed
-        return ((float)(this.Velocity * ((double)frametime / 10_000_000)));
+        return ((float)(this.Velocity * ((double)frametime * 0.0000001)));
     }
 
     /**
