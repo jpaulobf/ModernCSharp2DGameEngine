@@ -93,6 +93,7 @@ public class Menu
         {
             if (this.currentPosition == 0)
             {
+                this.GameRef.InGameStartupConfiguration();
                 this.GameRef.SetGameStateToInGame();
             }
             else if (this.currentPosition == 2)
