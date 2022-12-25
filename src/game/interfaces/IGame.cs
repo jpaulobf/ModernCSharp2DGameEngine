@@ -102,4 +102,6 @@ public interface IGame
     public void ExitGame();
     
     public bool GetTerminateStatus();
+    
+    public void InGameStartupConfiguration();
 }
