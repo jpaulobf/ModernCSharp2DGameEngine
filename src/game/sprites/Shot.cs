@@ -21,8 +21,9 @@ public class Shot : GameSprite
     /**
      * Constructor
      */
-    public Shot(IGame game, int width, int height, int X, int Y, int velocity) : base(width, height, X, Y, velocity, 0)
+    public Shot(IGame game, int width, int height, int X, int Y) : base(width, height, X, Y, 0, 0)
     {
+        this.Velocity = 600;
         this.GameRef = game;
         this.SpriteImage = LoadingStuffs.GetInstance().GetImage("shot");
     }
@@ -47,7 +48,7 @@ public class Shot : GameSprite
     {
         if (!this.IsBulletDestroyed) 
         {
-            float step = (float)(this.Velocity * ((double)frametime * 0.0000001)); //(float)(this.Velocity * ((double)frametime / 10_000_000));
+            float step = frametime * 0.00006f; //(float)(this.Velocity * ((double)frametime / 10_000_000));
             this.Y -= step;
             this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
             this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
