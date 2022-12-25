@@ -115,7 +115,7 @@ public class GameStages : IStagesDef
         if (this.CanStartStageOpening) 
         {
             //calc the offset
-            float velocity = ((float)(400 * ((double)frametime / 10_000_000)));
+            float velocity      = frametime * 0.00004f; //((float)(400 * ((double)frametime / 10_000_000)));
             this.OpeningOffset  += velocity;
             this.Offset         += velocity;
 
@@ -134,18 +134,17 @@ public class GameStages : IStagesDef
             float step = 0;
             if (this.GameRef.GetPlayer().DOUBLE_SPEED)
             {
-                step = 2;
+                //step = 2; ((float)(100 * ((double)frametime / 10_000_000))) * step;
+                step = frametime * 0.00002f;
             }
             else if (this.GameRef.GetPlayer().HALF_SPEED)
             {
-                step = 0.5f;
+                step = frametime * 0.000005f;
             } 
             else //default velocity
             {
-                step = 1;
+                step = frametime * 0.00001f;
             }
-
-            float velocity = ((float)(100 * ((double)frametime / 10_000_000))) * step;
 
             //flag the draw
             this.CanDrawBackground = true;
@@ -155,7 +154,7 @@ public class GameStages : IStagesDef
             {
                 if (this.CurrentLine > 95) {
                     //calc the offset
-                    this.Offset += velocity;
+                    this.Offset += step;
                     if (this.Offset >= PIXEL_HEIGHT) {
                         this.CurrentLine--;
                         this.Offset = 0;
