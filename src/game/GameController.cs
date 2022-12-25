@@ -22,8 +22,8 @@ public class GameController : IGame
     public Size Resolution                  { get; set; }
     public Size WindowSize                  { get; }
     public InterpolationMode Interpolation  { get; }
-    protected int InternalResolutionWidth   = 738; //1366;
-    protected int InternalResolutionHeight  = 516; //768
+    protected int InternalResolutionWidth   = 1366; //738
+    protected int InternalResolutionHeight  = 768; //516;
     private float ScaleW                    = 1.0F;
     private float ScaleH                    = 1.0F;
     private bool WindowResizing             = false;
@@ -85,13 +85,33 @@ public class GameController : IGame
         this.PausePoint = new Point((int)windowSize.Width/2 - 80, (int)windowSize.Height/2 - 50);
 
         // Load the game classes
-        this.Player     = new Player(this);
-        this.Hud        = new HUD(this);
-        this.Stages     = new GameStages(this);
-        this.Score      = new Score(this);
         this.Menu       = new Menu(this);
         this.Options    = new Options(this);
-        this.GameOver   = new GameOver(this);
+    }
+
+    public void InGameStartupConfiguration()
+    {
+        this.InternalResolutionWidth   = 738;
+        this.InternalResolutionHeight  = 516;
+
+        //create the imagebuffer
+        this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
+        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.WindowSize.Width, this.WindowSize.Height));
+        this.InternalGraphics   = BufferedGraphics.Graphics;
+
+        //calc the scale
+        this.ScaleW = (float)((float)this.WindowSize.Width / (float)this.GetInternalResolutionWidth());
+        this.ScaleH = (float)((float)this.WindowSize.Height / (float)this.GetInternalResolutionHeight());
+
+        //transform the image based on calc scale
+        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+        
+        //create the game objects
+        this.Player             = new Player(this);
+        this.Hud                = new HUD(this);
+        this.Score              = new Score(this);
+        this.GameOver           = new GameOver(this);
+        this.Stages             = new GameStages(this);
     }
 
     /**
@@ -102,7 +122,6 @@ public class GameController : IGame
         if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
         {
             this.Menu.Update(frametime);
-            this.SetGameStateToInGame();
         }
         else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
         {
