@@ -47,7 +47,7 @@ public class Shot : GameSprite
     {
         if (!this.IsBulletDestroyed) 
         {
-            float step = (float)(this.Velocity * ((double)frametime / 10_000_000));
+            float step = (float)(this.Velocity * ((double)frametime * 0.0000001)); //(float)(this.Velocity * ((double)frametime / 10_000_000));
             this.Y -= step;
             this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
             this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
