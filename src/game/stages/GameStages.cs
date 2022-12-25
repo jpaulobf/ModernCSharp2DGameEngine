@@ -13,7 +13,7 @@ public class GameStages : IStagesDef
     private Graphics InternalGraphics;
     private float ScaleW                                = 1.0F;
     private float ScaleH                                = 1.0F;
-    private const byte PIXEL_WIDTH                      = 18;
+    private const short PIXEL_WIDTH                     = 18;
     private const byte PIXEL_HEIGHT                     = 4;
     private SolidBrush [] Brushes                       = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 0, 0, 0)),       //black
                                                                             new SolidBrush(Color.FromArgb(255, 110, 156, 66)),  //green
@@ -30,7 +30,7 @@ public class GameStages : IStagesDef
     private const byte OPENING_LINES                    = 108;
     protected volatile short CurrentOpeningLine         = 0;
     private const byte STAGE_OFFSET                     = 1;
-    private short CURRENT_STAGE                         = 1 - STAGE_OFFSET;
+    private short CURRENT_STAGE                         = 2 - STAGE_OFFSET;
     private short CURRENT_STAGE_LINES_DIFF              = 0;
     private volatile float Offset                       = 0;
     private volatile float OpeningOffset                = 0;
@@ -374,7 +374,7 @@ public class GameStages : IStagesDef
         int currentMinus95  = this.CurrentLine - 95;
         int currentPlus13   = currentMinus95 + 108;
         int stagesColumns   = IStagesDef.stages.GetLength(2);
-        
+
         if (!this.TransitionBtwStages)
         {
             for (int i = currentMinus95, c = -1; i < currentPlus13; i++, c++) 
@@ -382,7 +382,7 @@ public class GameStages : IStagesDef
                 for (int j = 0; j < stagesColumns; j++) 
                 {
                     short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
-                    if (renderBlock == 1 || renderBlock == 2 || renderBlock == 5 || renderBlock == 6 || renderBlock == 7) 
+                    if (renderBlock != 0) 
                     {
                         this.DrawRect.X =  j * PIXEL_WIDTH;
                         this.DrawRect.Y = (c * PIXEL_HEIGHT) + this.Offset;
