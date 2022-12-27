@@ -104,4 +104,8 @@ public interface IGame
     public bool GetTerminateStatus();
     
     public void InGameStartupConfiguration();
+
+    public void SetGameStateToMenu();
+    
+    public void SetGameStateToOptions();
 }
