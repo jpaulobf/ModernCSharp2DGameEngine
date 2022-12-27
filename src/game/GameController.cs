@@ -123,7 +123,7 @@ public class GameController : IGame
         {
             this.Menu.Update(frametime);
         }
-        else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
+        else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTIONS)
         {
             this.Options.Update(frametime);
         }
@@ -216,7 +216,7 @@ public class GameController : IGame
             {
                 this.Menu.Draw(this.InternalGraphics);
             }
-            else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTION)
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTIONS)
             {
                 this.Options.Draw(this.InternalGraphics);
             }
@@ -368,6 +368,10 @@ public class GameController : IGame
         if (this.GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
         {
             this.Menu.KeyUp(sender, e);
+        }
+        else if (this.GameStateMachine.GetCurrentGameState() == StateMachine.OPTIONS)
+        {
+            this.Options.KeyUp(sender, e);
         }
         else if (this.GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
         {
@@ -523,6 +527,16 @@ public class GameController : IGame
     public void SetGameStateToInGame()
     {
         this.GameStateMachine.SetStateToInGame();
+    }
+
+    public void SetGameStateToMenu()
+    {
+        this.GameStateMachine.SetStateToMenu();
+    }
+
+    public void SetGameStateToOptions()
+    {
+        this.GameStateMachine.SetGameStateToOptions();
     }
 
     public void ExitGame()
