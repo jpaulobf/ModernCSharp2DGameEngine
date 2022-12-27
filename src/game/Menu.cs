@@ -96,6 +96,10 @@ public class Menu
                 this.GameRef.InGameStartupConfiguration();
                 this.GameRef.SetGameStateToInGame();
             }
+            else if (this.currentPosition == 1)
+            {
+                this.GameRef.SetGameStateToOptions();
+            }
             else if (this.currentPosition == 2)
             {
                 this.GameRef.ExitGame();
