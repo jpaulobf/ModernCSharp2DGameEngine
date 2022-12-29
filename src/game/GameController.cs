@@ -220,6 +220,24 @@ public class GameController : IGame
             {
                 this.Options.Draw(this.InternalGraphics);
             }
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.EXITING)
+            {
+                //draw the stage bg & enemies
+                this.Stages.Draw(this.InternalGraphics, frametime);
+
+                //draw the HUD
+                this.Hud.Draw(this.InternalGraphics);
+
+                //draw the Score
+                this.Score.Draw(this.InternalGraphics);
+
+                // Draw Player Sprite
+                this.Player.Draw(this.InternalGraphics);
+
+                //Draw Exiting Board
+                this.DrawExiting();
+
+            }
             else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
             {
                 //draw the stage bg & enemies
@@ -228,6 +246,7 @@ public class GameController : IGame
                 //draw the HUD
                 this.Hud.Draw(this.InternalGraphics);
 
+                //draw the Score
                 this.Score.Draw(this.InternalGraphics);
 
                 if (this.ShowPlayerSprite) 
@@ -250,6 +269,15 @@ public class GameController : IGame
                 this.GameOver.Draw(this.InternalGraphics);
             }
         }
+    }
+
+    private void DrawExiting()
+    {
+        //TODO
+        int x = (this.InternalResolutionWidth / 2) - 120;
+        int y = (this.InternalResolutionHeight / 2) - 80;
+        this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(255, 200, 200, 190)), x, y, 240, 120);
+        this.InternalGraphics.DrawRectangle(new Pen(Color.FromArgb(255, 0, 0, 0)), x, y, 240, 120);
     }
 
     private void PlayMusic()
