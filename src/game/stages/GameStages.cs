@@ -115,7 +115,7 @@ public class GameStages : IStagesDef
         if (this.CanStartStageOpening) 
         {
             //calc the offset
-            float velocity      = frametime * 0.00004f; //((float)(400 * ((double)frametime / 10_000_000)));
+            float velocity      = frametime * 0.00004f; //step = 4; ((float)(step * 100 * ((double)frametime / 10_000_000)));
             this.OpeningOffset  += velocity;
             this.Offset         += velocity;
 
@@ -136,13 +136,17 @@ public class GameStages : IStagesDef
             {
                 //step = 2; ((float)(100 * ((double)frametime / 10_000_000))) * step;
                 step = frametime * 0.00002f;
+                Console.WriteLine("double");
             }
             else if (this.GameRef.GetPlayer().HALF_SPEED)
             {
+                //step = .5; ((float)(100 * ((double)frametime / 10_000_000))) * step;
                 step = frametime * 0.000005f;
+                Console.WriteLine("half");
             } 
             else //default velocity
             {
+                //step = 1; ((float)(100 * ((double)frametime / 10_000_000))) * step;
                 step = frametime * 0.00001f;
             }
 
