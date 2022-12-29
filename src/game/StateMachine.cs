@@ -65,8 +65,13 @@ public class StateMachine
         this.CurrentGameState = GAME_OVER;
     }
 
-    internal void SetStateToInGame()
+    public void SetStateToInGame()
     {
         this.CurrentGameState = IN_GAME;
+    }
+
+    public void SetStateToExiting()
+    {
+        this.CurrentGameState = EXITING;
     }
 }
