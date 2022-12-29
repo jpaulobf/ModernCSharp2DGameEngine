@@ -53,6 +53,7 @@ public class GameController : IGame
     private Menu Menu;
     private Options Options;
     private GameOver GameOver;
+    private Exit Exit;
 
     /**
      * Game constructor
@@ -87,31 +88,6 @@ public class GameController : IGame
         // Load the game classes
         this.Menu       = new Menu(this);
         this.Options    = new Options(this);
-    }
-
-    public void InGameStartupConfiguration()
-    {
-        this.InternalResolutionWidth   = 738;
-        this.InternalResolutionHeight  = 516;
-
-        //create the imagebuffer
-        this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
-        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.WindowSize.Width, this.WindowSize.Height));
-        this.InternalGraphics   = BufferedGraphics.Graphics;
-
-        //calc the scale
-        this.ScaleW = (float)((float)this.WindowSize.Width / (float)this.GetInternalResolutionWidth());
-        this.ScaleH = (float)((float)this.WindowSize.Height / (float)this.GetInternalResolutionHeight());
-
-        //transform the image based on calc scale
-        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
-        
-        //create the game objects
-        this.Player             = new Player(this);
-        this.Hud                = new HUD(this);
-        this.Score              = new Score(this);
-        this.GameOver           = new GameOver(this);
-        this.Stages             = new GameStages(this);
     }
 
     /**
@@ -235,8 +211,7 @@ public class GameController : IGame
                 this.Player.Draw(this.InternalGraphics);
 
                 //Draw Exiting Board
-                this.DrawExiting();
-
+                this.Exit.Draw(this.InternalGraphics);
             }
             else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
             {
@@ -269,76 +244,14 @@ public class GameController : IGame
                 this.GameOver.Draw(this.InternalGraphics);
             }
         }
-    }
-
-    private void DrawExiting()
-    {
-        //TODO
-        int x = (this.InternalResolutionWidth / 2) - 120;
-        int y = (this.InternalResolutionHeight / 2) - 80;
-        this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(255, 200, 200, 190)), x, y, 240, 120);
-        this.InternalGraphics.DrawRectangle(new Pen(Color.FromArgb(255, 0, 0, 0)), x, y, 240, 120);
-    }
-
-    private void PlayMusic()
-    {
-        Task.Run(() =>
-            {
-                GameMusic.Stop();
-                GameMusic.PlayLooping();
-            }
-        );
-    }
-
+    }    
+    
     /**
      * Render the BackBuffer
      */
     public void Render(Graphics targetGraphics) 
     {
         this.BufferedGraphics.Render(targetGraphics);
-    }
-
-    /**
-     * Resize screen (buggy...)
-     */
-    public async void Resize(object? sender, System.EventArgs e)
-    {
-        //stop the render method
-        this.WindowResizing = true;
-        System.Threading.Thread.Sleep(1);
-        
-        try 
-        {
-            if (sender != null)
-            {
-                //calc new scale
-                int width = ((Form)sender).Width;
-                int height = ((Form)sender).Height;
-                this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
-                this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
-
-                //Invalidate the current buffer
-                BufferedGraphicsManager.Current.Invalidate();
-                BufferedGraphicsManager.Current.Dispose();
-
-                //apply new scale
-                this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
-                this.InternalGraphics   = BufferedGraphics.Graphics;
-                
-                this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
-                this.InternalGraphics.InterpolationMode = this.Interpolation;
-
-                this.Stages.Resize(sender, e);
-            }
-        } 
-        catch (Exception ex) 
-        {
-            Console.WriteLine(ex);
-        } 
-        finally 
-        {
-            await Task.Run(() => this.WindowResizing = false);
-        }
     }
 
     /**
@@ -400,6 +313,10 @@ public class GameController : IGame
         else if (this.GameStateMachine.GetCurrentGameState() == StateMachine.OPTIONS)
         {
             this.Options.KeyUp(sender, e);
+        }
+        else if (GameStateMachine.GetCurrentGameState() == StateMachine.EXITING)
+        {
+            this.Exit.KeyUp(sender, e);
         }
         else if (this.GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
         {
@@ -465,7 +382,7 @@ public class GameController : IGame
         }
         else 
         {
-            //GAMEOVER
+            this.GameStateMachine.SetGameStateToGameOver();
         }
     }
 
@@ -503,40 +420,99 @@ public class GameController : IGame
     /**
      * Reset the game
      */
-    private void Reset() {
-        this.IS_LEFT_KEY_DOWN   = false;
-        this.IS_RIGHT_KEY_DOWN  = false;
-        this.IS_SHOT_KEY_DOWN   = false;
-        this.Paused             = false;
-        this.ResetAfterDead     = false;
-        this.ResetCounter       = 0;
-        this.Framecounter       = 0;
+    public void Reset() {
+        this.IS_LEFT_KEY_DOWN           = false;
+        this.IS_RIGHT_KEY_DOWN          = false;
+        this.IS_SHOT_KEY_DOWN           = false;
+        this.Paused                     = false;
+        this.ResetAfterDead             = false;
+        this.ResetCounter               = 0;
+        this.Framecounter               = 0;
         this.Hud.Reset();
         this.Score.Reset();
         this.Stages.Reset();
         this.Player.Reset();
     }
 
-    private void NextStage()
+    /**
+     * Define the in game initial configs
+     */    
+    public void InitGameConfigurations()
     {
-        this.Reset();
-        this.Stages.ControlStageLinesCount();
+        this.InternalResolutionWidth   = 738;
+        this.InternalResolutionHeight  = 516;
+
+        //create the imagebuffer
+        this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
+        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.WindowSize.Width, this.WindowSize.Height));
+        this.InternalGraphics   = BufferedGraphics.Graphics;
+
+        //calc the scale
+        this.ScaleW             = (float)((float)this.WindowSize.Width / (float)this.GetInternalResolutionWidth());
+        this.ScaleH             = (float)((float)this.WindowSize.Height / (float)this.GetInternalResolutionHeight());
+
+        //transform the image based on calc scale
+        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+        
+        //create the game objects
+        this.Player             = new Player(this);
+        this.Hud                = new HUD(this);
+        this.Score              = new Score(this);
+        this.GameOver           = new GameOver(this);
+        this.Stages             = new GameStages(this);
+        this.Exit               = new Exit(this);
     }
 
-    //Accessors
-    public Graphics GetGraphics()               {   return (this.InternalGraphics);         }
-    public int GetInternalResolutionWidth()     {   return (this.InternalResolutionWidth);  }
-    public int GetInternalResolutionHeight()    {   return (this.InternalResolutionHeight); }
-    public float getScaleW()                    {   return (this.ScaleW);                   }
-    public float getScaleH()                    {   return (this.ScaleH);                   }
-    public Player GetPlayer()                   {   return (this.Player);                   }
+    /**
+     * Set configurations to back to the menu
+     */
+    public void ToMenu()
+    {
+        this.InternalResolutionWidth    = 1366;
+        this.InternalResolutionHeight   = 768;
+
+        //create the imagebuffer
+        this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
+        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.WindowSize.Width, this.WindowSize.Height));
+        this.InternalGraphics   = BufferedGraphics.Graphics;
+
+        //calc the scale
+        this.ScaleW             = (float)((float)this.WindowSize.Width / (float)this.GetInternalResolutionWidth());
+        this.ScaleH             = (float)((float)this.WindowSize.Height / (float)this.GetInternalResolutionHeight());
+
+        //transform the image based on calc scale
+        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+
+        //stop music
+        this.StopMusic();
+
+        //set the game state to menu
+        this.SetGameStateToMenu();
+    }
 
     /**
-     * return the current sprite list
+     * Play the main music
      */
-    public IEnumerable<GameSprite> GetCurrentScreenSprites()
+    private void PlayMusic()
     {
-        return(this.Stages.GetCurrentScreenSprites());
+        Task.Run(() =>
+            {
+                GameMusic.Stop();
+                GameMusic.PlayLooping();
+            }
+        );
+    }
+
+    /**
+     * Stop main music
+     */
+    private void StopMusic() 
+    {
+        Task.Run(() =>
+            {
+                GameMusic.Stop();
+            }
+        );
     }
 
     /**
@@ -555,33 +531,95 @@ public class GameController : IGame
         this.Score.ItemDestructed(type);
     }
 
-    public GameStages GetStages()
-    {
-        return (this.Stages);
-    }
-
+    /**
+     * Set game status to "in game"
+     */
     public void SetGameStateToInGame()
     {
         this.GameStateMachine.SetStateToInGame();
     }
 
+    /**
+     * Set game status to "menu"
+     */
     public void SetGameStateToMenu()
     {
         this.GameStateMachine.SetStateToMenu();
     }
 
+    /**
+     * Set game status to "options"
+     */
     public void SetGameStateToOptions()
     {
         this.GameStateMachine.SetGameStateToOptions();
     }
 
+    /**
+     * Set game status to "exit"
+     */
     public void ExitGame()
     {
         this.Terminate = true;
     }
 
-    public bool GetTerminateStatus()
+    private void NextStage()
     {
-        return (this.Terminate);
+        this.Reset();
+        this.Stages.ControlStageLinesCount();
+    }
+    
+    //Accessors
+    public IEnumerable<GameSprite> GetCurrentScreenSprites()    {  return(this.Stages.GetCurrentScreenSprites());   }
+    public Graphics GetGraphics()                               {   return (this.InternalGraphics);                 }
+    public int GetInternalResolutionWidth()                     {   return (this.InternalResolutionWidth);          }
+    public int GetInternalResolutionHeight()                    {   return (this.InternalResolutionHeight);         }
+    public float getScaleW()                                    {   return (this.ScaleW);                           }
+    public float getScaleH()                                    {   return (this.ScaleH);                           }
+    public Player GetPlayer()                                   {   return (this.Player);                           }
+    public bool GetTerminateStatus()                            {   return (this.Terminate);                        }
+    public GameStages GetStages()                               {   return (this.Stages);                           }
+
+    /**
+     * Resize screen (buggy...)
+     */
+    public async void Resize(object? sender, System.EventArgs e)
+    {
+        //stop the render method
+        this.WindowResizing = true;
+        System.Threading.Thread.Sleep(1);
+        
+        try 
+        {
+            if (sender != null)
+            {
+                //calc new scale
+                int width = ((Form)sender).Width;
+                int height = ((Form)sender).Height;
+                this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
+                this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
+
+                //Invalidate the current buffer
+                BufferedGraphicsManager.Current.Invalidate();
+                BufferedGraphicsManager.Current.Dispose();
+
+                //apply new scale
+                this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
+                this.InternalGraphics   = BufferedGraphics.Graphics;
+                
+                this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+                this.InternalGraphics.InterpolationMode = this.Interpolation;
+
+                this.Stages.Resize(sender, e);
+            }
+        } 
+        catch (Exception ex) 
+        {
+            Console.WriteLine(ex);
+        } 
+        finally 
+        {
+            await Task.Run(() => this.WindowResizing = false);
+        }
     }
 }
