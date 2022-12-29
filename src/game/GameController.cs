@@ -403,6 +403,14 @@ public class GameController : IGame
                 this.PauseGame();
             }
 
+            if (e.KeyValue == 27)
+            {
+                if (this.ShowPlayerSprite)
+                {
+                    this.GameStateMachine.SetStateToExiting();
+                }
+            }
+
             if (e.KeyValue == 82) 
             {
                 this.Reset();
