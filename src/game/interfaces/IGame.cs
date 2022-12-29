@@ -103,9 +103,13 @@ public interface IGame
     
     public bool GetTerminateStatus();
     
-    public void InGameStartupConfiguration();
+    public void InitGameConfigurations();
 
     public void SetGameStateToMenu();
     
     public void SetGameStateToOptions();
+    
+    public void Reset();
+
+    public void ToMenu();
 }
