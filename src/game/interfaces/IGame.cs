@@ -85,31 +85,49 @@ public interface IGame
      */
     public void PlayerCollided();
 
+    /**
+     * turns player sprite on/off
+     */
     public void TogglePlayerSprite();
 
+    /**
+     * turns player sprite off
+     */
     public void DisablePlayerSprite();
     
+    /**
+     * Getter - Get the player object
+     */
     public Player GetPlayer();
+    
+    /**
+     * Getter - Get the stage object
+     */
+    public GameStages GetStages();
 
     public void UpdateFuelMarker();
 
     public void UpdateScore(int type);
 
-    public GameStages GetStages();
-
     public void SetGameStateToInGame();
+
+    public void SetGameStateToMenu();
+    
+    public void SetGameStateToOptions();
 
     public void ExitGame();
     
     public bool GetTerminateStatus();
     
     public void InitGameConfigurations();
-
-    public void SetGameStateToMenu();
     
-    public void SetGameStateToOptions();
-    
+    /**
+     * Reset the game
+     */
     public void Reset();
 
+    /**
+     * Define the configurations to go to menu
+     */
     public void ToMenu();
 }
