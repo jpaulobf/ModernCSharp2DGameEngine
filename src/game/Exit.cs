@@ -5,22 +5,22 @@ using Util;
 public class Exit
 {
     private IGame GameRef;
-    private byte currentPosition    = 0;
-    private short ExitWindowX = 0;
-    private short ExitWindowY = 0;
-    private short ReallyX = 0;
-    private short ReallyY = 0;
-    private short YesX = 0;
-    private short YesY = 0;
-    private short NoX = 0;
-    private short NoY = 0;
-    private short YesBtX = 0;
-    private short YesBtY = 0;
-    private short NoBtX = 0;
-    private short NoBtY = 0;
-    private Bitmap ReallyBitmap = Util.LoadingStuffs.GetInstance().GetImage("really");
-    private Bitmap YesBitmap    = Util.LoadingStuffs.GetInstance().GetImage("bt-yes");
-    private Bitmap NoBitmap    = Util.LoadingStuffs.GetInstance().GetImage("bt-no");
+    private byte CurrentPosition    = 0;
+    private short ExitWindowX       = 0;
+    private short ExitWindowY       = 0;
+    private short ReallyX           = 0;
+    private short ReallyY           = 0;
+    private short YesX              = 0;
+    private short YesY              = 0;
+    private short NoX               = 0;
+    private short NoY               = 0;
+    private short YesBtX            = 0;
+    private short YesBtY            = 0;
+    private short NoBtX             = 0;
+    private short NoBtY             = 0;
+    private Bitmap ReallyBitmap     = Util.LoadingStuffs.GetInstance().GetImage("really");
+    private Bitmap YesBitmap        = Util.LoadingStuffs.GetInstance().GetImage("bt-yes");
+    private Bitmap NoBitmap         = Util.LoadingStuffs.GetInstance().GetImage("bt-no");
 
     /**
      * Constructor
@@ -59,8 +59,17 @@ public class Exit
         gfx.DrawImage(ReallyBitmap, ReallyX, ReallyY, ReallyBitmap.Width, ReallyBitmap.Height);
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 170, 170, 170)), YesX, YesY, 80, 30);
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 170, 170, 170)), NoX, NoY, 80, 30);
-        gfx.DrawRectangle(new Pen(Color.FromArgb(255, 0, 0, 0)), YesX, YesY, 80, 30);
-        gfx.DrawRectangle(new Pen(Color.FromArgb(255, 0, 0, 0)), NoX, NoY, 80, 30);
+        gfx.DrawRectangle(new Pen(Color.FromArgb(180, 0, 0, 0)), YesX, YesY, 80, 30);
+        gfx.DrawRectangle(new Pen(Color.FromArgb(180, 0, 0, 0)), NoX, NoY, 80, 30);
+
+        if (this.CurrentPosition == 0)
+        {
+            gfx.FillRectangle(new SolidBrush(Color.FromArgb(100, 255, 0, 0)), YesX, YesY, 80, 30);
+        }
+        else 
+        {
+            gfx.FillRectangle(new SolidBrush(Color.FromArgb(100, 255, 0, 0)), NoX, NoY, 80, 30);
+        }
 
         gfx.DrawImage(YesBitmap, YesBtX, YesBtY, YesBitmap.Width, YesBitmap.Height);
         gfx.DrawImage(NoBitmap, NoBtX, NoBtY, NoBitmap.Width, NoBitmap.Height);
@@ -71,42 +80,45 @@ public class Exit
      */
     internal void Reset()
     {
+        this.CurrentPosition = 0;
     }
 
     public void KeyUp(object? sender, KeyEventArgs e)
     {
-        if (e.KeyValue == 38) //up
+        if (e.KeyValue == 37) //left
         {
-            if (this.currentPosition == 0)
+            if (this.CurrentPosition == 0)
             {
-                this.currentPosition = 2;
+                this.CurrentPosition = 1;
             }
             else 
             {
-                this.currentPosition--;
+                this.CurrentPosition--;
             }
         }
-        else if (e.KeyValue == 40) //down
+        else if (e.KeyValue == 39) //right
         {
-            if (this.currentPosition == 2)
+            if (this.CurrentPosition == 1)
             {
-                this.currentPosition = 0;
+                this.CurrentPosition = 0;
             }
             else 
             {
-                this.currentPosition++;
+                this.CurrentPosition++;
             }
         }
         else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
         {
-            if (this.currentPosition == 0)
+            if (this.CurrentPosition == 0)
             {
+                this.Reset();
                 this.GameRef.ToMenu();
                 this.GameRef.Reset();
             }
-            else if (this.currentPosition == 1)
+            else if (this.CurrentPosition == 1)
             {
-                this.GameRef.SetGameStateToInGame();    
+                this.Reset();
+                this.GameRef.SetGameStateToInGame();
             }
         }
         else if (e.KeyValue == 27)
