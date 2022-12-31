@@ -259,39 +259,42 @@ public class GameController : IGame
      */
     public void KeyDown(object? sender, KeyEventArgs e)
     {
-        if (e.KeyValue == 37) 
+        if (this.GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
         {
-            IS_LEFT_KEY_DOWN = true;
-        } 
-        else if (e.KeyValue == 39) 
-        {
-            IS_RIGHT_KEY_DOWN = true;
-        } 
-        
-        //you can right/left + down/up
-        if (e.KeyValue == 38)
-        {
-            IS_UP_KEY_DOWN = true;
-        }
-        else if (e.KeyValue == 40)
-        {
-            IS_DOWN_KEY_DOWN = true;
-        }
-
-        if (e.KeyValue == 32) 
-        {
-            if (this.ShowPlayerSprite) 
+            if (e.KeyValue == 37) 
             {
-                IS_SHOT_KEY_DOWN = true;
+                IS_LEFT_KEY_DOWN = true;
+            } 
+            else if (e.KeyValue == 39) 
+            {
+                IS_RIGHT_KEY_DOWN = true;
+            } 
+            
+            //you can right/left + down/up
+            if (e.KeyValue == 38)
+            {
+                IS_UP_KEY_DOWN = true;
             }
-        }
-
-        if (e.KeyValue == 32 || e.KeyValue == 37 || e.KeyValue == 38 || e.KeyValue == 39 || e.KeyValue == 40) 
-        {
-            if (this.ShowPlayerSprite) 
+            else if (e.KeyValue == 40)
             {
-                this.Stages.Start();
-                this.Player.Flying = true;
+                IS_DOWN_KEY_DOWN = true;
+            }
+
+            if (e.KeyValue == 32) 
+            {
+                if (this.ShowPlayerSprite) 
+                {
+                    IS_SHOT_KEY_DOWN = true;
+                }
+            }
+
+            if (e.KeyValue == 32 || e.KeyValue == 37 || e.KeyValue == 38 || e.KeyValue == 39 || e.KeyValue == 40) 
+            {
+                if (this.ShowPlayerSprite) 
+                {
+                    this.Stages.Start();
+                    this.Player.Flying = true;
+                }
             }
         }
     }
