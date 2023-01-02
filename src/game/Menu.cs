@@ -10,19 +10,19 @@ public class Menu
     private Bitmap LabelStart;
     private Bitmap LabelOptions;
     private Bitmap LabelExit;
-    private int MainLogoX           = 372;
-    private int MainLogoY           = 40;
-    private int SelectorX           = 78;
-    private const int SelectorYBase = 484;
+    private int MainLogoX           = 222;
+    private int MainLogoY           = 48;
+    private int SelectorX           = 51;
+    private const int SelectorYBase = 450;
     private const int SelectorYDiff = 76;
     private int SelectorY           = SelectorYBase;
-    private int LabelStartX         = 545;
-    private int LabelStartY         = 498;
-    private int LabelOptionsX       = 611;
-    private int LabelOptionsY       = 574;
-    private int LabelExitX          = 592;
-    private int LabelExitY          = 650;
-    private byte currentPosition    = 0;
+    private int LabelStartX         = 362;
+    private int LabelStartY         = 464;
+    private int LabelOptionsX       = 428;
+    private int LabelOptionsY       = 540;
+    private int LabelExitX          = 409;
+    private int LabelExitY          = 616;
+    private byte CurrentPosition    = 0;
 
     /**
      * Constructor
@@ -42,7 +42,7 @@ public class Menu
      */
     public void Update(long frametime) 
     {
-        this.SelectorY = SelectorYBase + (this.currentPosition * SelectorYDiff);
+        this.SelectorY = SelectorYBase + (this.CurrentPosition * SelectorYDiff);
     }
 
     /**
@@ -69,38 +69,38 @@ public class Menu
     {
         if (e.KeyValue == 38) //up
         {
-            if (this.currentPosition == 0)
+            if (this.CurrentPosition == 0)
             {
-                this.currentPosition = 2;
+                this.CurrentPosition = 2;
             }
             else 
             {
-                this.currentPosition--;
+                this.CurrentPosition--;
             }
         }
         else if (e.KeyValue == 40) //down
         {
-            if (this.currentPosition == 2)
+            if (this.CurrentPosition == 2)
             {
-                this.currentPosition = 0;
+                this.CurrentPosition = 0;
             }
             else 
             {
-                this.currentPosition++;
+                this.CurrentPosition++;
             }
         }
         else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
         {
-            if (this.currentPosition == 0)
+            if (this.CurrentPosition == 0)
             {
                 this.GameRef.InitGameConfigurations();
                 this.GameRef.SetGameStateToInGame();
             }
-            else if (this.currentPosition == 1)
+            else if (this.CurrentPosition == 1)
             {
                 this.GameRef.SetGameStateToOptions();
             }
-            else if (this.currentPosition == 2)
+            else if (this.CurrentPosition == 2)
             {
                 this.GameRef.ExitGame();
             }
