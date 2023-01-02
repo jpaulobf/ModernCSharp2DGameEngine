@@ -130,4 +130,6 @@ public interface IGame
      * Define the configurations to go to menu
      */
     public void ToMenu();
+    
+    public void SkipDrawOnce();
 }
