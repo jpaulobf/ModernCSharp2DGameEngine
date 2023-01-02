@@ -18,6 +18,7 @@ public class Exit
     private short YesBtY            = 0;
     private short NoBtX             = 0;
     private short NoBtY             = 0;
+    private volatile bool exit      = false;
     private Bitmap ReallyBitmap     = Util.LoadingStuffs.GetInstance().GetImage("really");
     private Bitmap YesBitmap        = Util.LoadingStuffs.GetInstance().GetImage("bt-yes");
     private Bitmap NoBitmap         = Util.LoadingStuffs.GetInstance().GetImage("bt-no");
@@ -47,6 +48,13 @@ public class Exit
      */
     public void Update(long frametime) 
     {
+        if (this.exit)
+        {
+            this.Reset();
+            this.GameRef.ToMenu();
+            this.GameRef.Reset();
+            this.GameRef.SkipDrawOnce();
+        }
     }
 
     /**
@@ -111,9 +119,7 @@ public class Exit
         {
             if (this.CurrentPosition == 0)
             {
-                this.Reset();
-                this.GameRef.ToMenu();
-                this.GameRef.Reset();
+                this.exit = true;
             }
             else if (this.CurrentPosition == 1)
             {
