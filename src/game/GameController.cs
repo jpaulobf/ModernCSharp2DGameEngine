@@ -22,8 +22,8 @@ public class GameController : IGame
     public Size Resolution                  { get; set; }
     public Size WindowSize                  { get; }
     public InterpolationMode Interpolation  { get; }
-    protected int InternalResolutionWidth   = 1366; //738
-    protected int InternalResolutionHeight  = 768; //516;
+    protected int InternalResolutionWidth   = 1000; //738
+    protected int InternalResolutionHeight  = 700; //516;
     private float ScaleW                    = 1.0F;
     private float ScaleH                    = 1.0F;
     private bool WindowResizing             = false;
@@ -471,8 +471,8 @@ public class GameController : IGame
      */
     public void ToMenu()
     {
-        this.InternalResolutionWidth    = 1366;
-        this.InternalResolutionHeight   = 768;
+        this.InternalResolutionWidth    = 1000;
+        this.InternalResolutionHeight   = 700;
 
         //create the imagebuffer
         this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
