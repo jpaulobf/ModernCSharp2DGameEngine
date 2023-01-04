@@ -119,6 +119,9 @@ public interface IGame
     
     public bool GetTerminateStatus();
     
+    /**
+     * Start the configurations for in-game status
+     */
     public void InitGameConfigurations();
     
     /**
@@ -131,5 +134,8 @@ public interface IGame
      */
     public void ToMenu();
     
+    /**
+     * Skip the Draw Method, just once
+     */
     public void SkipDrawOnce();
 }
