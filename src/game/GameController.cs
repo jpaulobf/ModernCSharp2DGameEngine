@@ -112,6 +112,7 @@ public class GameController : IGame
         {
             this.Framecounter += frametime;
 
+            //start the music in the first frametime
             if (this.Framecounter == frametime)
             {
                 this.PlayMusic();
