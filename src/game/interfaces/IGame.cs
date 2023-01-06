@@ -109,14 +109,27 @@ public interface IGame
 
     public void UpdateScore(int type);
 
+    /**
+     * Change game state to "In Game"
+     */
     public void SetGameStateToInGame();
 
+    /**
+     * Change game state to "Menu"
+     */
     public void SetGameStateToMenu();
     
+    /**
+     * Change game state to "Options"
+     */
     public void SetGameStateToOptions();
 
+    /**
+     * Exit the game
+     */
     public void ExitGame();
     
+
     public bool GetTerminateStatus();
     
     /**
