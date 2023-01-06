@@ -447,6 +447,9 @@ public class GameController : IGame
         this.Player.Reset();
     }
 
+    /**
+     * Skip the Draw method (once)
+     */
     public void SkipDrawOnce()
     {
         this.SkipDraw = true;
