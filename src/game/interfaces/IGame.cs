@@ -107,6 +107,9 @@ public interface IGame
 
     public void UpdateFuelMarker();
 
+    /**
+     * Update the score, based on the enemy type
+     */
     public void UpdateScore(int type);
 
     /**
