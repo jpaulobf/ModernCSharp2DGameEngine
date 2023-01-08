@@ -22,6 +22,11 @@ public class Exit
     private Bitmap ReallyBitmap     = Util.LoadingStuffs.GetInstance().GetImage("really");
     private Bitmap YesBitmap        = Util.LoadingStuffs.GetInstance().GetImage("bt-yes");
     private Bitmap NoBitmap         = Util.LoadingStuffs.GetInstance().GetImage("bt-no");
+    private Brush [] brushes        = { new SolidBrush(Color.FromArgb(255, 200, 200, 190)),
+                                        new SolidBrush(Color.FromArgb(255, 170, 170, 170)),
+                                        new SolidBrush(Color.FromArgb(150, 50, 69, 64))};
+    private Pen [] pens             = { new Pen(Color.FromArgb(255, 0, 0, 0)),
+                                        new Pen(Color.FromArgb(180, 0, 0, 0))};
 
     /**
      * Constructor
@@ -62,22 +67,18 @@ public class Exit
      */
     public void Draw(Graphics gfx) 
     {
-        gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 200, 200, 190)), ExitWindowX, ExitWindowY, 240, 120);
-        gfx.DrawRectangle(new Pen(Color.FromArgb(255, 0, 0, 0)), ExitWindowX, ExitWindowY, 240, 120);
+        gfx.FillRectangle(brushes[0], ExitWindowX, ExitWindowY, 240, 120);
+        gfx.DrawRectangle(pens[0], ExitWindowX, ExitWindowY, 240, 120);
         gfx.DrawImage(ReallyBitmap, ReallyX, ReallyY, ReallyBitmap.Width, ReallyBitmap.Height);
-        gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 170, 170, 170)), YesX, YesY, 80, 30);
-        gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 170, 170, 170)), NoX, NoY, 80, 30);
-        gfx.DrawRectangle(new Pen(Color.FromArgb(180, 0, 0, 0)), YesX, YesY, 80, 30);
-        gfx.DrawRectangle(new Pen(Color.FromArgb(180, 0, 0, 0)), NoX, NoY, 80, 30);
+        gfx.FillRectangle(brushes[1], YesX, YesY, 80, 30);
+        gfx.FillRectangle(brushes[1], NoX, NoY, 80, 30);
+        gfx.DrawRectangle(pens[1], YesX, YesY, 80, 30);
+        gfx.DrawRectangle(pens[1], NoX, NoY, 80, 30);
 
         if (this.CurrentPosition == 0)
-        {
-            gfx.FillRectangle(new SolidBrush(Color.FromArgb(100, 255, 0, 0)), YesX, YesY, 80, 30);
-        }
+            gfx.FillRectangle(brushes[2], YesX, YesY, 80, 30);
         else 
-        {
-            gfx.FillRectangle(new SolidBrush(Color.FromArgb(100, 255, 0, 0)), NoX, NoY, 80, 30);
-        }
+            gfx.FillRectangle(brushes[2], NoX, NoY, 80, 30);
 
         gfx.DrawImage(YesBitmap, YesBtX, YesBtY, YesBitmap.Width, YesBitmap.Height);
         gfx.DrawImage(NoBitmap, NoBtX, NoBtY, NoBitmap.Width, NoBitmap.Height);
