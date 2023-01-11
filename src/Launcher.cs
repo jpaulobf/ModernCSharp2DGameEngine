@@ -18,8 +18,8 @@ static class Launcher
      * Just start the "Game" class, passing the desired FPS
      * 0 for unlimited
      */
-    static void Main()
+    static async Task Main()
     {
-        Application.Run(new SplashScreen(0));
+        await Task.Run(() => Application.Run(new SplashScreen(0)));
     } 
 }
