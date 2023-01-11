@@ -7,14 +7,12 @@ using System.Text;
 public class SoundPlayerEx : SoundPlayer
 {
     public bool Finished { get; private set; }
-
-    private Task _playTask;
     private CancellationTokenSource _tokenSource = new CancellationTokenSource();
     private CancellationToken _ct;
     private string _fileName;
     private bool _playingAsync = false;
 
-    public event EventHandler SoundFinished;
+    public event EventHandler? SoundFinished;
 
     public SoundPlayerEx(string soundLocation)
         : base(soundLocation)
@@ -65,11 +63,13 @@ public class SoundPlayerEx : SoundPlayer
     {
         Finished = true;
         _playingAsync = false;
+        EventHandler handler;
 
-        EventHandler handler = SoundFinished;
-
-        if (handler != null)
+        if (SoundFinished != null)
+        {
+            handler = SoundFinished;
             handler(this, EventArgs.Empty);
+        }
     }
 }
 
@@ -85,10 +85,11 @@ public static class SoundInfo
     public static int GetSoundLength(string fileName)
     {
         StringBuilder lengthBuf = new StringBuilder(32);
+        StringBuilder returnBuf = new StringBuilder();
 
-        mciSendString(string.Format("open \"{0}\" type waveaudio alias wave", fileName), null, 0, IntPtr.Zero);
+        mciSendString(string.Format("open \"{0}\" type waveaudio alias wave", fileName), returnBuf, 0, IntPtr.Zero);
         mciSendString("status wave length", lengthBuf, lengthBuf.Capacity, IntPtr.Zero);
-        mciSendString("close wave", null, 0, IntPtr.Zero);
+        mciSendString("close wave", returnBuf, 0, IntPtr.Zero);
 
         int length = 0;
         int.TryParse(lengthBuf.ToString(), out length);
