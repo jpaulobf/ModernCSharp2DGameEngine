@@ -105,6 +105,9 @@ public interface IGame
      */
     public GameStages GetStages();
 
+    /**
+     * Update the Fuel Mark
+     */
     public void UpdateFuelMarker();
 
     /**
