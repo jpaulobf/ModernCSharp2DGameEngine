@@ -131,8 +131,10 @@ public interface IGame
      * Exit the game
      */
     public void ExitGame();
-    
 
+    /**
+     * Recovery the flag that indicates the game must terminate
+     */
     public bool GetTerminateStatus();
     
     /**
