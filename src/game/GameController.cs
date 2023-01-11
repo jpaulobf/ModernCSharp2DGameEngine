@@ -45,6 +45,7 @@ public class GameController : IGame
     private StateMachine GameStateMachine   = new StateMachine();
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
+    private volatile bool SkipDraw          = false;
     private Point PausePoint;
     private HUD Hud;
     private GameStages Stages;
@@ -54,7 +55,7 @@ public class GameController : IGame
     private Options Options;
     private GameOver GameOver;
     private Exit Exit;
-    private volatile bool SkipDraw          = false;
+    
 
     /**
      * Game constructor
