@@ -464,17 +464,22 @@ public class GameController : IGame
         this.InternalResolutionWidth   = 738;
         this.InternalResolutionHeight  = 516;
 
+        //calc the scale
+        this.ScaleW             = (float)((float)this.WindowSize.Width / (float)this.InternalResolutionWidth);
+        this.ScaleH             = (float)((float)this.WindowSize.Height / (float)this.InternalResolutionHeight);
+
+        //Invalidate the current buffer
+        BufferedGraphicsManager.Current.Invalidate();
+        BufferedGraphicsManager.Current.Dispose();
+
         //create the imagebuffer
         this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
         this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.WindowSize.Width, this.WindowSize.Height));
         this.InternalGraphics   = BufferedGraphics.Graphics;
 
-        //calc the scale
-        this.ScaleW             = (float)((float)this.WindowSize.Width / (float)this.GetInternalResolutionWidth());
-        this.ScaleH             = (float)((float)this.WindowSize.Height / (float)this.GetInternalResolutionHeight());
-
         //transform the image based on calc scale
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+        this.InternalGraphics.InterpolationMode = this.Interpolation;
         
         //create the game objects
         this.Player             = new Player(this);
@@ -631,8 +636,6 @@ public class GameController : IGame
                 
                 this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
                 this.InternalGraphics.InterpolationMode = this.Interpolation;
-
-                this.Stages.Resize(sender, e);
             }
         } 
         catch (Exception ex) 
