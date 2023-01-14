@@ -89,11 +89,15 @@ public class Options
         }
         else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
         {
-            //todo
+            if (this.CurrentPosition == 2)
+            {
+                this.CurrentPosition = 0;
+                this.GameRef.SetGameStateToMenu();    
+            }
         } 
         else if (e.KeyValue == 27) //ESC
         {
-            //back to menu
+            this.CurrentPosition = 0;
             this.GameRef.SetGameStateToMenu();
         }
 
