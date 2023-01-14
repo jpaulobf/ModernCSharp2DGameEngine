@@ -136,6 +136,12 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\lb_exit_options.png");
             Images.Add("label-exit-options", image);
+
+            image = BitmapEx.New("img\\toggle_on.png");
+            Images.Add("toggle-on", image);
+
+            image = BitmapEx.New("img\\toggle_off.png");
+            Images.Add("toggle-off", image);
         }
         catch (Exception ex)
         {
