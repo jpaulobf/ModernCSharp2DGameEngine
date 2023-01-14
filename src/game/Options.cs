@@ -5,20 +5,26 @@ using Util;
 public class Options
 {
     private IGame GameRef;
-    private byte CurrentPosition = 0;
     private Bitmap Selector;
+    private Bitmap LabelPlayMusic;
+
+
+    private byte CurrentPosition    = 0;
     private int SelectorX           = 66;
     private const int SelectorYBase = 106;
     private const int SelectorYDiff = 70;
     private int SelectorY           = SelectorYBase;
+    private int LabelPlayMusicX     = 128;
+    private int LabelPlayMusicY     = 120;
 
     /**
      * Constructor
      */
     public Options(IGame game) 
     {
-        this.GameRef    = game;
-        this.Selector   = LoadingStuffs.GetInstance().GetImage("selector");
+        this.GameRef        = game;
+        this.Selector       = LoadingStuffs.GetInstance().GetImage("selector");
+        this.LabelPlayMusic = LoadingStuffs.GetInstance().GetImage("label-play-music");
     }
 
     /**
@@ -33,6 +39,9 @@ public class Options
     {
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 58, 80, 74)), 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
         gfx.DrawImage(this.Selector, this.SelectorX, this.SelectorY, this.Selector.Width, this.Selector.Height);
+        gfx.DrawImage(this.LabelPlayMusic, this.LabelPlayMusicX, this.LabelPlayMusicY, this.LabelPlayMusic.Width, this.LabelPlayMusic.Height);
+
+
     }
 
     /**
