@@ -1,25 +1,30 @@
 namespace Game;
 
+using Util;
+
 public class Options
 {
     private IGame GameRef;
-    private byte currentPosition = 0;
+    private byte CurrentPosition = 0;
+    private Bitmap Selector;
+    private int SelectorX           = 66;
+    private const int SelectorYBase = 106;
+    private const int SelectorYDiff = 70;
+    private int SelectorY           = SelectorYBase;
 
     /**
      * Constructor
      */
     public Options(IGame game) 
     {
-        this.GameRef = game;
+        this.GameRef    = game;
+        this.Selector   = LoadingStuffs.GetInstance().GetImage("selector");
     }
 
     /**
      * Update the HUD
      */
-    public void Update(long frametime) 
-    {
-        //TODO
-    }
+    public void Update(long frametime) {}
 
     /**
      * Draw the HUD
@@ -27,8 +32,7 @@ public class Options
     public void Draw(Graphics gfx) 
     {
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 58, 80, 74)), 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        //gfx.DrawImage(this.FuelMeter, this.FuelMeterX, this.FuelMeterY, this.FuelMeter.Width, this.FuelMeter.Height);
-        //TODO
+        gfx.DrawImage(this.Selector, this.SelectorX, this.SelectorY, this.Selector.Width, this.Selector.Height);
     }
 
     /**
@@ -42,24 +46,24 @@ public class Options
     {
         if (e.KeyValue == 38) //up
         {
-            if (this.currentPosition == 0)
+            if (this.CurrentPosition == 0)
             {
-                this.currentPosition = 2;
+                this.CurrentPosition = 2;
             }
             else 
             {
-                this.currentPosition--;
+                this.CurrentPosition--;
             }
         }
         else if (e.KeyValue == 40) //down
         {
-            if (this.currentPosition == 2)
+            if (this.CurrentPosition == 2)
             {
-                this.currentPosition = 0;
+                this.CurrentPosition = 0;
             }
             else 
             {
-                this.currentPosition++;
+                this.CurrentPosition++;
             }
         }
         else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
@@ -71,5 +75,7 @@ public class Options
             //back to menu
             this.GameRef.SetGameStateToMenu();
         }
+
+        this.SelectorY = SelectorYBase + (this.CurrentPosition * SelectorYDiff);
     }
 }
