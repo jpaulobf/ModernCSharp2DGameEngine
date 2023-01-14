@@ -23,6 +23,7 @@ public class Menu
     private int LabelExitX          = 409;
     private int LabelExitY          = 616;
     private byte CurrentPosition    = 0;
+    private Brush BgBrush           = new SolidBrush(Color.FromArgb(255, 58, 80, 74));
 
     /**
      * Constructor
@@ -40,17 +41,14 @@ public class Menu
     /**
      * Update the HUD
      */
-    public void Update(long frametime) 
-    {
-        this.SelectorY = SelectorYBase + (this.CurrentPosition * SelectorYDiff);
-    }
+    public void Update(long frametime) {}
 
     /**
      * Draw the HUD
      */
     public void Draw(Graphics gfx) 
     {
-        gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 58, 80, 74)), 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+        gfx.FillRectangle(this.BgBrush, 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
         gfx.DrawImage(this.MainLogo, this.MainLogoX, this.MainLogoY, this.MainLogo.Width, this.MainLogo.Height);
         gfx.DrawImage(this.Selector, this.SelectorX, this.SelectorY, this.Selector.Width, this.Selector.Height);
         gfx.DrawImage(this.LabelStart, this.LabelStartX, this.LabelStartY, this.LabelStart.Width, this.LabelStart.Height);
@@ -105,5 +103,7 @@ public class Menu
                 this.GameRef.ExitGame();
             }
         }
+
+        this.SelectorY = SelectorYBase + (this.CurrentPosition * SelectorYDiff);
     }
 }
