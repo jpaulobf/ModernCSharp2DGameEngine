@@ -127,6 +127,9 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\no.png");
             Images.Add("bt-no", image);
+
+            image = BitmapEx.New("img\\lb_play_game_music.png");
+            Images.Add("label-play-music", image);
         }
         catch (Exception ex)
         {
