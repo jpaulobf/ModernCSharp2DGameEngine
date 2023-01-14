@@ -130,6 +130,12 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\lb_play_game_music.png");
             Images.Add("label-play-music", image);
+
+            image = BitmapEx.New("img\\lb_play_sound_fx.png");
+            Images.Add("label-play-sfx", image);
+
+            image = BitmapEx.New("img\\lb_exit_options.png");
+            Images.Add("label-exit-options", image);
         }
         catch (Exception ex)
         {
