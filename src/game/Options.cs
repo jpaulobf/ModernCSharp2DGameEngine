@@ -42,7 +42,7 @@ public class Options
         this.LabelExitOptions   = LoadingStuffs.GetInstance().GetImage("label-exit-options");
         this.ButtonToggleOn     = LoadingStuffs.GetInstance().GetImage("button-toggle-on");
         this.ButtonToggleOff    = LoadingStuffs.GetInstance().GetImage("button-toggle-off");
-        this.ButtonToggle1      = this.ButtonToggleOff;
+        this.ButtonToggle1      = this.ButtonToggleOn;
         this.ButtonToggle2      = this.ButtonToggleOff;
     }
 
