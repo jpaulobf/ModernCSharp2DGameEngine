@@ -9,6 +9,10 @@ public class Options
     private Bitmap LabelPlayMusic;
     private Bitmap LabelPlaySFX;
     private Bitmap LabelExitOptions;
+    private Bitmap ButtonToggleOn;
+    private Bitmap ButtonToggleOff;
+    private Bitmap ButtonToggle1;
+    private Bitmap ButtonToggle2;
     private byte CurrentPosition    = 0;
     private const int OgSelectorX   = 66;
     private int SelectorX           = OgSelectorX;
@@ -21,6 +25,10 @@ public class Options
     private int LabelPlaySFXY       = 190;
     private int LabelExitOptionsX   = 38;
     private int LabelExitOptionsY   = 627;
+    private int ButtonToggle1X      = 773;
+    private int ButtonToggle1Y      = 120;
+    private int ButtonToggle2X      = 773;
+    private int ButtonToggle2Y      = 190;
 
     /**
      * Constructor
@@ -32,6 +40,10 @@ public class Options
         this.LabelPlayMusic     = LoadingStuffs.GetInstance().GetImage("label-play-music");
         this.LabelPlaySFX       = LoadingStuffs.GetInstance().GetImage("label-play-sfx");
         this.LabelExitOptions   = LoadingStuffs.GetInstance().GetImage("label-exit-options");
+        this.ButtonToggleOn     = LoadingStuffs.GetInstance().GetImage("button-toggle-on");
+        this.ButtonToggleOff    = LoadingStuffs.GetInstance().GetImage("button-toggle-off");
+        this.ButtonToggle1      = this.ButtonToggleOff;
+        this.ButtonToggle2      = this.ButtonToggleOff;
     }
 
     /**
@@ -49,8 +61,8 @@ public class Options
         gfx.DrawImage(this.LabelPlayMusic, this.LabelPlayMusicX, this.LabelPlayMusicY, this.LabelPlayMusic.Width, this.LabelPlayMusic.Height);
         gfx.DrawImage(this.LabelPlaySFX, this.LabelPlaySFXX, this.LabelPlaySFXY, this.LabelPlaySFX.Width, this.LabelPlaySFX.Height);
         gfx.DrawImage(this.LabelExitOptions, this.LabelExitOptionsX, this.LabelExitOptionsY, this.LabelExitOptions.Width, this.LabelExitOptions.Height);
-
-
+        gfx.DrawImage(this.ButtonToggle1, this.ButtonToggle1X, this.ButtonToggle1Y, this.ButtonToggle1.Width, this.ButtonToggle1.Height);
+        gfx.DrawImage(this.ButtonToggle2, this.ButtonToggle2X, this.ButtonToggle2Y, this.ButtonToggle1.Width, this.ButtonToggle1.Height);
     }
 
     /**
