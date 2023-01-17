@@ -11,8 +11,8 @@ public class Options
     private Bitmap LabelExitOptions;
     private Bitmap ButtonToggleOn;
     private Bitmap ButtonToggleOff;
-    private Bitmap ButtonToggle1;
-    private Bitmap ButtonToggle2;
+    private bool ButtonToggle1      = true;
+    private bool ButtonToggle2      = false;
     private byte CurrentPosition    = 0;
     private const int OgSelectorX   = 66;
     private int SelectorX           = OgSelectorX;
@@ -42,8 +42,6 @@ public class Options
         this.LabelExitOptions   = LoadingStuffs.GetInstance().GetImage("label-exit-options");
         this.ButtonToggleOn     = LoadingStuffs.GetInstance().GetImage("button-toggle-on");
         this.ButtonToggleOff    = LoadingStuffs.GetInstance().GetImage("button-toggle-off");
-        this.ButtonToggle1      = this.ButtonToggleOn;
-        this.ButtonToggle2      = this.ButtonToggleOff;
     }
 
     /**
@@ -61,8 +59,8 @@ public class Options
         gfx.DrawImage(this.LabelPlayMusic, this.LabelPlayMusicX, this.LabelPlayMusicY, this.LabelPlayMusic.Width, this.LabelPlayMusic.Height);
         gfx.DrawImage(this.LabelPlaySFX, this.LabelPlaySFXX, this.LabelPlaySFXY, this.LabelPlaySFX.Width, this.LabelPlaySFX.Height);
         gfx.DrawImage(this.LabelExitOptions, this.LabelExitOptionsX, this.LabelExitOptionsY, this.LabelExitOptions.Width, this.LabelExitOptions.Height);
-        gfx.DrawImage(this.ButtonToggle1, this.ButtonToggle1X, this.ButtonToggle1Y, this.ButtonToggle1.Width, this.ButtonToggle1.Height);
-        gfx.DrawImage(this.ButtonToggle2, this.ButtonToggle2X, this.ButtonToggle2Y, this.ButtonToggle1.Width, this.ButtonToggle1.Height);
+        gfx.DrawImage((this.ButtonToggle1)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle1X, this.ButtonToggle1Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
+        gfx.DrawImage((this.ButtonToggle2)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle2X, this.ButtonToggle2Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
     }
 
     /**
@@ -99,6 +97,17 @@ public class Options
                 this.CurrentPosition++;
             }
         }
+        else if (e.KeyValue == 37 || e.KeyValue == 39) //left || right
+        {
+            if (this.CurrentPosition == 0)
+            {
+                this.ButtonToggle1 = !this.ButtonToggle1;
+            }
+            else if (this.CurrentPosition == 1)
+            {
+                this.ButtonToggle2 = !this.ButtonToggle2;
+            }
+        }
         else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
         {
             if (this.CurrentPosition == 2)
@@ -113,12 +122,14 @@ public class Options
             this.GameRef.SetGameStateToMenu();
         }
 
+        //Correct the X & Y position of selection bar for the "exit command"
         if (this.CurrentPosition == 2)
         {
-            diff = 373;
-            diffY = -50;
+            diff    = 373;
+            diffY   = -50;
         }
 
+        //Define the selector position
         this.SelectorY = SelectorYBase + (this.CurrentPosition * SelectorYDiff) + diff;
         this.SelectorX = OgSelectorX + diffY;
     }
