@@ -59,6 +59,7 @@ public class Exit
             this.GameRef.ToMenu();
             this.GameRef.Reset();
             this.GameRef.SkipDrawOnce();
+            this.GameRef.SkipRenderOnce();
         }
     }
 
