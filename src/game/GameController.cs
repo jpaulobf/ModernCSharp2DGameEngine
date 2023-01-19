@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using Game.Stages;
+using Util;
 
 /**
  * Author: Joao P B Faria
@@ -55,6 +56,8 @@ public class GameController : IGame
     private Options Options;
     private GameOver GameOver;
     private Exit Exit;
+    private NGameStages NStages;
+    private bool newGS = true;
     
 
     /**
@@ -71,8 +74,15 @@ public class GameController : IGame
 
         //create the imagebuffer
         this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
-        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, windowSize.Width, windowSize.Height));
-        this.InternalGraphics   = BufferedGraphics.Graphics;
+        
+        // -->>>> gdi+ style
+        Graphics graphics           = Graphics.FromImage(this.BufferedImage);
+        IntPtr hdc                  = graphics.GetHdc();
+        this.InternalGraphics       = Graphics.FromHdc(hdc);
+
+        // -->>>> dotnet preferable style (same performance)
+        // this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, windowSize.Width, windowSize.Height));
+        // this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //define the interpolation mode
         this.InternalGraphics.InterpolationMode = this.Interpolation;
@@ -90,6 +100,9 @@ public class GameController : IGame
         // Load the game classes
         this.Menu       = new Menu(this);
         this.Options    = new Options(this);
+        this.NStages    = new NGameStages(this);
+
+        this.InitGameConfigurations();
     }
 
     /**
@@ -152,7 +165,10 @@ public class GameController : IGame
                 }
                 
                 this.Hud.Update(frametime);
-                this.Stages.Update(frametime);
+                if (newGS)
+                    this.NStages.Update(frametime);
+                else 
+                    this.Stages.Update(frametime);
                 this.Player.Update(frametime);
                 this.Score.Update(frametime);
             } 
@@ -207,6 +223,7 @@ public class GameController : IGame
                 }
                 else if (GameStateMachine.GetCurrentGameState() == StateMachine.EXITING)
                 {
+                    /*
                     //draw the stage bg & enemies
                     this.Stages.Draw(this.InternalGraphics);
 
@@ -220,12 +237,15 @@ public class GameController : IGame
                     this.Player.Draw(this.InternalGraphics);
 
                     //Draw Exiting Board
-                    this.Exit.Draw(this.InternalGraphics);
+                    this.Exit.Draw(this.InternalGraphics);*/
                 }
                 else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
                 {
-                    //draw the stage bg & enemies
-                    this.Stages.Draw(this.InternalGraphics);
+                    if (newGS)
+                        this.NStages.Draw(this.InternalGraphics);
+                    else
+                        //draw the stage bg & enemies
+                        this.Stages.Draw(this.InternalGraphics);
 
                     //draw the HUD
                     this.Hud.Draw(this.InternalGraphics);
@@ -262,8 +282,15 @@ public class GameController : IGame
      */
     public void Render(Graphics targetGraphics) 
     {
-        //this.InternalGraphics.Clip = new Region(new Rectangle(0, 0, 200, 200));
-        this.BufferedGraphics.Render(targetGraphics);
+        //dotnet preferable code
+        // this.BufferedGraphics.Render(targetGraphics);
+
+        //gdi+ style
+        IntPtr dhdc = targetGraphics.GetHdc();
+        IntPtr shdc = this.InternalGraphics.GetHdc();
+        BitmapEx.BitBlt(dhdc, 0, 0, this.WindowSize.Width, this.WindowSize.Height, shdc, 0, 0, BitmapEx.SRCCOPY);
+        this.InternalGraphics.ReleaseHdc(shdc);
+        targetGraphics.ReleaseHdc(dhdc);
     }
 
     /**
