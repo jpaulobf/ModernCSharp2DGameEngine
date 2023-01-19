@@ -262,6 +262,7 @@ public class GameController : IGame
      */
     public void Render(Graphics targetGraphics) 
     {
+        //this.InternalGraphics.Clip = new Region(new Rectangle(0, 0, 200, 200));
         this.BufferedGraphics.Render(targetGraphics);
     }
 
