@@ -208,7 +208,7 @@ public class GameController : IGame
                 else if (GameStateMachine.GetCurrentGameState() == StateMachine.EXITING)
                 {
                     //draw the stage bg & enemies
-                    this.Stages.Draw(this.InternalGraphics, frametime);
+                    this.Stages.Draw(this.InternalGraphics);
 
                     //draw the HUD
                     this.Hud.Draw(this.InternalGraphics);
@@ -225,7 +225,7 @@ public class GameController : IGame
                 else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
                 {
                     //draw the stage bg & enemies
-                    this.Stages.Draw(this.InternalGraphics, frametime);
+                    this.Stages.Draw(this.InternalGraphics);
 
                     //draw the HUD
                     this.Hud.Draw(this.InternalGraphics);
