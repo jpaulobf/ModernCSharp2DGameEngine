@@ -41,7 +41,8 @@ public class Menu
     /**
      * Update the HUD
      */
-    public void Update(long frametime) {}
+    public void Update(long frametime) {
+    }
 
     /**
      * Draw the HUD
