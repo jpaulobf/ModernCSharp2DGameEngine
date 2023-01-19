@@ -181,7 +181,7 @@ public class GameStages : IStagesDef
     /**
      * Draw method
      */
-    public void Draw(Graphics gfx, long frametime) 
+    public void Draw(Graphics gfx) 
     {
         //draw the stage opening
         if (this.CanDrawStageOpening) 
