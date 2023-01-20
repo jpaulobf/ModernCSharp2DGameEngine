@@ -2,26 +2,6 @@ namespace Game.Stages;
 
 using Util;
 
-public enum TernaryRasterOperations : System.Int32 {
-    SRCCOPY     = 0x00CC0020,
-    SRCPAINT    = 0x00EE0086,
-    SRCAND      = 0x008800C6,
-    SRCINVERT   = 0x00660046,
-    SRCERASE    = 0x00440328,
-    NOTSRCCOPY  = 0x00330008,
-    NOTSRCERASE = 0x001100A6,
-    MERGECOPY   = 0x00C000CA,
-    MERGEPAINT  = 0x00BB0226,
-    PATCOPY     = 0x00F00021,
-    PATPAINT    = 0x00FB0A09,
-    PATINVERT   = 0x005A0049,
-    DSTINVERT   = 0x00550009,
-    BLACKNESS   = 0x00000042,
-    WHITENESS   = 0x00FF0062,
-    CAPTUREBLT  = 0x40000000 //only if WinVer >= 5.0.0 (see wingdi.h)
-}
-
-
 /**
  * Author: Joao P B Faria
  * Date: Oct/2022
@@ -36,7 +16,7 @@ public class NGameStages : IStagesDef
     private const byte PIXEL_HEIGHT                         = 4;
     private const short OPENING_LINES                       = 108;
     private const byte STAGES_COLUMNS                       = 41;
-    private SolidBrush [] NBrushes                           = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 0, 0, 0)),       //black
+    private SolidBrush [] NBrushes                          = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 0, 0, 0)),       //black
                                                                                 new SolidBrush(Color.FromArgb(255, 110, 156, 66)),  //green
                                                                                 new SolidBrush(Color.FromArgb(255, 53, 95, 24)),    //dark green
                                                                                 new SolidBrush(Color.FromArgb(0, 0, 0, 0)),         //transparent black
@@ -57,18 +37,25 @@ public class NGameStages : IStagesDef
     private volatile BufferedGraphics OpenBufferedGraphics;
     private volatile Bitmap OpenBufferedImage;
     private volatile Graphics OpenStageGraphics;
-    private float X = 0f;
+    private float X = (616 - 29) * PIXEL_HEIGHT;
 
     public NGameStages(IGame gameRef)
     {
         this.GameRef = gameRef;
         this.CURRENT_STAGE_LINES    = (short)((CURRENT_STAGE % 2 == 1)?587:616);
 
+        this.ScaleW                 = (float)((float)this.GameRef.WindowSize.Width / (float)this.GameRef.GetInternalResolutionWidth());
+        this.ScaleH                 = (float)((float)this.GameRef.WindowSize.Height / (float)this.GameRef.GetInternalResolutionHeight());
+
+        X *= this.ScaleH;
+
         //create two imagebuffers
-        this.OddBufferedImage       = new Bitmap(PIXEL_WIDTH * STAGES_COLUMNS, PIXEL_HEIGHT * CURRENT_STAGE_LINES);
+        this.OddBufferedImage       = new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * CURRENT_STAGE_LINES * this.ScaleH));
         Graphics graphics           = Graphics.FromImage(this.OddBufferedImage);
         IntPtr hdc                  = graphics.GetHdc();
         this.OddStageGraphics       = Graphics.FromHdc(hdc);
+        
+        this.OddStageGraphics.ScaleTransform(ScaleW, ScaleH);
 
         for (int i = 0; i < CURRENT_STAGE_LINES; i++) 
         {
@@ -84,41 +71,22 @@ public class NGameStages : IStagesDef
             }
         }
 
-        //graphics.ReleaseHdc(hdc);
+        graphics.ReleaseHdc(hdc);
     }
-
-    [System.Runtime.InteropServices.DllImportAttribute("gdi32.dll")]
-    public static extern IntPtr CreateCompatibleDC(IntPtr hdc);
-
-    [System.Runtime.InteropServices.DllImportAttribute("gdi32.dll")]
-    public static extern IntPtr SelectObject(IntPtr hdc, IntPtr obj);
-
-    [System.Runtime.InteropServices.DllImportAttribute("gdi32.dll")]
-    public static extern void DeleteObject(IntPtr obj);
 
     public void Update(long frametime, bool colliding = false) 
     {
-        X += 0.05f;
+        X -= 0.05f;
     }
 
     public void Draw(Graphics gfx)
     {
-        // IntPtr pTarget = gfx.GetHdc();
-        // IntPtr pSource = CreateCompatibleDC(pTarget);
-        // IntPtr pOrig = SelectObject(pSource, this.OddStageGraphics.GetHdc());
-        
-        // BitBlt(pTarget, 0,0, 500, 500, pSource, 0, 0, SRCCOPY);
-        // DeleteObject(pSource);
-        // gfx.ReleaseHdc(pTarget);
-
         IntPtr dhdc = gfx.GetHdc();
         IntPtr shdc = this.OddStageGraphics.GetHdc();
-        BitmapEx.BitBlt(dhdc, 0, 0, 500, 500, shdc, 0, (int)X, BitmapEx.SRCCOPY);
+        BitmapEx.BitBlt(dhdc, 0, 0, 1000, (int)(516 * this.ScaleH), shdc, 0, (int)X, BitmapEx.SRCCOPY);
 
         this.OddStageGraphics.ReleaseHdc(shdc);
         gfx.ReleaseHdc(dhdc);
-
-        //gfx.DrawImage(OddBufferedImage, 0, 0);
     }
 
     private void LoadOpeningStageLines()
