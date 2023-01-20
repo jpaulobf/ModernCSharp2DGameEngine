@@ -47,6 +47,7 @@ public class GameController : IGame
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
     private volatile bool SkipDraw          = false;
+    private volatile bool SkipRender        = false;
     private Point PausePoint;
     private HUD Hud;
     private GameStages Stages;
@@ -100,9 +101,11 @@ public class GameController : IGame
         // Load the game classes
         this.Menu       = new Menu(this);
         this.Options    = new Options(this);
-        this.NStages    = new NGameStages(this);
+        
 
         this.InitGameConfigurations();
+
+        this.NStages    = new NGameStages(this);
     }
 
     /**
@@ -253,7 +256,7 @@ public class GameController : IGame
                     //draw the Score
                     this.Score.Draw(this.InternalGraphics);
 
-                    if (this.ShowPlayerSprite) 
+                    // if (this.ShowPlayerSprite) 
                     {
                         // Draw Player Sprite
                         this.Player.Draw(this.InternalGraphics);
@@ -282,15 +285,19 @@ public class GameController : IGame
      */
     public void Render(Graphics targetGraphics) 
     {
-        //dotnet preferable code
-        // this.BufferedGraphics.Render(targetGraphics);
+        if (!this.SkipRender)
+        {
+            // --->> dotnet preferable code
+            // this.BufferedGraphics.Render(targetGraphics);
 
-        //gdi+ style
-        IntPtr dhdc = targetGraphics.GetHdc();
-        IntPtr shdc = this.InternalGraphics.GetHdc();
-        BitmapEx.BitBlt(dhdc, 0, 0, this.WindowSize.Width, this.WindowSize.Height, shdc, 0, 0, BitmapEx.SRCCOPY);
-        this.InternalGraphics.ReleaseHdc(shdc);
-        targetGraphics.ReleaseHdc(dhdc);
+            //gdi+ style
+            IntPtr dhdc = targetGraphics.GetHdc();
+            IntPtr shdc = this.InternalGraphics.GetHdc();
+            BitmapEx.BitBlt(dhdc, 0, 0, this.WindowSize.Width, this.WindowSize.Height, shdc, 0, 0, BitmapEx.SRCCOPY);
+            this.InternalGraphics.ReleaseHdc(shdc);
+            targetGraphics.ReleaseHdc(dhdc);
+        }
+        this.SkipRender = false;
     }
 
     /**
@@ -484,6 +491,11 @@ public class GameController : IGame
         this.SkipDraw = true;
     }
 
+    public void SkipRenderOnce()
+    {
+        this.SkipRender = true;
+    }
+
     /**
      * Define the in game initial configs
      */    
@@ -496,14 +508,16 @@ public class GameController : IGame
         this.ScaleW             = (float)((float)this.WindowSize.Width / (float)this.InternalResolutionWidth);
         this.ScaleH             = (float)((float)this.WindowSize.Height / (float)this.InternalResolutionHeight);
 
+        // --->> dotnet preferable code
         //Invalidate the current buffer
-        BufferedGraphicsManager.Current.Invalidate();
-        BufferedGraphicsManager.Current.Dispose();
+        // BufferedGraphicsManager.Current.Invalidate();
+        // BufferedGraphicsManager.Current.Dispose();
 
+        // --->> dotnet preferable code
         //create the imagebuffer
-        this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
-        this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.WindowSize.Width, this.WindowSize.Height));
-        this.InternalGraphics   = BufferedGraphics.Graphics;
+        // this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
+        // this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.WindowSize.Width, this.WindowSize.Height));
+        // this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //transform the image based on calc scale
         this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
@@ -643,7 +657,9 @@ public class GameController : IGame
         //stop the render method
         this.WindowResizing = true;
         System.Threading.Thread.Sleep(1);
-        
+        this.SkipDrawOnce();
+        this.SkipRenderOnce();
+
         try 
         {
             if (sender != null)
@@ -654,13 +670,15 @@ public class GameController : IGame
                 this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
                 this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
 
+                // --->> dotnet preferable code
                 //Invalidate the current buffer
-                BufferedGraphicsManager.Current.Invalidate();
-                BufferedGraphicsManager.Current.Dispose();
+                //BufferedGraphicsManager.Current.Invalidate();
+                //BufferedGraphicsManager.Current.Dispose();
 
+                // --->> dotnet preferable code
                 //apply new scale
-                this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
-                this.InternalGraphics   = BufferedGraphics.Graphics;
+                //this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
+                //this.InternalGraphics   = BufferedGraphics.Graphics;
                 
                 this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
                 this.InternalGraphics.InterpolationMode = this.Interpolation;
