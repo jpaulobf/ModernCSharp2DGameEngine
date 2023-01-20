@@ -159,4 +159,6 @@ public interface IGame
      * Skip the Draw Method, just once
      */
     public void SkipDrawOnce();
+    
+    public void SkipRenderOnce();
 }
