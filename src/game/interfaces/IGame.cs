@@ -63,6 +63,9 @@ public interface IGame
 
     public int GetInternalResolutionWidth();
 
+    /**
+     * Get the height value of internal resolution
+     */
     public int GetInternalResolutionHeight();
 
     /**
