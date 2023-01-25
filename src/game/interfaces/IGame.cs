@@ -61,6 +61,9 @@ public interface IGame
 
     public IEnumerable<GameSprite> GetCurrentScreenSprites();
 
+    /**
+     * Get the width value of internal resolution
+     */
     public int GetInternalResolutionWidth();
 
     /**
