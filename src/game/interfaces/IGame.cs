@@ -160,5 +160,8 @@ public interface IGame
      */
     public void SkipDrawOnce();
     
+    /**
+     * Skip the Render Method, once
+     */
     public void SkipRenderOnce();
 }
