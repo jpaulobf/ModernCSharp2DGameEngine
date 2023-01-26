@@ -39,6 +39,10 @@ public class NGameStages : IStagesDef
     private volatile Graphics OpenStageGraphics;
     private float X = (616 - 29) * PIXEL_HEIGHT;
 
+    /**
+     * Description: Game stage constructor
+     * In parameters: IGame reference
+     */
     public NGameStages(IGame gameRef)
     {
         this.GameRef = gameRef;
