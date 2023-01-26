@@ -75,11 +75,17 @@ public class NGameStages : IStagesDef
         graphics.ReleaseHdc(hdc);
     }
 
+    /**
+     * Update the Game Stage
+     */
     public void Update(long frametime, bool colliding = false) 
     {
         X -= 0.05f;
     }
 
+    /**
+     * Draw the Game Stage
+     */
     public void Draw(Graphics gfx)
     {
         IntPtr dhdc = gfx.GetHdc();
