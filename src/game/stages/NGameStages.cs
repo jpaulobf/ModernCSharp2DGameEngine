@@ -16,7 +16,7 @@ public class NGameStages : IStagesDef
     private const byte PIXEL_HEIGHT                         = 4;
     private const short OPENING_LINES                       = 108;
     private const byte STAGES_COLUMNS                       = 41;
-    private SolidBrush [] NBrushes                          = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 0, 0, 0)),       //black
+    private SolidBrush [] NBrushes                          = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 45, 50, 184)),  //dark blue
                                                                                 new SolidBrush(Color.FromArgb(255, 110, 156, 66)),  //green
                                                                                 new SolidBrush(Color.FromArgb(255, 53, 95, 24)),    //dark green
                                                                                 new SolidBrush(Color.FromArgb(0, 0, 0, 0)),         //transparent black
@@ -24,7 +24,7 @@ public class NGameStages : IStagesDef
                                                                                 new SolidBrush(Color.FromArgb(255, 111, 111, 111)), //silver
                                                                                 new SolidBrush(Color.FromArgb(255, 170, 170, 170)), //dark gray
                                                                                 new SolidBrush(Color.FromArgb(255, 234, 234, 70)),  //yellow
-                                                                                new SolidBrush(Color.FromArgb(255, 45, 50, 184))};  //dark blue
+                                                                                new SolidBrush(Color.FromArgb(255, 0, 0, 0))};
     private RectangleF DrawRect                             = new RectangleF(0f, 0f, PIXEL_WIDTH, PIXEL_HEIGHT);
     private short CURRENT_STAGE                             = 1;
     private short CURRENT_STAGE_LINES                       = 0;
@@ -37,7 +37,7 @@ public class NGameStages : IStagesDef
     private volatile BufferedGraphics OpenBufferedGraphics;
     private volatile Bitmap OpenBufferedImage;
     private volatile Graphics OpenStageGraphics;
-    private float X = (616 - 29) * PIXEL_HEIGHT;
+    private float X = (616) * PIXEL_HEIGHT;
 
     /**
      * Description: Game stage constructor
@@ -46,7 +46,7 @@ public class NGameStages : IStagesDef
     public NGameStages(IGame gameRef)
     {
         this.GameRef = gameRef;
-        this.CURRENT_STAGE_LINES    = (short)((CURRENT_STAGE % 2 == 1)?587:616);
+        this.CURRENT_STAGE_LINES    = (short)((CURRENT_STAGE % 2 == 0)?587:616);
 
         this.ScaleW                 = (float)((float)this.GameRef.WindowSize.Width / (float)this.GameRef.GetInternalResolutionWidth());
         this.ScaleH                 = (float)((float)this.GameRef.WindowSize.Height / (float)this.GameRef.GetInternalResolutionHeight());
@@ -66,12 +66,9 @@ public class NGameStages : IStagesDef
             for (int j = 0; j < STAGES_COLUMNS; j++) 
             {
                 short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
-                if (renderBlock != 0)
-                {
-                    this.DrawRect.X =  j * PIXEL_WIDTH;
-                    this.DrawRect.Y = (i * PIXEL_HEIGHT);
-                    this.OddStageGraphics.FillRectangle(this.NBrushes[renderBlock], this.DrawRect);
-                }
+                this.DrawRect.X =  j * PIXEL_WIDTH;
+                this.DrawRect.Y = (i * PIXEL_HEIGHT);
+                this.OddStageGraphics.FillRectangle(this.NBrushes[renderBlock], this.DrawRect);
             }
         }
 
@@ -87,7 +84,7 @@ public class NGameStages : IStagesDef
     {
         IntPtr dhdc = gfx.GetHdc();
         IntPtr shdc = this.OddStageGraphics.GetHdc();
-        BitmapEx.BitBlt(dhdc, 0, 0, 1000, (int)(516 * this.ScaleH), shdc, 0, (int)X, BitmapEx.SRCCOPY);
+        BitmapEx.BitBlt(dhdc, 0, 0, 1000, (int)(428 * this.ScaleH), shdc, 0, (int)X, BitmapEx.SRCCOPY);
 
         this.OddStageGraphics.ReleaseHdc(shdc);
         gfx.ReleaseHdc(dhdc);
