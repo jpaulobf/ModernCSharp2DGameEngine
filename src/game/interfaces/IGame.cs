@@ -59,6 +59,9 @@ public interface IGame
      */
     public System.Drawing.Drawing2D.InterpolationMode Interpolation { get; }
 
+    /**
+     * Get the sprites of current screen moment
+     */
     public IEnumerable<GameSprite> GetCurrentScreenSprites();
 
     /**
