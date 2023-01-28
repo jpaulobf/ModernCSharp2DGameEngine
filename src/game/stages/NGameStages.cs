@@ -96,6 +96,9 @@ public class NGameStages : IStagesDef
         gfx.ReleaseHdc(dhdc);
     }
 
+    /**
+     * This function is responsable for load the opening stages lines
+     */
     private void LoadOpeningStageLines()
     {
         
