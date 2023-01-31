@@ -6,7 +6,7 @@ using Util;
  * Author: Joao P B Faria
  * Date: Oct/2022
  * Definition: This class represent the Game Stages, with their background and enemy/static sprites.
-                This is a test class. If the performance surpass the OG class, it will replace it.
+               This is a test class. If the performance surpass the OG class, it will replace it.
  */
 public class NGameStages : IStagesDef 
 {
