@@ -46,7 +46,9 @@ public class NGameStages : IStagesDef
      */
     public NGameStages(IGame gameRef)
     {
+        //store the game reference
         this.GameRef = gameRef;
+
         this.CURRENT_STAGE_LINES    = (short)((CURRENT_STAGE % 2 == 0)?587:616);
 
         this.ScaleW                 = (float)((float)this.GameRef.WindowSize.Width / (float)this.GameRef.GetInternalResolutionWidth());
