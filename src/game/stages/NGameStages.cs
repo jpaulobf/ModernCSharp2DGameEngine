@@ -49,11 +49,15 @@ public class NGameStages : IStagesDef
         //store the game reference
         this.GameRef = gameRef;
 
-        this.CURRENT_STAGE_LINES    = (short)((CURRENT_STAGE % 2 == 0)?587:616);
+        //control the current stage lines count
+        //  if the stage is odd there are 574 lines / otherwise 603
+        this.ControlStageLinesCount();
 
+        //calc the scale
         this.ScaleW                 = (float)((float)this.GameRef.WindowSize.Width / (float)this.GameRef.GetInternalResolutionWidth());
         this.ScaleH                 = (float)((float)this.GameRef.WindowSize.Height / (float)this.GameRef.GetInternalResolutionHeight());
 
+        //TEMP.......
         X *= this.ScaleH;
 
         //create two imagebuffers
@@ -76,6 +80,11 @@ public class NGameStages : IStagesDef
         }
 
         graphics.ReleaseHdc(hdc);
+    }
+
+    private void ControlStageLinesCount()
+    {
+        this.CURRENT_STAGE_LINES = (short)((CURRENT_STAGE % 2 == 0)?587:616);
     }
 
     /**
