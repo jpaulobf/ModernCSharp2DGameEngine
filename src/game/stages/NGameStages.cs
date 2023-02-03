@@ -39,6 +39,9 @@ public class NGameStages : IStagesDef
     private volatile Bitmap OpenBufferedImage;
     private volatile Graphics OpenStageGraphics;
     private float X = (616) * PIXEL_HEIGHT;
+    private List<GameSprite> CurrentStageSprites;
+    private Dictionary<int, GameSprite> CurrentStageSpritesDefition = new Dictionary<int, GameSprite>();
+    private Dictionary<int, GameSprite> NextStageSpritesDefition    = new Dictionary<int, GameSprite>();
 
     /**
      * Description: Game stage constructor
@@ -80,6 +83,34 @@ public class NGameStages : IStagesDef
         }
 
         graphics.ReleaseHdc(hdc);
+
+        //Load the Sprite List for the current stage
+        this.LoadSpriteListForSpecifiedStage(CURRENT_STAGE);
+
+        //store the sprites of current stage
+        this.CurrentStageSprites = this.CurrentStageSpritesDefition.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
+    }
+
+
+    /**
+     * Load the Sprite List for the Specified Stage
+     * The values goes or to CurrentStageDef or to NextStageDef
+     */
+    private void LoadSpriteListForSpecifiedStage(short stage)
+    {
+        Dictionary<int, GameSprite> temp = (stage == CURRENT_STAGE)?this.CurrentStageSpritesDefition:this.NextStageSpritesDefition;
+        for (short i = 0; i < IStagesDef.StagesSpritesConfig.GetLength(1); i++)
+        {
+            temp.Add(IStagesDef.StagesSpritesConfig[stage, i, 0],
+                     SpriteFactory.CreateSprite(this.GameRef,
+                     (byte)IStagesDef.StagesSpritesConfig[stage, i, 1],
+                     IStagesDef.StagesSpritesConfig[stage, i, 2],
+                     IStagesDef.StagesSpritesConfig[stage, i, 0],
+                     (IStagesDef.StagesSpritesConfig[stage, i, 3] == 0) ? false : true,
+                     IStagesDef.StagesSpritesConfig[stage, i, 4],
+                     IStagesDef.StagesSpritesConfig[stage, i, 5],
+                     (byte)IStagesDef.StagesSpritesConfig[stage, i, 6]));
+        }
     }
 
     private void ControlStageLinesCount()
