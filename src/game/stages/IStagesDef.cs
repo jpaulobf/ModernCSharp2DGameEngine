@@ -2,6 +2,16 @@ namespace Game.Stages;
 
 public interface IStagesDef 
 {
+
+    public static SolidBrush [] Brushes            = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 45, 50, 184)),  //dark blue
+                                                                       new SolidBrush(Color.FromArgb(255, 110, 156, 66)),  //green
+                                                                       new SolidBrush(Color.FromArgb(255, 53, 95, 24)),    //dark green
+                                                                       new SolidBrush(Color.FromArgb(0, 0, 0, 0)),         //transparent black
+                                                                       new SolidBrush(Color.FromArgb(255, 255, 255, 255)), //white
+                                                                       new SolidBrush(Color.FromArgb(255, 111, 111, 111)), //silver
+                                                                       new SolidBrush(Color.FromArgb(255, 170, 170, 170)), //dark gray
+                                                                       new SolidBrush(Color.FromArgb(255, 234, 234, 70)),  //yellow
+                                                                       new SolidBrush(Color.FromArgb(255, 0, 0, 0))};
     /**
      * Y, type, X, reversed (0 = false, 1 = true), maxLeft, maxRight, direction
      */
