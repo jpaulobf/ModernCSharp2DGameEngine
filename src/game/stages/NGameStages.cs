@@ -16,8 +16,26 @@ public class NGameStages : IStagesDef
     private const short PIXEL_WIDTH                         = 18;
     private const byte PIXEL_HEIGHT                         = 4;
     private const byte STAGES_COLUMNS                       = 41;
-    private short CURRENT_STAGE                             = 1;
-    private short CURRENT_STAGE_LINES                       = 0;
+    private const short MAX_STAGES                          = 2;
+    private short CURRENT_STAGE                             = 0;
+    private short NEXT_STAGE                                = 1;
+    private const byte OPENING_LINES                        = 108;
+    private const short EVEN_STAGES_LINES                   = 587;
+    private const short ODD_STAGES_LINES                    = 616;
+    private short LinesInCurrentStage                       = 0;
+    private short LinesInNextStage                          = 0;
+    private volatile Bitmap OddBufferedImage;
+    private volatile Graphics OddStageGraphics;
+    private volatile Bitmap EvenBufferedImage;
+    private volatile Graphics EvenStageGraphics;
+    private volatile Bitmap OddOpenBufferedImage;
+    private volatile Graphics OddOpenStageGraphics;
+    private volatile Bitmap EvenOpenBufferedImage;
+    private volatile Graphics EvenOpenStageGraphics;
+
+
+
+
     protected volatile short PlayerCurrentLine              = 574;
     private volatile int StartScreenFrame                   = 0;
     private volatile int EndScreenFrame                     = 0;
@@ -26,24 +44,14 @@ public class NGameStages : IStagesDef
     private volatile float OpeningOffset                    = 0;
     private volatile short TransitionOffset                 = 0;
     protected volatile short CurrentOpeningLine             = 0;
-
     private volatile bool CanStartStageOpening              = true;
     private volatile bool CanDrawStageOpening               = true;
-
-    private volatile BufferedGraphics OddBufferedGraphics;
-    private volatile Bitmap OddBufferedImage;
-    private volatile Graphics OddStageGraphics;
-    private volatile BufferedGraphics EvenBufferedGraphics;
-    private volatile Bitmap EvenBufferedImage;
-    private volatile Graphics EvenStageGraphics;
-    private volatile BufferedGraphics OpenBufferedGraphics;
-    private volatile Bitmap OpenBufferedImage;
-    private volatile Graphics OpenStageGraphics;
+    
     private float X = (616) * PIXEL_HEIGHT;
     private List<GameSprite> CurrentStageSprites;
     private Dictionary<int, GameSprite> CurrentStageSpritesDefition = new Dictionary<int, GameSprite>();
     private Dictionary<int, GameSprite> NextStageSpritesDefition    = new Dictionary<int, GameSprite>();
-    private RectangleF DrawRect                             = new RectangleF(0f, 0f, PIXEL_WIDTH, PIXEL_HEIGHT);
+    private RectangleF DrawRect = new RectangleF(0f, 0f, PIXEL_WIDTH, PIXEL_HEIGHT);
 
     /**
      * Description: Game stage constructor
@@ -55,25 +63,81 @@ public class NGameStages : IStagesDef
         this.GameRef = gameRef;
 
         //control the current stage lines count
-        //  if the stage is odd there are 574 lines / otherwise 603
         this.ControlStageLinesCount();
 
         //calc the scale
-        this.ScaleW                 = (float)((float)this.GameRef.WindowSize.Width / (float)this.GameRef.GetInternalResolutionWidth());
-        this.ScaleH                 = (float)((float)this.GameRef.WindowSize.Height / (float)this.GameRef.GetInternalResolutionHeight());
+        this.ScaleW = (float)((float)this.GameRef.WindowSize.Width / (float)this.GameRef.GetInternalResolutionWidth());
+        this.ScaleH = (float)((float)this.GameRef.WindowSize.Height / (float)this.GameRef.GetInternalResolutionHeight());
 
         //TEMP.......
         X *= this.ScaleH;
 
-        //create two imagebuffers
-        this.OddBufferedImage       = new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * CURRENT_STAGE_LINES * this.ScaleH));
+        //load opening imagebuffer 1 & 2
+        this.LoadOpeningScenarioGraphics();
+
+        //load the current scenario image (backbuffered)
+        this.LoadCurrentScenarioGraphics();
+
+        //load the next scenario image (backbuffered)
+        this.LoadNextScenarioGraphics();
+
+        //Load the Sprite List for the current stage
+        //this.LoadSpriteListForSpecifiedStage(CURRENT_STAGE);
+
+        //store the sprites of current stage
+        //this.CurrentStageSprites = this.CurrentStageSpritesDefition.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
+    }
+
+    private void LoadOpeningScenarioGraphics()
+    {
+        //create the current image buffer
+        this.OddOpenBufferedImage       = new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * OPENING_LINES * this.ScaleH));
+        this.EvenOpenBufferedImage      = new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * OPENING_LINES * this.ScaleH));
+        Graphics graphics               = Graphics.FromImage(this.OddOpenBufferedImage);
+        Graphics eGraphics              = Graphics.FromImage(this.EvenOpenBufferedImage);
+        IntPtr hdc                      = graphics.GetHdc();
+        IntPtr eHdc                     = eGraphics.GetHdc();
+        this.OddOpenStageGraphics       = Graphics.FromHdc(hdc);
+        this.EvenOpenStageGraphics      = Graphics.FromHdc(eHdc);
+        
+        //scale if necessary
+        this.OddOpenStageGraphics.ScaleTransform(this.ScaleW, this.ScaleH);
+        this.EvenOpenStageGraphics.ScaleTransform(this.ScaleW, this.ScaleH);
+
+        //render
+        for (int i = 0; i < OPENING_LINES; i++) 
+        {
+            for (int j = 0; j < STAGES_COLUMNS; j++) 
+            {
+                short renderBlock = IStagesDef.opening[CURRENT_STAGE, i, j];
+                this.DrawRect.X =  j * PIXEL_WIDTH;
+                this.DrawRect.Y = (i * PIXEL_HEIGHT);
+                this.OddOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
+
+                renderBlock = IStagesDef.opening[NEXT_STAGE, i, j];
+                this.DrawRect.X =  j * PIXEL_WIDTH;
+                this.DrawRect.Y = (i * PIXEL_HEIGHT);
+                this.EvenOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
+            }
+        }
+
+        graphics.ReleaseHdc(hdc);
+        eGraphics.ReleaseHdc(eHdc);
+    }
+
+    private void LoadCurrentScenarioGraphics()
+    {
+        //create the current image buffer
+        this.OddBufferedImage       = new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * this.LinesInCurrentStage * this.ScaleH));
         Graphics graphics           = Graphics.FromImage(this.OddBufferedImage);
         IntPtr hdc                  = graphics.GetHdc();
         this.OddStageGraphics       = Graphics.FromHdc(hdc);
         
+        //scale if necessary
         this.OddStageGraphics.ScaleTransform(ScaleW, ScaleH);
 
-        for (int i = 0; i < CURRENT_STAGE_LINES; i++) 
+        //render
+        for (int i = 0; i < this.LinesInCurrentStage; i++) 
         {
             for (int j = 0; j < STAGES_COLUMNS; j++) 
             {
@@ -85,14 +149,33 @@ public class NGameStages : IStagesDef
         }
 
         graphics.ReleaseHdc(hdc);
-
-        //Load the Sprite List for the current stage
-        this.LoadSpriteListForSpecifiedStage(CURRENT_STAGE);
-
-        //store the sprites of current stage
-        this.CurrentStageSprites = this.CurrentStageSpritesDefition.Values.Where(item => item.Type != GameSprite.HOUSE && item.Type != GameSprite.HOUSE2).ToList();
     }
 
+    private void LoadNextScenarioGraphics()
+    {
+        //create the next scenario image buffer
+        this.EvenBufferedImage      = new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * this.LinesInNextStage * this.ScaleH));
+        Graphics graphics           = Graphics.FromImage(this.EvenBufferedImage);
+        IntPtr hdc                  = graphics.GetHdc();
+        this.EvenStageGraphics      = Graphics.FromHdc(hdc);
+        
+        //scale if necessary
+        this.EvenStageGraphics.ScaleTransform(this.ScaleW, this.ScaleH);
+
+        //render
+        for (int i = 0; i < this.LinesInNextStage; i++) 
+        {
+            for (int j = 0; j < STAGES_COLUMNS; j++) 
+            {
+                short renderBlock = IStagesDef.stages[NEXT_STAGE, i, j];
+                this.DrawRect.X =  j * PIXEL_WIDTH;
+                this.DrawRect.Y = (i * PIXEL_HEIGHT);
+                this.EvenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
+            }
+        }
+
+        graphics.ReleaseHdc(hdc);
+    }
 
     /**
      * Load the Sprite List for the Specified Stage
@@ -117,8 +200,18 @@ public class NGameStages : IStagesDef
 
     private void ControlStageLinesCount()
     {
-        this.CURRENT_STAGE_LINES = (short)((CURRENT_STAGE % 2 == 0)?587:616);
-        PlayerCurrentLine = (short)((CURRENT_STAGE % 2 == 0)?574:603);
+        if (this.CURRENT_STAGE % 2 == 0)
+        {
+            this.LinesInCurrentStage    = EVEN_STAGES_LINES;
+            this.LinesInNextStage       = ODD_STAGES_LINES;
+            this.PlayerCurrentLine      = 574;
+        }
+        else
+        {
+            this.LinesInCurrentStage    = ODD_STAGES_LINES;
+            this.LinesInNextStage       = EVEN_STAGES_LINES;
+            this.PlayerCurrentLine      = 603;
+        }
     }
 
     /**
@@ -126,9 +219,9 @@ public class NGameStages : IStagesDef
      */
     public void Update(long frametime, bool colliding = false) 
     {
-        //X -= 0.05f;
+        X -= 0.05f;
 
-
+/*
         //if the game is opening the stage (just an animation)
         if (this.CanStartStageOpening) 
         {
@@ -164,7 +257,7 @@ public class NGameStages : IStagesDef
             item.Value.Y = (item.Key - this.CurrentLineYPosition) + this.Offset + this.TransitionOffset;
             item.Value.Update(frametime, colliding);
         }
-
+*/
 
     }
 
@@ -173,12 +266,22 @@ public class NGameStages : IStagesDef
      */
     public void Draw(Graphics gfx)
     {
+        /*
         IntPtr dhdc = gfx.GetHdc();
         IntPtr shdc = this.OddStageGraphics.GetHdc();
         BitmapEx.BitBlt(dhdc, 0, 0, 1000, (int)(428 * this.ScaleH), shdc, 0, (int)X, BitmapEx.SRCCOPY);
 
         this.OddStageGraphics.ReleaseHdc(shdc);
         gfx.ReleaseHdc(dhdc);
+        */
+
+        IntPtr dhdc = gfx.GetHdc();
+        IntPtr shdc = this.OddOpenStageGraphics.GetHdc();
+        BitmapEx.BitBlt(dhdc, 0, 0, 1000, (int)(428 * this.ScaleH), shdc, 0, 0, BitmapEx.SRCCOPY);
+
+        this.OddOpenStageGraphics.ReleaseHdc(shdc);
+        gfx.ReleaseHdc(dhdc);
+
     }
 
     /**
