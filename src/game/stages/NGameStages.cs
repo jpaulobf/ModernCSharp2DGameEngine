@@ -15,20 +15,21 @@ public class NGameStages : IStagesDef
     private float ScaleH                                    = 1.0F;
     private const short PIXEL_WIDTH                         = 18;
     private const byte PIXEL_HEIGHT                         = 4;
-    private const short OPENING_LINES                       = 108;
     private const byte STAGES_COLUMNS                       = 41;
-    private SolidBrush [] NBrushes                          = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 45, 50, 184)),  //dark blue
-                                                                                new SolidBrush(Color.FromArgb(255, 110, 156, 66)),  //green
-                                                                                new SolidBrush(Color.FromArgb(255, 53, 95, 24)),    //dark green
-                                                                                new SolidBrush(Color.FromArgb(0, 0, 0, 0)),         //transparent black
-                                                                                new SolidBrush(Color.FromArgb(255, 255, 255, 255)), //white
-                                                                                new SolidBrush(Color.FromArgb(255, 111, 111, 111)), //silver
-                                                                                new SolidBrush(Color.FromArgb(255, 170, 170, 170)), //dark gray
-                                                                                new SolidBrush(Color.FromArgb(255, 234, 234, 70)),  //yellow
-                                                                                new SolidBrush(Color.FromArgb(255, 0, 0, 0))};
-    private RectangleF DrawRect                             = new RectangleF(0f, 0f, PIXEL_WIDTH, PIXEL_HEIGHT);
     private short CURRENT_STAGE                             = 1;
     private short CURRENT_STAGE_LINES                       = 0;
+    protected volatile short PlayerCurrentLine              = 574;
+    private volatile int StartScreenFrame                   = 0;
+    private volatile int EndScreenFrame                     = 0;
+    private volatile int CurrentLineYPosition               = 0;
+    private volatile float Offset                           = 0;
+    private volatile float OpeningOffset                    = 0;
+    private volatile short TransitionOffset                 = 0;
+    protected volatile short CurrentOpeningLine             = 0;
+
+    private volatile bool CanStartStageOpening              = true;
+    private volatile bool CanDrawStageOpening               = true;
+
     private volatile BufferedGraphics OddBufferedGraphics;
     private volatile Bitmap OddBufferedImage;
     private volatile Graphics OddStageGraphics;
@@ -42,6 +43,7 @@ public class NGameStages : IStagesDef
     private List<GameSprite> CurrentStageSprites;
     private Dictionary<int, GameSprite> CurrentStageSpritesDefition = new Dictionary<int, GameSprite>();
     private Dictionary<int, GameSprite> NextStageSpritesDefition    = new Dictionary<int, GameSprite>();
+    private RectangleF DrawRect                             = new RectangleF(0f, 0f, PIXEL_WIDTH, PIXEL_HEIGHT);
 
     /**
      * Description: Game stage constructor
@@ -78,7 +80,7 @@ public class NGameStages : IStagesDef
                 short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
                 this.DrawRect.X =  j * PIXEL_WIDTH;
                 this.DrawRect.Y = (i * PIXEL_HEIGHT);
-                this.OddStageGraphics.FillRectangle(this.NBrushes[renderBlock], this.DrawRect);
+                this.OddStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
             }
         }
 
@@ -116,6 +118,7 @@ public class NGameStages : IStagesDef
     private void ControlStageLinesCount()
     {
         this.CURRENT_STAGE_LINES = (short)((CURRENT_STAGE % 2 == 0)?587:616);
+        PlayerCurrentLine = (short)((CURRENT_STAGE % 2 == 0)?574:603);
     }
 
     /**
@@ -123,7 +126,46 @@ public class NGameStages : IStagesDef
      */
     public void Update(long frametime, bool colliding = false) 
     {
-        X -= 0.05f;
+        //X -= 0.05f;
+
+
+        //if the game is opening the stage (just an animation)
+        if (this.CanStartStageOpening) 
+        {
+            //calc the offset
+            float velocity      = frametime * 0.00004f; //step = 4; ((float)(step * 100 * ((double)frametime / 10_000_000)));
+            this.OpeningOffset  += velocity;
+            this.Offset         += velocity;
+
+            if (this.OpeningOffset >= PIXEL_HEIGHT) {
+                this.CurrentOpeningLine++;
+                this.Offset -= (this.OpeningOffset - PIXEL_HEIGHT);
+                this.OpeningOffset = 0;
+            }
+
+            //update draw stage opening flag
+            this.CanDrawStageOpening = true;
+        }
+        //if the game is running
+        //else if (this.CanStartTheStage) 
+       // {
+            
+       // }
+
+        //update the sprites
+        //110 = 95 (screen lines before current line) + 15 lines (60 pixels, max sprite height)
+        this.StartScreenFrame           = (this.PlayerCurrentLine - 110) * PIXEL_HEIGHT;
+        this.EndScreenFrame             = (this.PlayerCurrentLine + 13)  * PIXEL_HEIGHT;
+        this.CurrentLineYPosition       = (this.PlayerCurrentLine - 95)  * PIXEL_HEIGHT;
+
+        //if exist an sprite in the current screen frame, update it
+        foreach (var item in this.CurrentStageSpritesDefition.Where(item => this.StartScreenFrame < item.Key && this.EndScreenFrame > item.Key)) 
+        {
+            item.Value.Y = (item.Key - this.CurrentLineYPosition) + this.Offset + this.TransitionOffset;
+            item.Value.Update(frametime, colliding);
+        }
+
+
     }
 
     /**
