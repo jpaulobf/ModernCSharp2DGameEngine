@@ -3,7 +3,10 @@ namespace Game.Stages;
 public interface IStagesDef 
 {
 
-    public static SolidBrush [] Brushes            = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 45, 50, 184)),  //dark blue
+    /**
+     * Brushes
+     */
+    public static SolidBrush [] Brushes = new SolidBrush[] {new SolidBrush(Color.FromArgb(255, 45, 50, 184)),  //dark blue
                                                                        new SolidBrush(Color.FromArgb(255, 110, 156, 66)),  //green
                                                                        new SolidBrush(Color.FromArgb(255, 53, 95, 24)),    //dark green
                                                                        new SolidBrush(Color.FromArgb(0, 0, 0, 0)),         //transparent black
