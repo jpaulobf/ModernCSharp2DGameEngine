@@ -33,6 +33,7 @@ public class NGameStages : IStagesDef
     private volatile Bitmap EvenOpenBufferedImage;
     private volatile Graphics EvenOpenStageGraphics;
 
+    private float ScreenStepY = 0f;
 
 
 
@@ -47,7 +48,7 @@ public class NGameStages : IStagesDef
     private volatile bool CanStartStageOpening              = true;
     private volatile bool CanDrawStageOpening               = true;
     
-    private float X = (616) * PIXEL_HEIGHT;
+    
     private List<GameSprite> CurrentStageSprites;
     private Dictionary<int, GameSprite> CurrentStageSpritesDefition = new Dictionary<int, GameSprite>();
     private Dictionary<int, GameSprite> NextStageSpritesDefition    = new Dictionary<int, GameSprite>();
@@ -70,7 +71,7 @@ public class NGameStages : IStagesDef
         this.ScaleH = (float)((float)this.GameRef.WindowSize.Height / (float)this.GameRef.GetInternalResolutionHeight());
 
         //TEMP.......
-        X *= this.ScaleH;
+        this.ScreenStepY *= this.ScaleH;
 
         //load opening imagebuffer 1 & 2
         this.LoadOpeningScenarioGraphics();
@@ -219,7 +220,7 @@ public class NGameStages : IStagesDef
      */
     public void Update(long frametime, bool colliding = false) 
     {
-        X -= 0.05f;
+        this.ScreenStepY -= 0.05f;
 
 /*
         //if the game is opening the stage (just an animation)
@@ -277,7 +278,9 @@ public class NGameStages : IStagesDef
 
         IntPtr dhdc = gfx.GetHdc();
         IntPtr shdc = this.OddOpenStageGraphics.GetHdc();
-        BitmapEx.BitBlt(dhdc, 0, 0, 1000, (int)(428 * this.ScaleH), shdc, 0, 0, BitmapEx.SRCCOPY);
+
+        Graphics.FromHdc(dhdc).Clear(Color.Black);
+        BitmapEx.BitBlt(dhdc, 0, 0, 1000, (int)(428 * this.ScaleH), shdc, 0, (int)ScreenStepY, BitmapEx.SRCCOPY);
 
         this.OddOpenStageGraphics.ReleaseHdc(shdc);
         gfx.ReleaseHdc(dhdc);
