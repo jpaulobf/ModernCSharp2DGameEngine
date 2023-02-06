@@ -30,6 +30,11 @@ public class HUD
     private const byte HUD_HEIGHT               = 85; //px
     private const short HUD_WIDTH               = 738; //px
 
+    public short GetHudHeight()
+    {
+        return (HUD_HEIGHT);
+    }
+
     /**
      * Constructor
      */
