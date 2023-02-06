@@ -27,13 +27,10 @@ public class HUD
     private const short LifeCounterY            = 495;
     private const float FuelSpentUnit           = 1.4f;
     private const byte SEPARATOR_HEIGHT         = 3; //px
+    private const short SEPARATOR_Y             = 428; //px
     private const byte HUD_HEIGHT               = 85; //px
     private const short HUD_WIDTH               = 738; //px
-
-    public short GetHudHeight()
-    {
-        return (HUD_HEIGHT);
-    }
+    private const short HUD_Y_POSITION          = 431; //px
 
     /**
      * Constructor
@@ -42,15 +39,13 @@ public class HUD
     {
         this.GameRef        = game;
         this.PlayerRef      = this.GameRef.GetPlayer();
-        this.SeparatorRect  = new Rectangle(0, 428, HUD_WIDTH, SEPARATOR_HEIGHT);
-        this.HudRect        = new Rectangle(0, 431, HUD_WIDTH, HUD_HEIGHT);
-
+        this.SeparatorRect  = new Rectangle(0, SEPARATOR_Y, HUD_WIDTH, SEPARATOR_HEIGHT);
+        this.HudRect        = new Rectangle(0, HUD_Y_POSITION, HUD_WIDTH, HUD_HEIGHT);
         this.FuelFrameX     = (int)((this.HudRect.Size.Width / 2) - (this.FuelFrame.Width / 2));
         this.FuelFrameY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y);
         this.OGFuelMeterX   = (float)FuelZeroX + (100 * FuelSpentUnit);
         this.FuelMeterX     = this.OGFuelMeterX;
         this.FuelMeterY     = (int)((this.HudRect.Size.Height / 2) - (this.FuelFrame.Height / 2) + this.HudRect.Y) + 8;
-
         this.LifeCounter    = LoadingStuffs.GetInstance().GetImage(NumbersMap[this.PlayerRef.Lives]);
     }
 
@@ -67,14 +62,6 @@ public class HUD
      */
     public void Update(long frametime) 
     {
-        this.GetCurrentLifeCounterImage();
-    }
-
-    /**
-     * Get current life counter image
-     */
-    private void GetCurrentLifeCounterImage()
-    {
         this.LifeCounter = LoadingStuffs.GetInstance().GetImage(NumbersMap[this.PlayerRef.Lives]);
     }
 
@@ -85,10 +72,8 @@ public class HUD
     {
         gfx.FillRectangle(Brushes.Black, this.SeparatorRect);
         gfx.FillRectangle(new SolidBrush(Color.FromArgb(255, 144, 144, 144)), this.HudRect);
-
         gfx.DrawImage(this.FuelMeter, this.FuelMeterX, this.FuelMeterY, this.FuelMeter.Width, this.FuelMeter.Height);
         gfx.DrawImage(this.FuelFrame, this.FuelFrameX, this.FuelFrameY, this.FuelFrame.Width, this.FuelFrame.Height);
-
         gfx.DrawImage(this.LifeCounter, LifeCounterX, LifeCounterY, this.LifeCounter.Width, this.LifeCounter.Height);
     }
 
@@ -99,4 +84,9 @@ public class HUD
     {
         this.FuelMeterX = this.OGFuelMeterX;
     }
+
+    /**
+     * Accessors
+     */
+    public short GetHudHeight() {   return (HUD_HEIGHT);    }
 }
