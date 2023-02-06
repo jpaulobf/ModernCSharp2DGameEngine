@@ -102,10 +102,8 @@ public class GameController : IGame
         this.Menu       = new Menu(this);
         this.Options    = new Options(this);
         
-
+        //Init configurations
         this.InitGameConfigurations();
-
-        this.NStages    = new NGameStages(this);
     }
 
     /**
@@ -256,7 +254,7 @@ public class GameController : IGame
                     //draw the Score
                     this.Score.Draw(this.InternalGraphics);
 
-                    // if (this.ShowPlayerSprite) 
+                    if (this.ShowPlayerSprite) 
                     {
                         // Draw Player Sprite
                         this.Player.Draw(this.InternalGraphics);
@@ -338,7 +336,10 @@ public class GameController : IGame
             {
                 if (this.ShowPlayerSprite) 
                 {
-                    this.Stages.Start();
+                    if (newGS)
+                        this.NStages.Start();
+                    else
+                        this.Stages.Start();
                     this.Player.Flying = true;
                 }
             }
@@ -440,7 +441,10 @@ public class GameController : IGame
      */
     private void ResetAfterCollision()
     {
-        this.Stages.Reset();
+        if (newGS)
+            this.NStages.Reset();
+        else
+            this.Stages.Reset();
         this.Player.Reset(false);
         this.Hud.Reset();
         this.Player.Colliding   = false;
@@ -479,7 +483,10 @@ public class GameController : IGame
         this.Framecounter               = 0;
         this.Hud.Reset();
         this.Score.Reset();
-        this.Stages.Reset();
+        if (newGS)
+            this.NStages.Reset();
+        else
+            this.Stages.Reset();
         this.Player.Reset();
     }
 
@@ -529,6 +536,7 @@ public class GameController : IGame
         this.Score              = new Score(this);
         this.GameOver           = new GameOver(this);
         this.Stages             = new GameStages(this);
+        this.NStages            = new NGameStages(this);
         this.Exit               = new Exit(this);
     }
 
@@ -635,7 +643,10 @@ public class GameController : IGame
     private void NextStage()
     {
         this.Reset();
-        this.Stages.ControlStageLinesCount();
+        if (newGS)
+            this.NStages.ControlStageLinesCount();
+        else
+            this.Stages.ControlStageLinesCount();
     }
     
     //Accessors
@@ -643,11 +654,12 @@ public class GameController : IGame
     public Graphics GetGraphics()                               {   return (this.InternalGraphics);                 }
     public int GetInternalResolutionWidth()                     {   return (this.InternalResolutionWidth);          }
     public int GetInternalResolutionHeight()                    {   return (this.InternalResolutionHeight);         }
-    public float getScaleW()                                    {   return (this.ScaleW);                           }
-    public float getScaleH()                                    {   return (this.ScaleH);                           }
+    public float GetScaleW()                                    {   return (this.ScaleW);                           }
+    public float GetScaleH()                                    {   return (this.ScaleH);                           }
     public Player GetPlayer()                                   {   return (this.Player);                           }
     public bool GetTerminateStatus()                            {   return (this.Terminate);                        }
     public GameStages GetStages()                               {   return (this.Stages);                           }
+    public HUD GetHUD()                                         {   return (this.Hud);                              }
 
     /**
      * Resize screen (buggy...)
