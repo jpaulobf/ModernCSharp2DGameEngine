@@ -77,12 +77,12 @@ public interface IGame
     /**
      * Get the current scaled width
      */
-    public float getScaleW();
+    public float GetScaleW();
     
     /**
      * Get the current scaled height
      */
-    public float getScaleH();
+    public float GetScaleH();
 
     /**
      * Get the current Window Size
@@ -173,4 +173,6 @@ public interface IGame
      * Skip the Render Method, once
      */
     public void SkipRenderOnce();
+
+    public HUD GetHUD();
 }
