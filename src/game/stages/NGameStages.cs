@@ -132,7 +132,7 @@ public class NGameStages : IStagesDef
         {
             //calc the offset
             //step = 4; ((float)(step * 100 * ((double)frametime / 10_000_000)));
-            float step      = frametime * 0.00004f;
+            float step          = frametime * 0.00004f;
             this.OpeningLineY  -= step;
 
             //update draw stage opening flag
@@ -189,13 +189,28 @@ public class NGameStages : IStagesDef
                 //current stage end
                 if (!this.isToDrawCurrentStage)
                 {
-                    //TODO: SWAP....
-                    Console.WriteLine("aui.....");
-                    //this.CanStartTheStage = true;
-                    //this.GameRef.TogglePlayerSprite();
+                    //TODO: verify if the next stage exists
+                    this.CURRENT_STAGE          += 1;
+                    
+                    //Swap current elements with next
+                    this.isToDrawNextStage      = false;
+                    this.isToDrawCurrentStage   = true;
+
+                    this.CurrentStageImage      = this.NextStageImage;
+                    this.CurrentStageGraphics   = this.NextStageGraphics;
+                    this.CurrentLineY           = this.NextLineY;
+                    this.CurrentLineDestY       = this.NextLineDestY;
+
+                    //Load the next elements (async)
+                    Task task = LoadNextStage();
                 }
             }
         }
+    }
+
+    private async Task LoadNextStage()
+    {
+        
     }
 
     /**
