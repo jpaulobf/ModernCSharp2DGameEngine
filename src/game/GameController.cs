@@ -60,21 +60,20 @@ public class GameController : IGame
     private NGameStages NStages;
     private bool newGS = true;
     
-
     /**
      * Game constructor
      */
     public GameController(Size resolution, Size windowSize, InterpolationMode interpolationMode) {
 
         //store the window resolution
-        this.Resolution         = resolution;
-        this.WindowSize         = windowSize;
+        this.Resolution             = resolution;
+        this.WindowSize             = windowSize;
 
         //set the iterpolation mode
-        this.Interpolation = interpolationMode;
+        this.Interpolation          = interpolationMode;
 
         //create the imagebuffer
-        this.BufferedImage      = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
+        this.BufferedImage          = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
         
         // -->>>> gdi+ style
         Graphics graphics           = Graphics.FromImage(this.BufferedImage);
@@ -86,14 +85,14 @@ public class GameController : IGame
         // this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //define the interpolation mode
-        this.InternalGraphics.InterpolationMode = this.Interpolation;
+        //this.InternalGraphics.InterpolationMode = this.Interpolation;
 
         //calc the scale
-        this.ScaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
-        this.ScaleH = (float)((float)windowSize.Height/(float)this.InternalResolutionHeight);
+        //this.ScaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
+        //this.ScaleH = (float)((float)windowSize.Height/(float)this.InternalResolutionHeight);
 
         //transform the image based on calc scale
-        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+        //this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
 
         //screen center
         this.PausePoint = new Point((int)windowSize.Width/2 - 80, (int)windowSize.Height/2 - 50);
@@ -224,9 +223,13 @@ public class GameController : IGame
                 }
                 else if (GameStateMachine.GetCurrentGameState() == StateMachine.EXITING)
                 {
-                    /*
+                    
                     //draw the stage bg & enemies
-                    this.Stages.Draw(this.InternalGraphics);
+                    if (newGS)
+                        this.NStages.Draw(this.InternalGraphics);
+                    else
+                        //draw the stage bg & enemies
+                        this.Stages.Draw(this.InternalGraphics);
 
                     //draw the HUD
                     this.Hud.Draw(this.InternalGraphics);
@@ -238,7 +241,7 @@ public class GameController : IGame
                     this.Player.Draw(this.InternalGraphics);
 
                     //Draw Exiting Board
-                    this.Exit.Draw(this.InternalGraphics);*/
+                    this.Exit.Draw(this.InternalGraphics);
                 }
                 else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
                 {
@@ -287,7 +290,7 @@ public class GameController : IGame
         {
             // --->> dotnet preferable code
             // this.BufferedGraphics.Render(targetGraphics);
-
+            
             //gdi+ style
             IntPtr dhdc = targetGraphics.GetHdc();
             IntPtr shdc = this.InternalGraphics.GetHdc();
@@ -644,13 +647,26 @@ public class GameController : IGame
     {
         this.Reset();
         if (newGS)
-            this.NStages.ControlStageLinesCount();
+        {
+            this.NStages.ControlLinesCount();
+        }
         else
+        {
             this.Stages.ControlStageLinesCount();
+        }
     }
     
     //Accessors
-    public IEnumerable<GameSprite> GetCurrentScreenSprites()    {  return(this.Stages.GetCurrentScreenSprites());   }
+    public IEnumerable<GameSprite> GetCurrentScreenSprites()    {  
+        if (newGS)
+        {
+            return (this.NStages.GetSpritesInScreen());
+        }
+        else 
+        {
+            return (this.Stages.GetCurrentScreenSprites());
+        }
+    }
     public Graphics GetGraphics()                               {   return (this.InternalGraphics);                 }
     public int GetInternalResolutionWidth()                     {   return (this.InternalResolutionWidth);          }
     public int GetInternalResolutionHeight()                    {   return (this.InternalResolutionHeight);         }
