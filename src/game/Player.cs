@@ -104,7 +104,7 @@ public class Player
             {
                 if (!this.Refueling)
                 {
-                    this.FuelCounter -= this.CurrentFuelSpent;
+                    //this.FuelCounter -= this.CurrentFuelSpent;
                 }
                 this.FrameCounter = 0;
 
