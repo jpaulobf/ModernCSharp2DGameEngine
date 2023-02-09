@@ -176,15 +176,18 @@ public class NGameStages : IStagesDef
                     step = frametime * 0.00001f;
                 }
 
-                //calc stev * inverted scaleH
-                stepInv = (step * this.InvertedScaleH);
+                if (!colliding) 
+                {
+                    //calc stev * inverted scaleH
+                    stepInv = (step * this.InvertedScaleH);
 
-                //calc next step
-                this.CurrentLineY           -= step;
-                this.PlayerCurrentLine      -= step * this.InvertedScaleInvertedPixelH;
-                this.PlayerCurrentLinePixel -= stepInv;
-                this.PlayerTopLinePixel     -= stepInv;
-                this.PlayerBottomLinePixel  -= stepInv;
+                    //calc next step
+                    this.CurrentLineY           -= step;
+                    this.PlayerCurrentLine      -= step * this.InvertedScaleInvertedPixelH;
+                    this.PlayerCurrentLinePixel -= stepInv;
+                    this.PlayerTopLinePixel     -= stepInv;
+                    this.PlayerBottomLinePixel  -= stepInv;
+                }
 
                 //update draw stage opening flag
                 this.isToDrawCurrentStage = (this.CurrentLineY > -this.RenderAreaHeight)?true:false;
