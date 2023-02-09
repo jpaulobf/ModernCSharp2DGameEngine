@@ -23,7 +23,7 @@ public class NGameStages : IStagesDef
     private float ScaleW                                    = 1.0F;
     private float ScaleH                                    = 1.0F;
     private float InvertedScaleH                            = 1.0F;
-    private float InvertedScaleInvertedPixelH                  = 1.0F;
+    private float InvertedScaleInvertedPixelH               = 1.0F;
     private const short PIXEL_WIDTH                         = 18;
     private const byte PIXEL_HEIGHT                         = 4;
     private const byte STAGES_COLUMNS                       = 41;
@@ -53,23 +53,19 @@ public class NGameStages : IStagesDef
     private volatile float CurrentLineDestY                 = 0f;
     private volatile float NextLineY                        = 0f;
     private volatile float NextLineDestY                    = 0f;
+    private volatile float Offset                           = 0;
     private volatile bool IsToDrawStageOpening              = true;
     private volatile bool isToDrawCurrentStage              = false;
     private volatile bool isToDrawNextStage                 = false;
     private volatile bool CanStartStageOpening              = true;
     private volatile bool CanStartTheStage                  = false;
     private volatile bool IsStageRunning                    = false;
-    
     private Dictionary<int, GameSprite> CurrentStageSpritesDefinition = new Dictionary<int, GameSprite>();
     private Dictionary<int, GameSprite> NextStageSpritesDefinition    = new Dictionary<int, GameSprite>();
     private List<GameSprite> CurrentStageSprites;
     private List<GameSprite> NextStageSprites;
     private RectangleF DrawRect = new RectangleF(0f, 0f, PIXEL_WIDTH, PIXEL_HEIGHT);
-
-    private volatile float Offset                           = 0;
-    private volatile float OpeningOffset                    = 0;
-    private volatile short TransitionOffset                 = 0;
-    protected volatile short CurrentOpeningLine             = 0;
+    
 
     /**
      * Description: Game stage constructor
@@ -297,6 +293,36 @@ public class NGameStages : IStagesDef
     }
 
     /**
+     * Check if bullet is colliding with the background
+     */
+    internal bool IsShotCollidingWithBackground(GameSprite sprite)
+    {
+        //an offset to improve the visual impact of bullet with the background
+        byte offset         = 1;
+        
+        //get the column of the left side of the bullet
+        int column1         = (int)(sprite.X / PIXEL_WIDTH);
+
+        //get the column of the right side of the bullet (can be the same)
+        int column2         = (int)((sprite.X + sprite.Width) / PIXEL_WIDTH);
+
+        //get the line of the top of the bullet
+        int lineTop         = (int)(sprite.Y / PIXEL_HEIGHT);
+        int pixelToCheck    = (int)(this.PlayerCurrentLine - 97 + lineTop + offset);
+
+        //like this:
+        //-----------////-----------
+        //-----------/  /-----------
+
+        //check the current value of both pixels (column1 & line) && (column2 && line)
+        short currentValue1 = IStagesDef.stages[CURRENT_STAGE, pixelToCheck, column1];
+        short currentValue2 = IStagesDef.stages[CURRENT_STAGE, pixelToCheck, column2];
+        
+        //if both are 0, way to go, otherwise, destroy
+        return (!(currentValue1 == 0 && currentValue2 == 0));
+    }
+
+    /**
      * Draw the Game Stage
      */
     public void Draw(Graphics gfx)
@@ -393,7 +419,7 @@ public class NGameStages : IStagesDef
      */
     public IEnumerable<GameSprite> GetSpritesInScreen()
     {
-        return (new List<GameSprite>());
+        return (this.CurrentStageSprites.Where(item => this.PlayerTopLinePixel < item.OgY && this.PlayerBottomLinePixel > item.OgY));
     }
 
     /**
