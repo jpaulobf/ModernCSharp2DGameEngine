@@ -174,7 +174,10 @@ public class GameController : IGame
             } 
             else if (this.Player.Colliding)
             {
-                this.Stages.Update(frametime, this.Player.Colliding);
+                if (newGS)
+                    this.NStages.Update(frametime, this.Player.Colliding);
+                else 
+                    this.Stages.Update(frametime, this.Player.Colliding);
             }
 
             //if the player hit something, resetcounter will start
@@ -568,6 +571,18 @@ public class GameController : IGame
 
         //set the game state to menu
         this.SetGameStateToMenu();
+    }
+
+    public bool IsShotCollidingWithBackground(GameSprite sprite)
+    {
+        if (newGS)
+        {
+            return (this.NStages.IsShotCollidingWithBackground(sprite));
+        }
+        else
+        {
+            return (this.Stages.IsShotCollidingWithBackground(sprite));
+        }
     }
 
     /**
