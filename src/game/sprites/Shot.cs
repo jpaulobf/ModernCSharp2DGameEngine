@@ -53,6 +53,9 @@ public class Shot : GameSprite
             this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
             this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
 
+            this.StartDelay         = true;
+
+            /*
             //check if bullet collides with bg
             if (this.GameRef.IsShotCollidingWithBackground(this))
             {
@@ -78,6 +81,7 @@ public class Shot : GameSprite
                     }
                 }
             }
+            */
         }
 
         if (this.StartDelay) {
