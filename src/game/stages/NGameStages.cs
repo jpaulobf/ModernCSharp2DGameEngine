@@ -20,6 +20,7 @@ public class NGameStages : IStagesDef
     private volatile Graphics OddOpenStageGraphics;
     private volatile Bitmap EvenOpenBufferedImage;
     private volatile Graphics EvenOpenStageGraphics;
+    private volatile Graphics CurrentOpenStageGraphics;
     private float ScaleW                                    = 1.0F;
     private float ScaleH                                    = 1.0F;
     private float InvertedScaleH                            = 1.0F;
@@ -160,6 +161,8 @@ public class NGameStages : IStagesDef
             {
                 float step = 0;
                 float stepInv = 0;
+                
+                //get the current player speed
                 if (this.GameRef.GetPlayer().DOUBLE_SPEED)
                 {
                     //step = 2; ((float)(100 * ((double)frametime / 10_000_000))) * step;
@@ -178,7 +181,7 @@ public class NGameStages : IStagesDef
 
                 if (!colliding) 
                 {
-                    //calc stev * inverted scaleH
+                    //calc step * inverted scaleH == step / scaleH
                     stepInv = (step * this.InvertedScaleH);
 
                     //calc next step
@@ -187,54 +190,59 @@ public class NGameStages : IStagesDef
                     this.PlayerCurrentLinePixel -= stepInv;
                     this.PlayerTopLinePixel     -= stepInv;
                     this.PlayerBottomLinePixel  -= stepInv;
-                }
+                
+                
+                    //update draw stage opening flag
+                    this.isToDrawCurrentStage = (this.CurrentLineY > -this.RenderAreaHeight)?true:false;
 
-                //update draw stage opening flag
-                this.isToDrawCurrentStage = (this.CurrentLineY > -this.RenderAreaHeight)?true:false;
-
-                //enable next stage draw
-                if (this.CurrentLineY <= 0)
-                {
-                    this.isToDrawNextStage = true;
-                    this.NextLineDestY += step;
-                }
-
-                //if not already dead, check for dead (w/ bg)
-                if (!colliding) 
-                {
                     //Check if the Player is colliding with background
                     this.CheckBackgroundCollision();
-                }
 
-                //current stage end - runs once
-                //Swap with next stage
-                if (!this.isToDrawCurrentStage)
-                {
-                    //TODO: verify if the next stage exists
-                    this.CURRENT_STAGE          += 1;
-                    this.NEXT_STAGE             = (short)(this.CURRENT_STAGE + 1);
-                    
-                    //Swap current elements with next
-                    this.isToDrawNextStage      = false;
-                    this.isToDrawCurrentStage   = true;
+                    //enable next stage draw
+                    if (this.CurrentLineY <= 0)
+                    {
+                        this.isToDrawNextStage = true;
+                        this.NextLineDestY += step;
+                    }
 
-                    this.CurrentStageImage      = this.NextStageImage;
-                    this.CurrentStageGraphics   = this.NextStageGraphics;
-                    this.CurrentLineY           = this.NextLineY;
-                    this.CurrentLineDestY       = this.NextLineDestY;
+                    //current stage end - runs once
+                    //Swap with next stage
+                    if (!this.isToDrawCurrentStage)
+                    {
+                        //TODO: verify if the next stage exists
+                        this.CURRENT_STAGE          += 1;
+                        this.NEXT_STAGE             = (short)(this.CURRENT_STAGE + 1);
+                        
+                        //Swap current elements with next
+                        this.isToDrawNextStage      = false;
+                        this.isToDrawCurrentStage   = true;
 
-                    //Load the next elements (async)
-                    Task task = LoadNextStage();
+                        this.CurrentStageImage      = this.NextStageImage;
+                        this.CurrentStageGraphics   = this.NextStageGraphics;
+                        this.CurrentLineY           = this.NextLineY;
+                        this.CurrentLineDestY       = this.NextLineDestY;
+
+                        this.PlayerCurrentLine      = (this.CURRENT_STAGE % 2 == 0)?EVEN_PLAYER_ORIG_LINE:ODD_PLAYER_ORIG_LINE;
+                        this.PlayerCurrentLinePixel = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
+                        this.PlayerTopLinePixel     = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
+                        this.PlayerBottomLinePixel  = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
+
+                        this.CurrentOpenStageGraphics = (CURRENT_STAGE % 2 == 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
+
+                        //Load the next elements (async)
+                        Task task = LoadNextStage();
+                    }              
                 }
             }
         }
 
+        /*
         //if exist an sprite in the current screen frame, update it
         foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopLinePixel < item.Key && this.PlayerBottomLinePixel > item.Key)) 
         {
             item.Value.Y = (item.Key - this.PlayerCurrentLinePixel) + this.Offset;
             item.Value.Update(frametime, colliding);
-        }
+        }*/
     }
 
 
@@ -246,9 +254,15 @@ public class NGameStages : IStagesDef
         int firstFromLeftToRight    = 0;
         int firstFromRightToLeft    = 0;
         int value                   = -1;
-        int columns                 = IStagesDef.stages.GetLength(2);
-        int clBefore                = (int)(this.PlayerCurrentLine + 3);
-        int clAfter                 = clBefore + 7;
+        int columns                 = STAGES_COLUMNS;
+        int clBefore                = (int)this.PlayerCurrentLine;
+        int clAfter                 = clBefore + 8;
+        bool playerCollided         = false;
+
+        if (clBefore < 0)
+        {
+            clBefore = 0;
+        }
 
         //check 8 lines (each line has 4 pixels, the player has 32 pixels height)
         for (int i = clBefore; i < clAfter; i++) 
@@ -276,22 +290,26 @@ public class NGameStages : IStagesDef
             if ((this.GameRef.GetPlayer().GetXPosition() < (firstFromLeftToRight * PIXEL_WIDTH)) || 
                 (this.GameRef.GetPlayer().GetXPosition() + this.GameRef.GetPlayer().GetSpriteWidth() > (firstFromRightToLeft * PIXEL_WIDTH))) 
             {
+                playerCollided = true;
                 this.GameRef.PlayerCollided();
                 break;
-            } 
+            }
         }
 
-        //calc airplane nose position (begining and ending)
-        short columnP1 = (short)(this.GameRef.GetPlayer().GetAirplaneNoseX() / PIXEL_WIDTH);
-        short columnP2 = (short)(this.GameRef.GetPlayer().GetAirplaneNoseW() / PIXEL_WIDTH);
-
-        //check if the pixel in front of the nose is an obstacle.
-        short p1Value = IStagesDef.stages[CURRENT_STAGE, (int)(this.PlayerCurrentLine + 1), columnP1];
-        short p2Value = IStagesDef.stages[CURRENT_STAGE, (int)(this.PlayerCurrentLine + 1), columnP2];
-        if (!(p1Value == 0 && p2Value == 0))
+        if (!playerCollided && this.PlayerCurrentLine > 0)
         {
-            //if it's an obstacle, collide
-            this.GameRef.PlayerCollided();
+            //calc airplane nose position (begining and ending)
+            short columnP1 = (short)(this.GameRef.GetPlayer().GetAirplaneNoseX() / PIXEL_WIDTH);
+            short columnP2 = (short)(this.GameRef.GetPlayer().GetAirplaneNoseW() / PIXEL_WIDTH);
+
+            //check if the pixel in front of the nose is an obstacle.
+            short p1Value = IStagesDef.stages[CURRENT_STAGE, (int)(this.PlayerCurrentLine), columnP1];
+            short p2Value = IStagesDef.stages[CURRENT_STAGE, (int)(this.PlayerCurrentLine + 1), columnP2];
+            if (!(p1Value == 0 && p2Value == 0))
+            {
+                //if it's an obstacle, collide
+                this.GameRef.PlayerCollided();
+            }
         }
     }
 
@@ -335,9 +353,9 @@ public class NGameStages : IStagesDef
 
         if (this.IsToDrawStageOpening)
         {
-            IntPtr shdc = this.OddOpenStageGraphics.GetHdc();
+            IntPtr shdc = this.CurrentOpenStageGraphics.GetHdc();
             BitmapEx.BitBlt(dhdc, 0, -2, (int)this.RenderAreaWidth, (int)this.RenderAreaHeight, shdc, 0, (int)this.OpeningLineY, BitmapEx.SRCCOPY);
-            this.OddOpenStageGraphics.ReleaseHdc(shdc);
+            this.CurrentOpenStageGraphics.ReleaseHdc(shdc);
         }
 
         if (this.isToDrawCurrentStage)
@@ -356,11 +374,12 @@ public class NGameStages : IStagesDef
 
         gfx.ReleaseHdc(dhdc);
 
+        /*
         //Draw the sprites
         foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopLinePixel < item.Key && this.PlayerBottomLinePixel > item.Key))
         {
             item.Value.Draw(gfx);
-        }
+        }*/
 
         gfx.DrawString(this.PlayerCurrentLine + "", new Font("Arial", 10), Brushes.Black, 0, 20);
         //gfx.DrawString(this.TopOffSetScreenFrame + "", new Font("Arial", 10), Brushes.Black, 200, 220);
@@ -524,6 +543,8 @@ public class NGameStages : IStagesDef
                 this.EvenOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
             }
         }
+
+        this.CurrentOpenStageGraphics = (CURRENT_STAGE % 2 == 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
 
         //release the hdc
         graphics.ReleaseHdc(hdc);
