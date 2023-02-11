@@ -264,12 +264,18 @@ public class NGameStages : IStagesDef
             clBefore = 0;
         }
 
+        int stage = CURRENT_STAGE;
+        if (stage % 2 == 0)
+        {
+            stage = 0;
+        }
+
         //check 8 lines (each line has 4 pixels, the player has 32 pixels height)
         for (int i = clBefore; i < clAfter; i++) 
         {
             for (int j = 0; j < columns; j++) 
             {
-                value = IStagesDef.stages[CURRENT_STAGE, i, j];
+                value = IStagesDef.stages[stage, i, j];
                 if (value == 0) 
                 {
                     firstFromLeftToRight = j;
@@ -279,7 +285,7 @@ public class NGameStages : IStagesDef
 
             for (int j = columns - 1; j > 0; j--) 
             {
-                value = IStagesDef.stages[CURRENT_STAGE, i, j];
+                value = IStagesDef.stages[stage, i, j];
                 if (value == 0) 
                 {
                     firstFromRightToLeft = j + 1;
@@ -303,8 +309,8 @@ public class NGameStages : IStagesDef
             short columnP2 = (short)(this.GameRef.GetPlayer().GetAirplaneNoseW() / PIXEL_WIDTH);
 
             //check if the pixel in front of the nose is an obstacle.
-            short p1Value = IStagesDef.stages[CURRENT_STAGE, (int)(this.PlayerCurrentLine), columnP1];
-            short p2Value = IStagesDef.stages[CURRENT_STAGE, (int)(this.PlayerCurrentLine + 1), columnP2];
+            short p1Value = IStagesDef.stages[stage, (int)(this.PlayerCurrentLine), columnP1];
+            short p2Value = IStagesDef.stages[stage, (int)(this.PlayerCurrentLine + 1), columnP2];
             if (!(p1Value == 0 && p2Value == 0))
             {
                 //if it's an obstacle, collide
