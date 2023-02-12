@@ -41,6 +41,7 @@ public class NGameStages : IStagesDef
     private volatile float PlayerCurrentLinePixel           = 0;
     private volatile float PlayerTopLinePixel               = 0;
     private volatile float PlayerBottomLinePixel            = 0;
+    private volatile float PlayerCurrentLineInv        = 0;
     private short LinesInCurrentStage                       = 0;
     private short LinesInNextStage                          = 0;
     private float RenderAreaWidth                           = 0;
@@ -85,6 +86,7 @@ public class NGameStages : IStagesDef
         this.ScaledPixelHeight              = this.ScaleH * PIXEL_HEIGHT;
 
         //112 = 97 (screen lines before current line) + 15 lines (60 pixels, max sprite height)
+        this.PlayerCurrentLineInv      = (this.PlayerCurrentLine - 97);
         this.PlayerCurrentLinePixel         = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
         this.PlayerTopLinePixel             = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
         this.PlayerBottomLinePixel          = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
@@ -187,6 +189,7 @@ public class NGameStages : IStagesDef
                     //calc next step
                     this.CurrentLineY           -= step;
                     this.PlayerCurrentLine      -= step * this.InvertedScaleInvertedPixelH;
+                    this.PlayerCurrentLineInv   -= step * this.InvertedScaleInvertedPixelH;
                     this.PlayerCurrentLinePixel -= stepInv;
                     this.PlayerTopLinePixel     -= stepInv;
                     this.PlayerBottomLinePixel  -= stepInv;
@@ -210,24 +213,25 @@ public class NGameStages : IStagesDef
                     if (!this.isToDrawCurrentStage)
                     {
                         //TODO: verify if the next stage exists
-                        this.CURRENT_STAGE          += 1;
-                        this.NEXT_STAGE             = (short)(this.CURRENT_STAGE + 1);
+                        this.CURRENT_STAGE              += 1;
+                        this.NEXT_STAGE                 = (short)(this.CURRENT_STAGE + 1);
                         
                         //Swap current elements with next
-                        this.isToDrawNextStage      = false;
-                        this.isToDrawCurrentStage   = true;
+                        this.isToDrawNextStage          = false;
+                        this.isToDrawCurrentStage       = true;
 
-                        this.CurrentStageImage      = this.NextStageImage;
-                        this.CurrentStageGraphics   = this.NextStageGraphics;
-                        this.CurrentLineY           = this.NextLineY;
-                        this.CurrentLineDestY       = this.NextLineDestY;
+                        this.CurrentStageImage          = this.NextStageImage;
+                        this.CurrentStageGraphics       = this.NextStageGraphics;
+                        this.CurrentLineY               = this.NextLineY;
+                        this.CurrentLineDestY           = this.NextLineDestY;
 
-                        this.PlayerCurrentLine      = (this.CURRENT_STAGE % 2 == 0)?EVEN_PLAYER_ORIG_LINE:ODD_PLAYER_ORIG_LINE;
-                        this.PlayerCurrentLinePixel = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
-                        this.PlayerTopLinePixel     = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
-                        this.PlayerBottomLinePixel  = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
+                        this.PlayerCurrentLine          = (this.CURRENT_STAGE % 2 == 0)?EVEN_PLAYER_ORIG_LINE:ODD_PLAYER_ORIG_LINE;
+                        this.PlayerCurrentLinePixel     = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
+                        this.PlayerCurrentLineInv  = (this.PlayerCurrentLine - 97);
+                        this.PlayerTopLinePixel         = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
+                        this.PlayerBottomLinePixel      = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
 
-                        this.CurrentOpenStageGraphics = (CURRENT_STAGE % 2 == 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
+                        this.CurrentOpenStageGraphics   = (CURRENT_STAGE % 2 == 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
 
                         //Load the next elements (async)
                         Task task = LoadNextStage();
@@ -388,7 +392,7 @@ public class NGameStages : IStagesDef
         }*/
 
         gfx.DrawString(this.PlayerCurrentLine + "", new Font("Arial", 10), Brushes.Black, 0, 20);
-        //gfx.DrawString(this.TopOffSetScreenFrame + "", new Font("Arial", 10), Brushes.Black, 200, 220);
+        gfx.DrawString(this.PlayerCurrentLineInv + "", new Font("Arial", 10), Brushes.Black, 0, 40);
         //gfx.DrawString(this.EndScreenFrame + "", new Font("Arial", 10), Brushes.Black, 200, 240);
         //gfx.DrawString(this.EndScreenFrame + "", new Font("Arial", 10), Brushes.Black, 200, 260);
     }
