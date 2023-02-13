@@ -51,8 +51,8 @@ public class StaticSprite : GameSprite
      */
     public override void Update(long frametime, bool colliding = false) {
             
-        this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
-        this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
+        this.SourceRect = new RectangleF(0, 0, this.Width, this.Height);
+        this.DestineRect = new RectangleF(this.X, this.Y, this.Width, this.Height);
 
         if (!this.Destroyed && this.Type == FUEL) 
         {
