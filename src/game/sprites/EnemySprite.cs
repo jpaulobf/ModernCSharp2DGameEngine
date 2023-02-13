@@ -140,8 +140,8 @@ public class EnemySprite : GameSprite
         }
         
         //set the source & dest sprite rectangles
-        this.SourceRect  = new Rectangle(this.SourceStartX, this.SourceStartY, (short)this.Width, (short)this.Height);
-        this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);
+        this.SourceRect  = new RectangleF(this.SourceStartX, this.SourceStartY, this.Width, this.Height);
+        this.DestineRect = new RectangleF(this.X, this.Y, this.Width, this.Height);
 
         //verify if the player sprite is coliding with this current
         if ((!colliding) && !this.Destroyed && this.CollisionDetection(this.GameRef.GetPlayer().GetPlayerSprite())) 
