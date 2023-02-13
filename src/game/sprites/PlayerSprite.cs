@@ -60,8 +60,8 @@ public class PlayerSprite : GameSprite
         }
 
         //define the source & destine rect
-        this.SourceRect = new Rectangle(SourceStartX, SourceStartY, (short)Width - 1, (short)Height);
-        this.DestineRect = new Rectangle((short)X, (short)Y, (short)Width, (short)Height);
+        this.SourceRect = new RectangleF(SourceStartX, SourceStartY, Width - 1, Height);
+        this.DestineRect = new RectangleF(X, Y, Width, Height);
     }
 
     /**
