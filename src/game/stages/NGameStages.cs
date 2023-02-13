@@ -41,7 +41,7 @@ public class NGameStages : IStagesDef
     private volatile float PlayerCurrentLinePixel           = 0;
     private volatile float PlayerTopLinePixel               = 0;
     private volatile float PlayerBottomLinePixel            = 0;
-    private volatile float PlayerCurrentLineInv        = 0;
+    private volatile float PlayerCurrentLineInv             = 0;
     private short LinesInCurrentStage                       = 0;
     private short LinesInNextStage                          = 0;
     private float RenderAreaWidth                           = 0;
@@ -86,7 +86,7 @@ public class NGameStages : IStagesDef
         this.ScaledPixelHeight              = this.ScaleH * PIXEL_HEIGHT;
 
         //112 = 97 (screen lines before current line) + 15 lines (60 pixels, max sprite height)
-        this.PlayerCurrentLineInv      = (this.PlayerCurrentLine - 97);
+        this.PlayerCurrentLineInv           = (this.PlayerCurrentLine - 97);
         this.PlayerCurrentLinePixel         = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
         this.PlayerTopLinePixel             = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
         this.PlayerBottomLinePixel          = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
@@ -193,8 +193,7 @@ public class NGameStages : IStagesDef
                     this.PlayerCurrentLinePixel -= stepInv;
                     this.PlayerTopLinePixel     -= stepInv;
                     this.PlayerBottomLinePixel  -= stepInv;
-                
-                
+
                     //update draw stage opening flag
                     this.isToDrawCurrentStage = (this.CurrentLineY > -this.RenderAreaHeight)?true:false;
 
@@ -227,7 +226,7 @@ public class NGameStages : IStagesDef
 
                         this.PlayerCurrentLine          = (this.CURRENT_STAGE % 2 == 0)?EVEN_PLAYER_ORIG_LINE:ODD_PLAYER_ORIG_LINE;
                         this.PlayerCurrentLinePixel     = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
-                        this.PlayerCurrentLineInv  = (this.PlayerCurrentLine - 97);
+                        this.PlayerCurrentLineInv       = (this.PlayerCurrentLine - 97);
                         this.PlayerTopLinePixel         = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
                         this.PlayerBottomLinePixel      = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
 
@@ -240,13 +239,12 @@ public class NGameStages : IStagesDef
             }
         }
 
-        /*
         //if exist an sprite in the current screen frame, update it
         foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopLinePixel < item.Key && this.PlayerBottomLinePixel > item.Key)) 
         {
             item.Value.Y = (item.Key - this.PlayerCurrentLinePixel) + this.Offset;
             item.Value.Update(frametime, colliding);
-        }*/
+        }
     }
 
 
@@ -384,16 +382,15 @@ public class NGameStages : IStagesDef
 
         gfx.ReleaseHdc(dhdc);
 
-        /*
         //Draw the sprites
         foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopLinePixel < item.Key && this.PlayerBottomLinePixel > item.Key))
         {
             item.Value.Draw(gfx);
-        }*/
+        }
 
         gfx.DrawString(this.PlayerCurrentLine + "", new Font("Arial", 10), Brushes.Black, 0, 20);
         gfx.DrawString(this.PlayerCurrentLineInv + "", new Font("Arial", 10), Brushes.Black, 0, 40);
-        //gfx.DrawString(this.EndScreenFrame + "", new Font("Arial", 10), Brushes.Black, 200, 240);
+        //gfx.DrawString(this.PlayerCurrentLinePixel + "", new Font("Arial", 10), Brushes.Black, 0, 60);
         //gfx.DrawString(this.EndScreenFrame + "", new Font("Arial", 10), Brushes.Black, 200, 260);
     }
 
