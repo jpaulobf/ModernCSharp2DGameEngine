@@ -50,8 +50,8 @@ public class Shot : GameSprite
         {
             float step = frametime * 0.00006f; //(float)(this.Velocity * ((double)frametime / 10_000_000));
             this.Y -= step;
-            this.SourceRect = new Rectangle(0, 0, (short)this.Width, (short)this.Height);
-            this.DestineRect = new Rectangle((short)this.X, (short)this.Y, (short)this.Width, (short)this.Height);       
+            this.SourceRect = new RectangleF(0, 0, this.Width, this.Height);
+            this.DestineRect = new RectangleF(this.X, this.Y, this.Width, this.Height);       
 
             this.StartDelay         = true;
 
