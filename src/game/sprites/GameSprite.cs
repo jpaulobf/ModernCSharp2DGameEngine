@@ -12,8 +12,8 @@ public abstract class GameSprite
 {
     protected const bool NORMAL         = true;
     protected const bool REVERSED       = false;
-    protected short SourceStartX        = 0;
-    protected short SourceStartY        = 0;
+    protected float SourceStartX        = 0;
+    protected float SourceStartY        = 0;
     protected byte TilesNumber          = 1;
     protected uint MillisecsPerTile     = 0;
     internal float OgX                  = 0;
@@ -29,8 +29,8 @@ public abstract class GameSprite
     public float Width                  { get; set; }
     public float Height                 { get; set; }
     public int Velocity                 { get; set; }
-    protected Rectangle SourceRect;
-    protected Rectangle DestineRect;
+    protected RectangleF SourceRect;
+    protected RectangleF DestineRect;
 
     //sprite types
     public const byte HOUSE             = 1;
