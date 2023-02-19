@@ -174,7 +174,11 @@ public interface IGame
      */
     public void SkipRenderOnce();
 
+    /**
+     * Get the HUD Object
+     */
     public HUD GetHUD();
 
+    
     public bool IsShotCollidingWithBackground(GameSprite sprite);
 }
