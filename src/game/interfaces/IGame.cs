@@ -179,6 +179,8 @@ public interface IGame
      */
     public HUD GetHUD();
 
-    
+    /**
+     * Verify if the shot is colliding with the background
+     */
     public bool IsShotCollidingWithBackground(GameSprite sprite);
 }
