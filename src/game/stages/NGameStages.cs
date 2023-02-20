@@ -62,8 +62,8 @@ public class NGameStages : IStagesDef
     private volatile bool CanStartStageOpening              = true;
     private volatile bool CanStartTheStage                  = false;
     private volatile bool IsStageRunning                    = false;
-    private Dictionary<int, GameSprite> CurrentStageSpritesDefinition = new Dictionary<int, GameSprite>();
-    private Dictionary<int, GameSprite> NextStageSpritesDefinition    = new Dictionary<int, GameSprite>();
+    private Dictionary<float, GameSprite> CurrentStageSpritesDefinition = new Dictionary<float, GameSprite>();
+    private Dictionary<float, GameSprite> NextStageSpritesDefinition    = new Dictionary<float, GameSprite>();
     private List<GameSprite> CurrentStageSprites;
     private List<GameSprite> NextStageSprites;
     private RectangleF DrawRect = new RectangleF(0f, 0f, PIXEL_WIDTH, PIXEL_HEIGHT);
@@ -242,7 +242,7 @@ public class NGameStages : IStagesDef
         //if exist an sprite in the current screen frame, update it
         foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopLinePixel < item.Key && this.PlayerBottomLinePixel > item.Key)) 
         {
-            item.Value.Y = (item.Key - this.PlayerCurrentLinePixel) + this.Offset;
+            item.Value.Y = (float)((float)item.Key - (float)this.PlayerCurrentLinePixel) + (float)this.Offset;
             item.Value.Update(frametime, colliding);
         }
     }
@@ -388,8 +388,8 @@ public class NGameStages : IStagesDef
             item.Value.Draw(gfx);
         }
 
-        gfx.DrawString(this.PlayerCurrentLine + "", new Font("Arial", 10), Brushes.Black, 0, 20);
-        gfx.DrawString(this.PlayerCurrentLineInv + "", new Font("Arial", 10), Brushes.Black, 0, 40);
+        //gfx.DrawString(this.PlayerCurrentLine + "", new Font("Arial", 10), Brushes.Black, 0, 20);
+        //gfx.DrawString(this.PlayerCurrentLineInv + "", new Font("Arial", 10), Brushes.Black, 0, 40);
         //gfx.DrawString(this.PlayerCurrentLinePixel + "", new Font("Arial", 10), Brushes.Black, 0, 60);
         //gfx.DrawString(this.EndScreenFrame + "", new Font("Arial", 10), Brushes.Black, 200, 260);
     }
@@ -457,7 +457,7 @@ public class NGameStages : IStagesDef
      */
     private void LoadSpriteListForSpecifiedStage(short stage)
     {
-        Dictionary<int, GameSprite> temp = (stage == CURRENT_STAGE)?this.CurrentStageSpritesDefinition:this.NextStageSpritesDefinition;
+        Dictionary<float, GameSprite> temp = (stage == CURRENT_STAGE)?this.CurrentStageSpritesDefinition:this.NextStageSpritesDefinition;
         for (short i = 0; i < IStagesDef.StagesSpritesConfig.GetLength(1); i++)
         {
             temp.Add(IStagesDef.StagesSpritesConfig[stage, i, 0],
