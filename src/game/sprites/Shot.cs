@@ -52,10 +52,7 @@ public class Shot : GameSprite
             this.Y -= step;
             this.SourceRect = new RectangleF(0, 0, this.Width, this.Height);
             this.DestineRect = new RectangleF(this.X, this.Y, this.Width, this.Height);       
-
-            this.StartDelay         = true;
-
-            /*
+           
             //check if bullet collides with bg
             if (this.GameRef.IsShotCollidingWithBackground(this))
             {
@@ -65,13 +62,13 @@ public class Shot : GameSprite
             else if (this.Y + 20 < 0) 
             {
                 this.UpdateShotToHitOrLoose();
-            } 
+            }
             //check if bullet collides with one sprite
             else 
             {
                 foreach (var item in this.GameRef.GetCurrentScreenSprites()) 
                 {
-                    if (this.CollisionDetection(item) && !item.Destroyed) 
+                    if (!item.Destroyed && this.CollisionDetection(item)) 
                     {
                         item.SetCollision(false);
                         this.GameRef.UpdateScore(item.Type);
@@ -81,7 +78,6 @@ public class Shot : GameSprite
                     }
                 }
             }
-            */
         }
 
         if (this.StartDelay) {
