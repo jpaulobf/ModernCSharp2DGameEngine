@@ -29,16 +29,16 @@ public class NGameStages : IStagesDef
     private const short PIXEL_WIDTH                         = 18;
     private const byte PIXEL_HEIGHT                         = 4;
     private const byte STAGES_COLUMNS                       = 41;
-    private const short MAX_STAGES                          = 2;
-    private short CURRENT_STAGE                             = 0;
-    private short NEXT_STAGE                                = 1;
+    private const short MAX_STAGES                          = 3;
+    private short CURRENT_STAGE                             = 1;
+    private short NEXT_STAGE;
     private const byte OPENING_LINES                        = 108;
     private const byte SCREEN_LINES                         = 108;
-    private const short EVEN_STAGES_LINES                   = 587;
-    private const short ODD_STAGES_LINES                    = 616;
-    private const short EVEN_PLAYER_ORIG_LINE               = 576;
-    private const short ODD_PLAYER_ORIG_LINE                = 605;
-    private volatile float PlayerCurrentLine                = EVEN_PLAYER_ORIG_LINE;
+    private const short EVEN_STAGES_LINES                   = 616;
+    private const short ODD_STAGES_LINES                    = 587;
+    private const short EVEN_PLAYER_ORIG_LINE               = 605;
+    private const short ODD_PLAYER_ORIG_LINE                = 576;
+    private volatile float PlayerCurrentLine;
     private volatile float PlayerTopScreenLinePixel         = 0f;
     private volatile float PlayerTopScreenLinePixelOffSet   = 0f;
     private volatile float PlayerBottomScreenLinePixel      = 0f;
@@ -48,9 +48,6 @@ public class NGameStages : IStagesDef
     private short LinesInNextStage                          = 0;
     private float RenderAreaWidth                           = 0f;
     private float RenderAreaHeight                          = 0f;
-    //private volatile int TopOffSetScreenFrame               = 0;
-    //private volatile int EndScreenFrame                     = 0;
-    //private volatile int TopScreenFrame                     = 0;
     private volatile float OpeningLineY                     = 0f;
     private volatile float CurrentLineDestY                 = 0f;
     private volatile float NextLineY                        = 0f;
@@ -76,6 +73,10 @@ public class NGameStages : IStagesDef
     {
         //store the game reference
         this.GameRef = gameRef;
+
+        //update next_stage
+        this.NEXT_STAGE                         = (short)(this.CURRENT_STAGE + 1);
+        this.PlayerCurrentLine                  = (CURRENT_STAGE % 2 == 0)?EVEN_PLAYER_ORIG_LINE:ODD_PLAYER_ORIG_LINE;
 
         //calc the scale
         this.ScaleW                             = (float)((float)this.GameRef.WindowSize.Width / (float)this.GameRef.GetInternalResolutionWidth());
@@ -231,7 +232,7 @@ public class NGameStages : IStagesDef
                         this.PlayerTopScreenLinePixelOffSet     = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
                         this.PlayerBottomScreenLinePixel        = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
 
-                        this.CurrentOpenStageGraphics           = (CURRENT_STAGE % 2 == 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
+                        this.CurrentOpenStageGraphics           = (CURRENT_STAGE % 2 != 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
 
                         //Load the next elements (async)
                         Task task = LoadNextStage();
@@ -248,6 +249,25 @@ public class NGameStages : IStagesDef
         }
     }
 
+    private short GetOpeningDefinitionValue(int stage, int line, int column)
+    {
+        int temp = 0;
+        if (stage % 2 == 0)
+        {
+            temp = 1;
+        }
+        return (IStagesDef.opening[temp, line, column]);
+    }
+
+    private short GetStageDefinitionValue(int stage, int line, int column)
+    {
+        int temp = 0;
+        if (stage % 2 == 0)
+        {
+            temp = stage / 2;
+        }
+        return (IStagesDef.stages[temp, line, column]);
+    }
 
     /**
      * Verify if the player is colliding with the background
@@ -267,18 +287,12 @@ public class NGameStages : IStagesDef
             clBefore = 0;
         }
 
-        int stage = CURRENT_STAGE;
-        if (stage % 2 == 0)
-        {
-            stage = 0;
-        }
-
         //check 8 lines (each line has 4 pixels, the player has 32 pixels height)
         for (int i = clBefore; i < clAfter; i++) 
         {
             for (int j = 0; j < columns; j++) 
             {
-                value = IStagesDef.stages[stage, i, j];
+                value = this.GetStageDefinitionValue(CURRENT_STAGE, i, j);
                 if (value == 0) 
                 {
                     firstFromLeftToRight = j;
@@ -288,7 +302,7 @@ public class NGameStages : IStagesDef
 
             for (int j = columns - 1; j > 0; j--) 
             {
-                value = IStagesDef.stages[stage, i, j];
+                value = this.GetStageDefinitionValue(CURRENT_STAGE, i, j);
                 if (value == 0) 
                 {
                     firstFromRightToLeft = j + 1;
@@ -312,8 +326,8 @@ public class NGameStages : IStagesDef
             short columnP2 = (short)(this.GameRef.GetPlayer().GetAirplaneNoseW() / PIXEL_WIDTH);
 
             //check if the pixel in front of the nose is an obstacle.
-            short p1Value = IStagesDef.stages[stage, (int)(this.PlayerCurrentLine), columnP1];
-            short p2Value = IStagesDef.stages[stage, (int)(this.PlayerCurrentLine + 1), columnP2];
+            short p1Value = this.GetStageDefinitionValue(CURRENT_STAGE, (int)(this.PlayerCurrentLine), columnP1);
+            short p2Value = this.GetStageDefinitionValue(CURRENT_STAGE, (int)(this.PlayerCurrentLine + 1), columnP2);
             if (!(p1Value == 0 && p2Value == 0))
             {
                 //if it's an obstacle, collide
@@ -349,15 +363,15 @@ public class NGameStages : IStagesDef
         //check the current value of both pixels (column1 & line) && (column2 && line)
         if (pixelToCheck >= 0) 
         {
-            currentValue1 = IStagesDef.stages[CURRENT_STAGE, pixelToCheck, column1];
-            currentValue2 = IStagesDef.stages[CURRENT_STAGE, pixelToCheck, column2];
+            currentValue1 = this.GetStageDefinitionValue(CURRENT_STAGE, pixelToCheck, column1);
+            currentValue2 = this.GetStageDefinitionValue(CURRENT_STAGE, pixelToCheck, column2);
         } 
         else
         {
             if (NEXT_STAGE <= MAX_STAGES && NEXT_STAGE % 2 != 0)
             {
-                currentValue1 = IStagesDef.stages[NEXT_STAGE, this.LinesInNextStage + pixelToCheck, column1];
-                currentValue2 = IStagesDef.stages[NEXT_STAGE, this.LinesInNextStage + pixelToCheck, column2];
+                currentValue1 = this.GetStageDefinitionValue(NEXT_STAGE, this.LinesInNextStage + pixelToCheck, column1);
+                currentValue2 = this.GetStageDefinitionValue(NEXT_STAGE, this.LinesInNextStage + pixelToCheck, column2);
             }
         }
 
@@ -477,6 +491,7 @@ public class NGameStages : IStagesDef
     private void LoadSpriteListForSpecifiedStage(short stage)
     {
         Dictionary<float, GameSprite> temp = (stage == CURRENT_STAGE)?this.CurrentStageSpritesDefinition:this.NextStageSpritesDefinition;
+        stage = (short)(stage - 1);
         for (short i = 0; i < IStagesDef.StagesSpritesConfig.GetLength(1); i++)
         {
             temp.Add(IStagesDef.StagesSpritesConfig[stage, i, 0],
@@ -559,19 +574,33 @@ public class NGameStages : IStagesDef
         {
             for (int j = 0; j < STAGES_COLUMNS; j++) 
             {
-                short renderBlock = IStagesDef.opening[CURRENT_STAGE, i, j];
+                short renderBlock = this.GetOpeningDefinitionValue(CURRENT_STAGE, i, j);
                 this.DrawRect.X =  j * PIXEL_WIDTH;
                 this.DrawRect.Y = (i * PIXEL_HEIGHT);
-                this.OddOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
-
-                renderBlock = IStagesDef.opening[NEXT_STAGE, i, j];
+                if (CURRENT_STAGE % 2 != 0)
+                {
+                    this.OddOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
+                }
+                else
+                {
+                    this.EvenOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
+                }
+                
+                renderBlock = this.GetOpeningDefinitionValue(NEXT_STAGE, i, j);
                 this.DrawRect.X =  j * PIXEL_WIDTH;
                 this.DrawRect.Y = (i * PIXEL_HEIGHT);
-                this.EvenOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
+                if (NEXT_STAGE % 2 != 0)
+                {
+                    this.OddOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
+                }
+                else
+                {
+                    this.EvenOpenStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
+                }
             }
         }
 
-        this.CurrentOpenStageGraphics = (CURRENT_STAGE % 2 == 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
+        this.CurrentOpenStageGraphics = (CURRENT_STAGE % 2 != 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
 
         //release the hdc
         graphics.ReleaseHdc(hdc);
@@ -597,7 +626,7 @@ public class NGameStages : IStagesDef
         {
             for (int j = 0; j < STAGES_COLUMNS; j++) 
             {
-                short renderBlock = IStagesDef.stages[CURRENT_STAGE, i, j];
+                short renderBlock = this.GetStageDefinitionValue(CURRENT_STAGE, i, j);
                 this.DrawRect.X =  j * PIXEL_WIDTH;
                 this.DrawRect.Y = (i * PIXEL_HEIGHT);
                 this.CurrentStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
@@ -622,18 +651,12 @@ public class NGameStages : IStagesDef
         //scale if necessary
         this.NextStageGraphics.ScaleTransform(this.ScaleW, this.ScaleH);
 
-        int stage = NEXT_STAGE;
-        if (stage % 2 == 0)
-        {
-            stage = 0;
-        }
-
         //render
         for (int i = 0; i < this.LinesInNextStage; i++) 
         {
             for (int j = 0; j < STAGES_COLUMNS; j++) 
             {
-                short renderBlock = IStagesDef.stages[stage, i, j];
+                short renderBlock = this.GetStageDefinitionValue(NEXT_STAGE, i, j);
                 this.DrawRect.X =  j * PIXEL_WIDTH;
                 this.DrawRect.Y = (i * PIXEL_HEIGHT);
                 this.NextStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
