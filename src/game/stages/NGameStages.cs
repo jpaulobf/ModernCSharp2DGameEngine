@@ -236,6 +236,12 @@ public class NGameStages : IStagesDef
 
                         //Load the next elements (async)
                         Task task = LoadNextStage();
+                        
+                        //Swap current sprites with the next stage sprites
+                        this.CurrentStageSpritesDefinition = this.NextStageSpritesDefinition;
+                        this.CurrentStageSprites = this.NextStageSprites;
+
+                        //TODO: Load next stage sprites
                     }              
                 }
             }
