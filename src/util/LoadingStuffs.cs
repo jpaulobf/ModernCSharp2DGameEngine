@@ -62,6 +62,9 @@ public class LoadingStuffs
             image = BitmapEx.New("img\\shot_sprite.png");
             Images.Add("shot", image);
 
+            image = BitmapEx.New("img\\bridge.png");
+            Images.Add("bridge", image);
+
             image = BitmapEx.New("img\\airplanetile.png");
             Images.Add("airplane-tile", image);
 
