@@ -255,26 +255,6 @@ public class NGameStages : IStagesDef
         }
     }
 
-    private short GetOpeningDefinitionValue(int stage, int line, int column)
-    {
-        int temp = 0;
-        if (stage % 2 == 0)
-        {
-            temp = 1;
-        }
-        return (IStagesDef.opening[temp, line, column]);
-    }
-
-    private short GetStageDefinitionValue(int stage, int line, int column)
-    {
-        int temp = 0;
-        if (stage % 2 == 0)
-        {
-            temp = stage / 2;
-        }
-        return (IStagesDef.stages[temp, line, column]);
-    }
-
     /**
      * Verify if the player is colliding with the background
      */
@@ -480,6 +460,32 @@ public class NGameStages : IStagesDef
         this.OpeningLineY       = (OPENING_LINES - SCREEN_LINES) * PIXEL_HEIGHT * this.ScaleH;
         this.NextLineY          = (this.LinesInNextStage - SCREEN_LINES) * PIXEL_HEIGHT * this.ScaleH;
         this.NextLineDestY      = this.NextLineY - ((this.LinesInNextStage) * PIXEL_HEIGHT * this.ScaleH);
+    }
+
+    /**
+     * Retrieve the values from the Opening Array (controlling the stage counter)
+     */
+    private short GetOpeningDefinitionValue(int stage, int line, int column)
+    {
+        int temp = 0;
+        if (stage % 2 == 0)
+        {
+            temp = 1;
+        }
+        return (IStagesDef.opening[temp, line, column]);
+    }
+
+    /**
+     * Retrieve the values from the Stages Array (controlling the stage counter)
+     */
+    private short GetStageDefinitionValue(int stage, int line, int column)
+    {
+        int temp = 0;
+        if (stage % 2 == 0)
+        {
+            temp = stage / 2;
+        }
+        return (IStagesDef.stages[temp, line, column]);
     }
 
     /**
