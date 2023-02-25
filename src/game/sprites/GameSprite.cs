@@ -18,6 +18,8 @@ public abstract class GameSprite
     protected uint MillisecsPerTile     = 0;
     internal float OgX                  = 0;
     internal float OgY                  = 0;
+    protected bool AnimateExplosion     = false;
+    protected long AnimationCounter     = 0;
     public byte Type                    { get; set; }
     public bool Destroyed               { get; set; } = false;
     public bool RenderReversed          { get; set; }
@@ -64,6 +66,13 @@ public abstract class GameSprite
         
         // Set sprite Velocity
         this.Velocity = velocity;
+    }
+
+    public void SetDestroyed()
+    {
+        this.SpriteImage        = this.Pixel;
+        this.AnimateExplosion   = false;
+        this.AnimationCounter   = 0;
     }
 
     /**
