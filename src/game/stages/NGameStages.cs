@@ -238,10 +238,12 @@ public class NGameStages : IStagesDef
                         Task task = LoadNextStage();
                         
                         //Swap current sprites with the next stage sprites
-                        this.CurrentStageSpritesDefinition = this.NextStageSpritesDefinition;
-                        this.CurrentStageSprites = this.NextStageSprites;
+                        this.CurrentStageSpritesDefinition      = this.NextStageSpritesDefinition;
+                        this.CurrentStageSprites                = this.NextStageSprites;
 
                         //TODO: Load next stage sprites
+                        this.NextStageSpritesDefinition         = new Dictionary<float, GameSprite>();
+                        this.NextStageSprites                   = new List<GameSprite>();
                     }              
                 }
             }
@@ -410,7 +412,6 @@ public class NGameStages : IStagesDef
         gfx.DrawString("Bottom * Pixel: " + this.PlayerBottomScreenLinePixel + "", new Font("Arial", 10), Brushes.Black, 0, 100);
         gfx.DrawString("Top * Pixel * Scale: " + this.PlayerTopScreenLinePixelScaled + "", new Font("Arial", 10), Brushes.Black, 0, 120);
         */
-
     }
 
     /**
@@ -551,6 +552,11 @@ public class NGameStages : IStagesDef
         foreach (var item in this.CurrentStageSpritesDefinition) 
         {
             item.Value.Reset();
+            if (item.Value.Type == GameSprite.BRIDGE)
+            {
+                item.Value.Destroyed = true;
+                item.Value.SetDestroyed();
+            }
         }
 
         foreach (var item in this.NextStageSpritesDefinition) 
