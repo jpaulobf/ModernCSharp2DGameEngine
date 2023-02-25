@@ -50,7 +50,7 @@ public class GameController : IGame
     private volatile bool SkipRender        = false;
     private Point PausePoint;
     private HUD Hud;
-    private NGameStages Stages;
+    private GameStages Stages;
     private Player Player;
     private Score Score;
     private Menu Menu;
@@ -517,7 +517,7 @@ public class GameController : IGame
         this.Hud                = new HUD(this);
         this.Score              = new Score(this);
         this.GameOver           = new GameOver(this);
-        this.Stages            = new NGameStages(this);
+        this.Stages            = new GameStages(this);
         this.Exit               = new Exit(this);
     }
 
@@ -643,7 +643,7 @@ public class GameController : IGame
     public float GetScaleH()                                    {   return (this.ScaleH);                           }
     public Player GetPlayer()                                   {   return (this.Player);                           }
     public bool GetTerminateStatus()                            {   return (this.Terminate);                        }
-    public NGameStages GetStages()                              {   return (this.Stages);                           }
+    public GameStages GetStages()                              {   return (this.Stages);                           }
     public HUD GetHUD()                                         {   return (this.Hud);                              }
 
     /**
