@@ -50,7 +50,7 @@ public interface IStagesDef
                                                                       {107, GameSprite.HELI,    288, 0, 198, 540, GameSprite.RIGHT},
                                                                       {41, GameSprite.SHIP,     320, 0, 288, 450, GameSprite.LEFT}},
                                                                     
-                                                                     {{2338, GameSprite.HOUSE,  577, 0, 0, 0, 0},
+                                                                     {{2413, GameSprite.BRIDGE, 288, 0, 0, 0, 0},
                                                                       {2300, GameSprite.HOUSE2, 98,  0, 0, 0, 0},
                                                                       {2278, GameSprite.SHIP,   394, 1, 0, 0, 0},
                                                                       {2184, GameSprite.HOUSE,  597, 0, 0, 0, 0},
