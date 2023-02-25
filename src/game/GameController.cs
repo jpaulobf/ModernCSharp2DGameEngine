@@ -50,15 +50,13 @@ public class GameController : IGame
     private volatile bool SkipRender        = false;
     private Point PausePoint;
     private HUD Hud;
-    private GameStages Stages;
+    private NGameStages Stages;
     private Player Player;
     private Score Score;
     private Menu Menu;
     private Options Options;
     private GameOver GameOver;
     private Exit Exit;
-    private NGameStages NStages;
-    private bool newGS = true;
     
     /**
      * Game constructor
@@ -165,19 +163,13 @@ public class GameController : IGame
                 }
                 
                 this.Hud.Update(frametime);
-                if (newGS)
-                    this.NStages.Update(frametime);
-                else 
-                    this.Stages.Update(frametime);
+                this.Stages.Update(frametime);
                 this.Player.Update(frametime);
                 this.Score.Update(frametime);
             } 
             else if (this.Player.Colliding)
             {
-                if (newGS)
-                    this.NStages.Update(frametime, this.Player.Colliding);
-                else 
-                    this.Stages.Update(frametime, this.Player.Colliding);
+                this.Stages.Update(frametime, this.Player.Colliding);
             }
 
             //if the player hit something, resetcounter will start
@@ -228,11 +220,7 @@ public class GameController : IGame
                 {
                     
                     //draw the stage bg & enemies
-                    if (newGS)
-                        this.NStages.Draw(this.InternalGraphics);
-                    else
-                        //draw the stage bg & enemies
-                        this.Stages.Draw(this.InternalGraphics);
+                    this.Stages.Draw(this.InternalGraphics);
 
                     //draw the HUD
                     this.Hud.Draw(this.InternalGraphics);
@@ -248,11 +236,8 @@ public class GameController : IGame
                 }
                 else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
                 {
-                    if (newGS)
-                        this.NStages.Draw(this.InternalGraphics);
-                    else
-                        //draw the stage bg & enemies
-                        this.Stages.Draw(this.InternalGraphics);
+                    //draw the stage bg & enemies
+                    this.Stages.Draw(this.InternalGraphics);
 
                     //draw the HUD
                     this.Hud.Draw(this.InternalGraphics);
@@ -342,10 +327,7 @@ public class GameController : IGame
             {
                 if (this.ShowPlayerSprite) 
                 {
-                    if (newGS)
-                        this.NStages.Start();
-                    else
-                        this.Stages.Start();
+                    this.Stages.Start();
                     this.Player.Flying = true;
                 }
             }
@@ -447,10 +429,7 @@ public class GameController : IGame
      */
     private void ResetAfterCollision()
     {
-        if (newGS)
-            this.NStages.Reset();
-        else
-            this.Stages.Reset();
+        this.Stages.Reset();
         this.Player.Reset(false);
         this.Hud.Reset();
         this.Player.Colliding   = false;
@@ -489,10 +468,7 @@ public class GameController : IGame
         this.Framecounter               = 0;
         this.Hud.Reset();
         this.Score.Reset();
-        if (newGS)
-            this.NStages.Reset();
-        else
-            this.Stages.Reset();
+        this.Stages.Reset();
         this.Player.Reset();
     }
 
@@ -541,8 +517,7 @@ public class GameController : IGame
         this.Hud                = new HUD(this);
         this.Score              = new Score(this);
         this.GameOver           = new GameOver(this);
-        this.Stages             = new GameStages(this);
-        this.NStages            = new NGameStages(this);
+        this.Stages            = new NGameStages(this);
         this.Exit               = new Exit(this);
     }
 
@@ -575,14 +550,7 @@ public class GameController : IGame
 
     public bool IsShotCollidingWithBackground(GameSprite sprite)
     {
-        if (newGS)
-        {
-            return (this.NStages.IsShotCollidingWithBackground(sprite));
-        }
-        else
-        {
-            return (this.Stages.IsShotCollidingWithBackground(sprite));
-        }
+        return (this.Stages.IsShotCollidingWithBackground(sprite));
     }
 
     /**
@@ -661,26 +629,12 @@ public class GameController : IGame
     private void NextStage()
     {
         this.Reset();
-        if (newGS)
-        {
-            this.NStages.ControlLinesCount();
-        }
-        else
-        {
-            this.Stages.ControlStageLinesCount();
-        }
+        this.Stages.ControlLinesCount();
     }
     
     //Accessors
     public IEnumerable<GameSprite> GetCurrentScreenSprites()    {  
-        if (newGS)
-        {
-            return (this.NStages.GetSpritesInScreen());
-        }
-        else 
-        {
-            return (this.Stages.GetCurrentScreenSprites());
-        }
+        return (this.Stages.GetSpritesInScreen());
     }
     public Graphics GetGraphics()                               {   return (this.InternalGraphics);                 }
     public int GetInternalResolutionWidth()                     {   return (this.InternalResolutionWidth);          }
@@ -689,7 +643,7 @@ public class GameController : IGame
     public float GetScaleH()                                    {   return (this.ScaleH);                           }
     public Player GetPlayer()                                   {   return (this.Player);                           }
     public bool GetTerminateStatus()                            {   return (this.Terminate);                        }
-    public GameStages GetStages()                               {   return (this.Stages);                           }
+    public NGameStages GetStages()                              {   return (this.Stages);                           }
     public HUD GetHUD()                                         {   return (this.Hud);                              }
 
     /**
