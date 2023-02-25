@@ -10,8 +10,6 @@ namespace Game;
 public class StaticSprite : GameSprite
 {
     private IGame GameRef;
-    private volatile bool AnimateExplosion  = false;
-    private long AnimationCounter           = 0;
     private Bitmap OGSpriteImage;
     private Bitmap Explosion1               = LoadingStuffs.GetInstance().GetImage("heli-explosion-1");
     private Bitmap Explosion2               = LoadingStuffs.GetInstance().GetImage("heli-explosion-2");
@@ -53,6 +51,7 @@ public class StaticSprite : GameSprite
             
         this.SourceRect = new RectangleF(0, 0, this.Width, this.Height);
         this.DestineRect = new RectangleF(this.X, this.Y, this.Width, this.Height);
+        int bridgeExplosionX = 350;
 
         if (!this.Destroyed && this.Type == FUEL) 
         {
@@ -75,6 +74,10 @@ public class StaticSprite : GameSprite
             if (this.AnimationCounter > 1_000_000 && this.AnimationCounter < 4_000_000) 
             {
                 this.SpriteImage = this.Explosion1;
+                if (this.Type == BRIDGE)
+                {
+                    this.X = bridgeExplosionX;
+                }
             } 
             else if (this.AnimationCounter >= 4_000_000 && this.AnimationCounter < 8_000_000) 
             {
@@ -95,11 +98,12 @@ public class StaticSprite : GameSprite
      */
     public override void Reset()
     {
-        this.SpriteImage = this.OGSpriteImage;
-        this.TilesNumber = 0;
-        this.Destroyed = false;
-        this.AnimateExplosion = false;
-        this.Destroyed = false;
+        this.SpriteImage        = this.OGSpriteImage;
+        this.TilesNumber        = 0;
+        this.Destroyed          = false;
+        this.AnimateExplosion   = false;
+        this.Destroyed          = false;
+        this.X                  = this.OgX;
     }
 
     public override void SetCollision(bool isPlayerCollision)
