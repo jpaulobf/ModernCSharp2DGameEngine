@@ -112,7 +112,7 @@ public interface IGame
     /**
      * Getter - Get the stage object
      */
-    public GameStages GetStages();
+    public NGameStages GetStages();
 
     /**
      * Update the Fuel Mark
