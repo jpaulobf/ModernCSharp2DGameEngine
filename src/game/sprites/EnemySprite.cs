@@ -17,8 +17,6 @@ public class EnemySprite : GameSprite
     protected byte DefaultDirection         = 0;
     protected byte DefaultTilesNumber       = 0;
     protected bool DefaultRenderReverse     = false;
-    private volatile bool AnimateExplosion  = false;
-    private long AnimationCounter           = 0;
     private Bitmap ShipExplosion1           = LoadingStuffs.GetInstance().GetImage("ship-explosion-1");
     private Bitmap ShipExplosion2           = LoadingStuffs.GetInstance().GetImage("ship-explosion-2");
     private Bitmap HeliExplosion1           = LoadingStuffs.GetInstance().GetImage("heli-explosion-1");
