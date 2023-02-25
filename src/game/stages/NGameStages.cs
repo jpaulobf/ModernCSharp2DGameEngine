@@ -59,6 +59,9 @@ public class NGameStages : IStagesDef
     private volatile bool CanStartStageOpening              = true;
     private volatile bool CanStartTheStage                  = false;
     private volatile bool IsStageRunning                    = false;
+    private volatile float TempBottom                       = 0f;
+    private volatile float TempTopOffset                    = 0f;
+    private volatile float TempTop                          = 0f;
     private Dictionary<float, GameSprite> CurrentStageSpritesDefinition = new Dictionary<float, GameSprite>();
     private Dictionary<float, GameSprite> NextStageSpritesDefinition    = new Dictionary<float, GameSprite>();
     private List<GameSprite> CurrentStageSprites;
@@ -255,6 +258,20 @@ public class NGameStages : IStagesDef
             item.Value.Y = (float)((float)item.Key - (float)this.PlayerTopScreenLinePixel) + (float)this.Offset;
             item.Value.Update(frametime, colliding);
         }
+
+        if (this.PlayerTopScreenLinePixelOffSet < 0)
+        {
+            this.TempBottom     = this.LinesInNextStage * PIXEL_HEIGHT;
+            this.TempTopOffset  = this.TempBottom + this.PlayerTopScreenLinePixelOffSet;
+            this.TempTop        = this.TempBottom + this.PlayerTopScreenLinePixel;
+
+            //if exist an sprite in the current screen frame, update it
+            foreach (var item in this.NextStageSpritesDefinition.Where(item => this.TempTopOffset < item.Key && this.TempBottom > item.Key)) 
+            {
+                item.Value.Y = item.Key - TempTop;
+                item.Value.Update(frametime, colliding);
+            }
+        }
     }
 
     /**
@@ -404,6 +421,15 @@ public class NGameStages : IStagesDef
             item.Value.Draw(gfx);
         }
 
+        if (this.PlayerTopScreenLinePixelOffSet < 0)
+        {
+            //if exist an sprite in the current screen frame, update it
+            foreach (var item in this.NextStageSpritesDefinition.Where(item => this.TempTopOffset < item.Key && this.TempBottom > item.Key)) 
+            {
+                item.Value.Draw(gfx);
+            }
+        }
+
         /*
         gfx.DrawString("Player current line: " + this.PlayerCurrentLine + "", new Font("Arial", 10), Brushes.Black, 0, 20);
         gfx.DrawString("Player topscreen line: " + this.PlayerTopScreenLine + "", new Font("Arial", 10), Brushes.Black, 0, 40);
@@ -494,7 +520,9 @@ public class NGameStages : IStagesDef
      */
     public IEnumerable<GameSprite> GetSpritesInScreen()
     {
-        return (this.CurrentStageSprites.Where(item => this.PlayerTopScreenLinePixelOffSet < item.OgY && this.PlayerBottomScreenLinePixel > item.OgY));
+        IEnumerable<GameSprite> currentStageList = this.CurrentStageSprites.Where(item => this.PlayerTopScreenLinePixelOffSet < item.OgY && this.PlayerBottomScreenLinePixel > item.OgY);
+        IEnumerable<GameSprite> nextStageList = this.NextStageSprites.Where(item => this.TempTopOffset < item.OgY && this.TempBottom > item.OgY);
+        return (currentStageList.Concat(nextStageList));
     }
 
     /**
@@ -548,6 +576,8 @@ public class NGameStages : IStagesDef
         this.PlayerTopScreenLinePixel       = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
         this.PlayerTopScreenLinePixelOffSet = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
         this.PlayerBottomScreenLinePixel    = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
+        this.TempTopOffset                        = 0f;
+        this.TempBottom                     = 0f;
 
         foreach (var item in this.CurrentStageSpritesDefinition) 
         {
