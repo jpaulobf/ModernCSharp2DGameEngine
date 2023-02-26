@@ -17,7 +17,7 @@ public class StateMachine
     /**
      * Public constructor (the default initial state is MENU)
      */
-    public StateMachine(int initialState = StateMachine.IN_GAME)
+    public StateMachine(int initialState = StateMachine.MENU)
     {
         if (initialState != MENU && 
             initialState != OPTIONS && 
