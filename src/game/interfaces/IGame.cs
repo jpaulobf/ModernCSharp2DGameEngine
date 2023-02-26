@@ -30,6 +30,11 @@ public interface IGame
     public void Render(Graphics targetGraphics);
 
     /**
+     * Release anything (if necessary)
+     */
+    void Release(long frametime);
+
+    /**
      * Define the game Resolution (accessor)
      */
     public Size Resolution { get; set; }
