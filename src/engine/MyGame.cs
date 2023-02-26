@@ -185,6 +185,14 @@ public class MyGame
         }
 
         /**
+         * Release anything in the Game Logic
+         */
+        public void Release(long frametime)
+        {
+            this.Game.Release(frametime);
+        }
+
+        /**
          * Draw the Game FPS
          */
         private void RenderFPS(Graphics graphics, long frametime) 
@@ -385,6 +393,9 @@ public class MyGame
                     //render
                     this.Render();
 
+                    //release (if necessary)
+                    this.Release(timeElapsed);
+
                     //Yield
                     Thread.Yield();
 
@@ -488,6 +499,14 @@ public class MyGame
         public void Draw(long frametime) 
         {
             this.Canvas.Draw(frametime);
+        }
+
+        /**
+         * Release (if necessary)
+         */
+        public void Release(long frametime)
+        {
+            this.Canvas.Release(frametime);
         }
 
         /** 
