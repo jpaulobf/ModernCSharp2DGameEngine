@@ -199,4 +199,9 @@ public class SplashScreen : Form, ICanvasEngine
         //Go to the Game
         new MyGame(this.FPS);
     }
+
+    public void Release(long frametime)
+    {
+        throw new NotImplementedException();
+    }
 }
