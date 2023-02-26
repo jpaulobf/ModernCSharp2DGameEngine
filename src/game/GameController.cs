@@ -23,7 +23,7 @@ public class GameController : IGame
     public Size Resolution                  { get; set; }
     public Size WindowSize                  { get; }
     public InterpolationMode Interpolation  { get; }
-    protected int InternalResolutionWidth   = 1000; //738
+    protected int InternalResolutionWidth   = 1000; //738;
     protected int InternalResolutionHeight  = 700; //516;
     private float ScaleW                    = 1.0F;
     private float ScaleH                    = 1.0F;
@@ -41,6 +41,7 @@ public class GameController : IGame
     private volatile bool Paused            = false;
     private volatile bool ResetAfterDead    = false;
     private volatile bool ShowPlayerSprite  = false;
+    private volatile bool Invalidate        = false;
     private long Framecounter               = 0;
     private Util.SoundPlayerEx GameMusic    = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "\\sfx\\main.wav");
     private StateMachine GameStateMachine   = new StateMachine();
@@ -71,7 +72,7 @@ public class GameController : IGame
         this.Interpolation          = interpolationMode;
 
         //create the imagebuffer
-        this.BufferedImage          = new Bitmap(InternalResolutionWidth, InternalResolutionHeight);
+        this.BufferedImage = (this.InternalResolutionWidth > this.WindowSize.Width)?new Bitmap(InternalResolutionWidth, InternalResolutionHeight):new Bitmap(this.WindowSize.Width, this.WindowSize.Height);
         
         // -->>>> gdi+ style
         Graphics graphics           = Graphics.FromImage(this.BufferedImage);
@@ -83,14 +84,14 @@ public class GameController : IGame
         // this.InternalGraphics   = BufferedGraphics.Graphics;
 
         //define the interpolation mode
-        //this.InternalGraphics.InterpolationMode = this.Interpolation;
+        this.InternalGraphics.InterpolationMode = this.Interpolation;
 
         //calc the scale
-        //this.ScaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
-        //this.ScaleH = (float)((float)windowSize.Height/(float)this.InternalResolutionHeight);
+        this.ScaleW = (float)((float)windowSize.Width/(float)this.InternalResolutionWidth);
+        this.ScaleH = (float)((float)windowSize.Height/(float)this.InternalResolutionHeight);
 
         //transform the image based on calc scale
-        //this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
 
         //screen center
         this.PausePoint = new Point((int)windowSize.Width/2 - 80, (int)windowSize.Height/2 - 50);
@@ -99,8 +100,8 @@ public class GameController : IGame
         this.Menu       = new Menu(this);
         this.Options    = new Options(this);
         
-        //Init configurations
-        this.InitGameConfigurations();
+        //TEMP - REMOVE - JUST FOR TEST - Init configurations
+        //this.InitGameConfigurations();
     }
 
     /**
@@ -286,7 +287,48 @@ public class GameController : IGame
             this.InternalGraphics.ReleaseHdc(shdc);
             targetGraphics.ReleaseHdc(dhdc);
         }
+        
+        if (this.Invalidate)
+        {
+            this.InternalResolutionWidth   = 738;
+            this.InternalResolutionHeight  = 516;
+
+            //calc the scale
+            this.ScaleW = (float)((float)this.WindowSize.Width / (float)this.InternalResolutionWidth);
+            this.ScaleH = (float)((float)this.WindowSize.Height / (float)this.InternalResolutionHeight);
+
+            //create the imagebuffer
+            this.BufferedImage          = (this.InternalResolutionWidth > this.WindowSize.Width)?new Bitmap(InternalResolutionWidth, InternalResolutionHeight):new Bitmap(this.WindowSize.Width, this.WindowSize.Height);
+            
+            // -->>>> gdi+ style
+            Graphics graphics           = Graphics.FromImage(this.BufferedImage);
+            IntPtr hdc                  = graphics.GetHdc();
+            this.InternalGraphics       = Graphics.FromHdc(hdc);
+
+            //transform the image based on calc scale
+            this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+            this.InternalGraphics.InterpolationMode = this.Interpolation;
+
+            //create the game objects
+            this.Player             = new Player(this);
+            this.Hud                = new HUD(this);
+            this.Score              = new Score(this);
+            this.GameOver           = new GameOver(this);
+            this.Stages             = new GameStages(this);
+            this.Exit               = new Exit(this);
+
+            //disable the Invalidate
+            this.Invalidate = false;
+        }
+
         this.SkipRender = false;
+    }
+
+    /**
+     * Release anything (if necessary)
+     */
+    public void Release(long frametime)
+    {
     }
 
     /**
@@ -489,14 +531,7 @@ public class GameController : IGame
      * Define the in game initial configs
      */    
     public void InitGameConfigurations()
-    {
-        this.InternalResolutionWidth   = 738;
-        this.InternalResolutionHeight  = 516;
-
-        //calc the scale
-        this.ScaleW             = (float)((float)this.WindowSize.Width / (float)this.InternalResolutionWidth);
-        this.ScaleH             = (float)((float)this.WindowSize.Height / (float)this.InternalResolutionHeight);
-
+    {   
         // --->> dotnet preferable code
         //Invalidate the current buffer
         // BufferedGraphicsManager.Current.Invalidate();
@@ -508,17 +543,9 @@ public class GameController : IGame
         // this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, this.WindowSize.Width, this.WindowSize.Height));
         // this.InternalGraphics   = BufferedGraphics.Graphics;
 
-        //transform the image based on calc scale
-        this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
-        this.InternalGraphics.InterpolationMode = this.Interpolation;
-        
-        //create the game objects
-        this.Player             = new Player(this);
-        this.Hud                = new HUD(this);
-        this.Score              = new Score(this);
-        this.GameOver           = new GameOver(this);
-        this.Stages            = new GameStages(this);
-        this.Exit               = new Exit(this);
+        this.SkipDrawOnce();
+        this.SkipRenderOnce();
+        this.Invalidate = true;
     }
 
     /**
