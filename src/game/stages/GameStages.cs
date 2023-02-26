@@ -458,7 +458,7 @@ public class GameStages : IStagesDef
     }
 
     /**
-     * 
+     * Control the scenario lines of the current stage
      */
     private void ControlCurrentStageLinesCount()
     {
@@ -479,7 +479,7 @@ public class GameStages : IStagesDef
     }
 
     /**
-     * 
+     * Control the scenario lines of the next stage
      */
     private void ControlNextStageLinesCount()
     {
@@ -552,8 +552,12 @@ public class GameStages : IStagesDef
      */
     private async Task LoadNextStage()
     {
-        this.ControlNextStageLinesCount();
-        this.LoadNextScenarioGraphics();
+        await Task.Run(() =>
+            {
+                this.ControlNextStageLinesCount();
+                this.LoadNextScenarioGraphics();
+            }
+        );       
     }
 
     /**
@@ -656,7 +660,7 @@ public class GameStages : IStagesDef
     }
 
     /**
-     *
+     * Load the current graphics of the scenario
      */
     private void LoadCurrentScenarioGraphics()
     {
@@ -686,7 +690,7 @@ public class GameStages : IStagesDef
     }
 
     /**
-     * 
+     * Load the scenario graphics of the next level
      */
     private void LoadNextScenarioGraphics()
     {
