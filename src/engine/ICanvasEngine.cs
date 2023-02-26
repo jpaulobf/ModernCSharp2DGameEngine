@@ -20,6 +20,11 @@ public interface ICanvasEngine {
      * Render the backbuffer in the canvas
      */
     public void Render();
+
+    /**
+     * Release anything in the gameloop
+     */
+    public void Release(long frametime);
     
     /**
      * Dispose the graphics
