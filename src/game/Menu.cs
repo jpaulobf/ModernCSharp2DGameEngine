@@ -1,5 +1,6 @@
 namespace Game;
 
+using System;
 using Util;
 
 public class Menu
@@ -23,6 +24,7 @@ public class Menu
     private int LabelExitX          = 409;
     private int LabelExitY          = 616;
     private byte CurrentPosition    = 0;
+    private volatile bool CanRender = true;
     private Brush BgBrush           = new SolidBrush(Color.FromArgb(255, 58, 80, 74));
 
     /**
@@ -49,12 +51,23 @@ public class Menu
      */
     public void Draw(Graphics gfx) 
     {
-        gfx.FillRectangle(this.BgBrush, 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
-        gfx.DrawImage(this.MainLogo, this.MainLogoX, this.MainLogoY, this.MainLogo.Width, this.MainLogo.Height);
-        gfx.DrawImage(this.Selector, this.SelectorX, this.SelectorY, this.Selector.Width, this.Selector.Height);
-        gfx.DrawImage(this.LabelStart, this.LabelStartX, this.LabelStartY, this.LabelStart.Width, this.LabelStart.Height);
-        gfx.DrawImage(this.LabelOptions, this.LabelOptionsX, this.LabelOptionsY, this.LabelOptions.Width, this.LabelOptions.Height);
-        gfx.DrawImage(this.LabelExit, this.LabelExitX, this.LabelExitY, this.LabelExit.Width, this.LabelExit.Height);
+        if (CanRender)
+            gfx.FillRectangle(this.BgBrush, 0, 0, GameRef.GetInternalResolutionWidth(), GameRef.GetInternalResolutionHeight());
+        
+        if (CanRender)
+            gfx.DrawImage(this.MainLogo, this.MainLogoX, this.MainLogoY, this.MainLogo.Width, this.MainLogo.Height);
+        
+        if (CanRender)
+            gfx.DrawImage(this.Selector, this.SelectorX, this.SelectorY, this.Selector.Width, this.Selector.Height);
+
+        if (CanRender)
+            gfx.DrawImage(this.LabelStart, this.LabelStartX, this.LabelStartY, this.LabelStart.Width, this.LabelStart.Height);
+
+        if (CanRender)            
+            gfx.DrawImage(this.LabelOptions, this.LabelOptionsX, this.LabelOptionsY, this.LabelOptions.Width, this.LabelOptions.Height);
+
+        if (CanRender)
+            gfx.DrawImage(this.LabelExit, this.LabelExitX, this.LabelExitY, this.LabelExit.Width, this.LabelExit.Height);
     }
 
     /**
@@ -92,8 +105,9 @@ public class Menu
         {
             if (this.CurrentPosition == 0)
             {
+                this.StopRendering();
                 this.GameRef.InitGameConfigurations();
-                this.GameRef.SetGameStateToInGame();
+                this.GameRef.SetGameStateToInGame();             
             }
             else if (this.CurrentPosition == 1)
             {
@@ -106,5 +120,10 @@ public class Menu
         }
 
         this.SelectorY = SelectorYBase + (this.CurrentPosition * SelectorYDiff);
+    }
+
+    private void StopRendering()
+    {
+        this.CanRender = false;
     }
 }
