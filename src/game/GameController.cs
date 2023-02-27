@@ -637,6 +637,11 @@ public class GameController : IGame
         this.GameStateMachine.SetStateToMenu();
     }
 
+    public void SetGameStateToEnding()
+    {
+        this.GameStateMachine.SetStateToEnding();
+    }
+
     /**
      * Set game status to "options"
      */
