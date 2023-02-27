@@ -188,4 +188,6 @@ public interface IGame
      * Verify if the shot is colliding with the background
      */
     public bool IsShotCollidingWithBackground(GameSprite sprite);
+    
+    public void SetGameStateToEnding();
 }
