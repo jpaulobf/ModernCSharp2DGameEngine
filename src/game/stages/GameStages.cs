@@ -210,66 +210,79 @@ public class GameStages : IStagesDef
                     {
                         this.isToDrawNextStage = true;
                         this.NextLineDestY += step;
+
+                        if (NEXT_STAGE > MAX_STAGES)
+                        {
+                            this.NextLineY = 0;
+                        }
                     }
 
                     //current stage end - runs once
                     //Swap with next stage
                     if (!this.isToDrawCurrentStage)
                     {
-                        //TODO: verify if the next stage exists
-                        this.CURRENT_STAGE                      += 1;
-                        this.NEXT_STAGE                         = (short)(this.CURRENT_STAGE + 1);
-                        
-                        //Swap current elements with next
-                        this.isToDrawNextStage                  = false;
-                        this.isToDrawCurrentStage               = true;
+                        if (NEXT_STAGE <= MAX_STAGES)
+                        {
+                            this.CURRENT_STAGE                      += 1;
+                            this.NEXT_STAGE                         = (short)(this.CURRENT_STAGE + 1);
+                            
+                            //Swap current elements with next
+                            this.isToDrawNextStage                  = false;
+                            this.isToDrawCurrentStage               = true;
 
-                        this.CurrentStageImage                  = this.NextStageImage;
-                        this.CurrentStageGraphics               = this.NextStageGraphics;
-                        this.PlayerTopScreenLinePixelScaled     = this.NextLineY;
-                        this.CurrentLineDestY                   = this.NextLineDestY;
+                            this.CurrentStageImage                  = this.NextStageImage;
+                            this.CurrentStageGraphics               = this.NextStageGraphics;
+                            this.PlayerTopScreenLinePixelScaled     = this.NextLineY;
+                            this.CurrentLineDestY                   = this.NextLineDestY;
 
-                        this.PlayerCurrentLine                  = (this.CURRENT_STAGE % 2 == 0)?EVEN_PLAYER_ORIG_LINE:ODD_PLAYER_ORIG_LINE;
-                        this.PlayerTopScreenLinePixel           = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
-                        this.PlayerTopScreenLine                = (this.PlayerCurrentLine - 97);
-                        this.PlayerTopScreenLinePixelOffSet     = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
-                        this.PlayerBottomScreenLinePixel        = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
+                            this.PlayerCurrentLine                  = (this.CURRENT_STAGE % 2 == 0)?EVEN_PLAYER_ORIG_LINE:ODD_PLAYER_ORIG_LINE;
+                            this.PlayerTopScreenLinePixel           = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
+                            this.PlayerTopScreenLine                = (this.PlayerCurrentLine - 97);
+                            this.PlayerTopScreenLinePixelOffSet     = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
+                            this.PlayerBottomScreenLinePixel        = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
 
-                        this.CurrentOpenStageGraphics           = (CURRENT_STAGE % 2 != 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
+                            this.CurrentOpenStageGraphics           = (CURRENT_STAGE % 2 != 0)?OddOpenStageGraphics:EvenOpenStageGraphics;
 
-                        //Load the next elements (async)
-                        Task task = LoadNextStage();
-                        
-                        //Swap current sprites with the next stage sprites
-                        this.CurrentStageSpritesDefinition      = this.NextStageSpritesDefinition;
-                        this.CurrentStageSprites                = this.NextStageSprites;
+                            //Load the next elements (async)
+                            Task task = LoadNextStage();
+                            
+                            //Swap current sprites with the next stage sprites
+                            this.CurrentStageSpritesDefinition      = this.NextStageSpritesDefinition;
+                            this.CurrentStageSprites                = this.NextStageSprites;
 
-                        //TODO: Load next stage sprites
-                        this.NextStageSpritesDefinition         = new Dictionary<float, GameSprite>();
-                        this.NextStageSprites                   = new List<GameSprite>();
+                            //TODO: Load next stage sprites
+                            this.NextStageSpritesDefinition         = new Dictionary<float, GameSprite>();
+                            this.NextStageSprites                   = new List<GameSprite>();
+                        }
+                        else
+                        {
+                            this.GameRef.SetGameStateToEnding();
+                        }
                     }              
                 }
             }
         }
 
-        //if exist an sprite in the current screen frame, update it
-        foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopScreenLinePixelOffSet < item.Key && this.PlayerBottomScreenLinePixel > item.Key)) 
+        //update the sprites in the current screen frame
         {
-            item.Value.Y = (float)((float)item.Key - (float)this.PlayerTopScreenLinePixel) + (float)this.Offset;
-            item.Value.Update(frametime, colliding);
-        }
-
-        if (this.PlayerTopScreenLinePixelOffSet < 0)
-        {
-            this.TempBottom     = this.LinesInNextStage * PIXEL_HEIGHT;
-            this.TempTopOffset  = this.TempBottom + this.PlayerTopScreenLinePixelOffSet;
-            this.TempTop        = this.TempBottom + this.PlayerTopScreenLinePixel;
-
-            //if exist an sprite in the current screen frame, update it
-            foreach (var item in this.NextStageSpritesDefinition.Where(item => this.TempTopOffset < item.Key && this.TempBottom > item.Key)) 
+            foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopScreenLinePixelOffSet < item.Key && this.PlayerBottomScreenLinePixel > item.Key)) 
             {
-                item.Value.Y = item.Key - TempTop;
+                item.Value.Y = (float)((float)item.Key - (float)this.PlayerTopScreenLinePixel) + (float)this.Offset;
                 item.Value.Update(frametime, colliding);
+            }
+
+            if (this.PlayerTopScreenLinePixelOffSet < 0)
+            {
+                this.TempBottom     = this.LinesInNextStage * PIXEL_HEIGHT;
+                this.TempTopOffset  = this.TempBottom + this.PlayerTopScreenLinePixelOffSet;
+                this.TempTop        = this.TempBottom + this.PlayerTopScreenLinePixel;
+
+                //if exist an sprite in the current screen frame, update it
+                foreach (var item in this.NextStageSpritesDefinition.Where(item => this.TempTopOffset < item.Key && this.TempBottom > item.Key)) 
+                {
+                    item.Value.Y = item.Key - TempTop;
+                    item.Value.Update(frametime, colliding);
+                }
             }
         }
     }
@@ -416,17 +429,19 @@ public class GameStages : IStagesDef
         gfx.ReleaseHdc(dhdc);
 
         //Draw the sprites
-        foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopScreenLinePixelOffSet < item.Key && this.PlayerBottomScreenLinePixel > item.Key))
         {
-            item.Value.Draw(gfx);
-        }
-
-        if (this.PlayerTopScreenLinePixelOffSet < 0)
-        {
-            //if exist an sprite in the current screen frame, update it
-            foreach (var item in this.NextStageSpritesDefinition.Where(item => this.TempTopOffset < item.Key && this.TempBottom > item.Key)) 
+            foreach (var item in this.CurrentStageSpritesDefinition.Where(item => this.PlayerTopScreenLinePixelOffSet < item.Key && this.PlayerBottomScreenLinePixel > item.Key))
             {
                 item.Value.Draw(gfx);
+            }
+
+            if (this.PlayerTopScreenLinePixelOffSet < 0)
+            {
+                //if exist an sprite in the current screen frame, update it
+                foreach (var item in this.NextStageSpritesDefinition.Where(item => this.TempTopOffset < item.Key && this.TempBottom > item.Key)) 
+                {
+                    item.Value.Draw(gfx);
+                }
             }
         }
 
@@ -531,19 +546,22 @@ public class GameStages : IStagesDef
      */
     private void LoadSpriteListForSpecifiedStage(short stage)
     {
-        Dictionary<float, GameSprite> temp = (stage == CURRENT_STAGE)?this.CurrentStageSpritesDefinition:this.NextStageSpritesDefinition;
-        stage = (short)(stage - 1);
-        for (short i = 0; i < IStagesDef.StagesSpritesConfig.GetLength(1); i++)
+        if (stage <= MAX_STAGES)
         {
-            temp.Add(IStagesDef.StagesSpritesConfig[stage, i, 0],
-                     SpriteFactory.CreateSprite(this.GameRef,
-                     (byte)IStagesDef.StagesSpritesConfig[stage, i, 1],
-                     IStagesDef.StagesSpritesConfig[stage, i, 2],
-                     IStagesDef.StagesSpritesConfig[stage, i, 0],
-                     (IStagesDef.StagesSpritesConfig[stage, i, 3] == 0) ? false : true,
-                     IStagesDef.StagesSpritesConfig[stage, i, 4],
-                     IStagesDef.StagesSpritesConfig[stage, i, 5],
-                     (byte)IStagesDef.StagesSpritesConfig[stage, i, 6]));
+            Dictionary<float, GameSprite> temp = (stage == CURRENT_STAGE)?this.CurrentStageSpritesDefinition:this.NextStageSpritesDefinition;
+            stage = (short)(stage - 1);
+            for (short i = 0; i < IStagesDef.StagesSpritesConfig.GetLength(1); i++)
+            {
+                temp.Add(IStagesDef.StagesSpritesConfig[stage, i, 0],
+                        SpriteFactory.CreateSprite(this.GameRef,
+                        (byte)IStagesDef.StagesSpritesConfig[stage, i, 1],
+                        IStagesDef.StagesSpritesConfig[stage, i, 2],
+                        IStagesDef.StagesSpritesConfig[stage, i, 0],
+                        (IStagesDef.StagesSpritesConfig[stage, i, 3] == 0) ? false : true,
+                        IStagesDef.StagesSpritesConfig[stage, i, 4],
+                        IStagesDef.StagesSpritesConfig[stage, i, 5],
+                        (byte)IStagesDef.StagesSpritesConfig[stage, i, 6]));
+            }
         }
     }
 
@@ -580,7 +598,7 @@ public class GameStages : IStagesDef
         this.PlayerTopScreenLinePixel       = (this.PlayerCurrentLine - 97) * PIXEL_HEIGHT;
         this.PlayerTopScreenLinePixelOffSet = (this.PlayerCurrentLine - 112) * PIXEL_HEIGHT;
         this.PlayerBottomScreenLinePixel    = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
-        this.TempTopOffset                        = 0f;
+        this.TempTopOffset                  = 0f;
         this.TempBottom                     = 0f;
 
         foreach (var item in this.CurrentStageSpritesDefinition) 
@@ -695,7 +713,9 @@ public class GameStages : IStagesDef
     private void LoadNextScenarioGraphics()
     {
         //create the next scenario image buffer
-        this.NextStageImage         = new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * this.LinesInNextStage * this.ScaleH));
+        this.NextStageImage = (NEXT_STAGE <= MAX_STAGES)?new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * this.LinesInNextStage * this.ScaleH)):
+                                                         new Bitmap((int)(PIXEL_WIDTH * STAGES_COLUMNS * this.ScaleW), (int)(PIXEL_HEIGHT * OPENING_LINES * this.ScaleH));
+        
         Graphics graphics           = Graphics.FromImage(this.NextStageImage);
         IntPtr hdc                  = graphics.GetHdc();
         this.NextStageGraphics      = Graphics.FromHdc(hdc);
@@ -703,12 +723,15 @@ public class GameStages : IStagesDef
         //scale if necessary
         this.NextStageGraphics.ScaleTransform(this.ScaleW, this.ScaleH);
 
+        int lines = (NEXT_STAGE <= MAX_STAGES)?this.LinesInNextStage:OPENING_LINES;
+        int stage = (NEXT_STAGE % 2 !=0)?0:1;
+
         //render
-        for (int i = 0; i < this.LinesInNextStage; i++) 
+        for (int i = 0; i < lines; i++) 
         {
             for (int j = 0; j < STAGES_COLUMNS; j++) 
             {
-                short renderBlock = this.GetStageDefinitionValue(NEXT_STAGE, i, j);
+                short renderBlock = (NEXT_STAGE <= MAX_STAGES)?this.GetStageDefinitionValue(NEXT_STAGE, i, j):this.GetOpeningDefinitionValue(stage, i, j);
                 this.DrawRect.X =  j * PIXEL_WIDTH;
                 this.DrawRect.Y = (i * PIXEL_HEIGHT);
                 this.NextStageGraphics.FillRectangle(IStagesDef.Brushes[renderBlock], this.DrawRect);
