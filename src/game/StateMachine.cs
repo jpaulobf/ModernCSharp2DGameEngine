@@ -7,12 +7,13 @@ namespace Game;
  */
 public class StateMachine
 {
-    public const int MENU = 0;
-    public const int OPTIONS = 1;
-    public const int IN_GAME = 2;
-    public const int EXITING = 3;
-    public const int GAME_OVER = 4;
-    private int CurrentGameState = IN_GAME;
+    public const int MENU           = 0;
+    public const int OPTIONS        = 1;
+    public const int IN_GAME        = 2;
+    public const int EXITING        = 3;
+    public const int GAME_OVER      = 4;
+    public const int ENDING         = 5;
+    private int CurrentGameState    = MENU;
 
     /**
      * Public constructor (the default initial state is MENU)
@@ -23,6 +24,7 @@ public class StateMachine
             initialState != OPTIONS && 
             initialState != IN_GAME && 
             initialState != EXITING &&
+            initialState != ENDING &&
             initialState != GAME_OVER)
         {
             this.CurrentGameState = MENU;
@@ -73,5 +75,10 @@ public class StateMachine
     public void SetStateToExiting()
     {
         this.CurrentGameState = EXITING;
+    }
+
+    internal void SetStateToEnding()
+    {
+        this.CurrentGameState = ENDING;
     }
 }
