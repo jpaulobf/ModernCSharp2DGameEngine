@@ -44,6 +44,7 @@ public class GameController : IGame
     private volatile bool Invalidate        = false;
     private long Framecounter               = 0;
     private Util.SoundPlayerEx GameMusic    = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "\\sfx\\main.wav");
+    private Util.SoundPlayerEx EndingMusic  = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "\\sfx\\ending.wav");
     private StateMachine GameStateMachine   = new StateMachine();
     private long ResetCounter               = 0;
     private Font PauseFont                  = new Font("Arial", 16);
@@ -58,6 +59,7 @@ public class GameController : IGame
     private Options Options;
     private GameOver GameOver;
     private Exit Exit;
+    private Ending Ending;
     
     /**
      * Game constructor
@@ -197,6 +199,18 @@ public class GameController : IGame
                 this.Framecounter = 0;
                 this.GameStateMachine.SetStateToMenu();
             }
+        } 
+        else if (this.GameStateMachine.GetCurrentGameState() == StateMachine.ENDING)
+        {
+            this.Framecounter += frametime;
+
+            if (this.Framecounter == frametime)
+            {
+                this.GameMusic.Stop();
+                this.EndingMusic.PlayLooping();
+            }
+
+            this.Ending.Update(frametime);          
         }
     }
 
@@ -219,7 +233,6 @@ public class GameController : IGame
                 }
                 else if (GameStateMachine.GetCurrentGameState() == StateMachine.EXITING)
                 {
-                    
                     //draw the stage bg & enemies
                     this.Stages.Draw(this.InternalGraphics);
 
@@ -265,6 +278,20 @@ public class GameController : IGame
                 {
                     this.GameOver.Draw(this.InternalGraphics);
                 }
+                else if (GameStateMachine.GetCurrentGameState() == StateMachine.ENDING)
+                {
+                    //draw the ending scene...
+                    this.Ending.Draw(this.InternalGraphics);
+
+                    //draw the HUD
+                    this.Hud.Draw(this.InternalGraphics);
+
+                    //draw the Score
+                    this.Score.Draw(this.InternalGraphics);
+
+                    // Draw Player Sprite
+                    this.Player.Draw(this.InternalGraphics);
+                }
             }
             this.SkipDraw = false;
         }
@@ -287,7 +314,15 @@ public class GameController : IGame
             this.InternalGraphics.ReleaseHdc(shdc);
             targetGraphics.ReleaseHdc(dhdc);
         }
-        
+
+        this.SkipRender = false;
+    }
+
+    /**
+     * Release anything (if necessary)
+     */
+    public void Release(long frametime)
+    {
         if (this.Invalidate)
         {
             this.InternalResolutionWidth   = 738;
@@ -316,19 +351,11 @@ public class GameController : IGame
             this.GameOver           = new GameOver(this);
             this.Stages             = new GameStages(this);
             this.Exit               = new Exit(this);
+            this.Ending             = new Ending(this);
 
             //disable the Invalidate
             this.Invalidate = false;
         }
-
-        this.SkipRender = false;
-    }
-
-    /**
-     * Release anything (if necessary)
-     */
-    public void Release(long frametime)
-    {
     }
 
     /**
@@ -512,6 +539,7 @@ public class GameController : IGame
         this.Score.Reset();
         this.Stages.Reset();
         this.Player.Reset();
+        this.Ending.Reset();
     }
 
     /**
@@ -587,8 +615,8 @@ public class GameController : IGame
     {
         Task.Run(() =>
             {
-                GameMusic.Stop();
-                GameMusic.PlayLooping();
+                this.GameMusic.Stop();
+                this.GameMusic.PlayLooping();
             }
         );
     }
@@ -600,7 +628,7 @@ public class GameController : IGame
     {
         Task.Run(() =>
             {
-                GameMusic.Stop();
+                this.GameMusic.Stop();
             }
         );
     }
@@ -626,6 +654,7 @@ public class GameController : IGame
      */
     public void SetGameStateToInGame()
     {
+        this.Framecounter = 0;
         this.GameStateMachine.SetStateToInGame();
     }
 
@@ -634,11 +663,13 @@ public class GameController : IGame
      */
     public void SetGameStateToMenu()
     {
+        this.Framecounter = 0;
         this.GameStateMachine.SetStateToMenu();
     }
 
     public void SetGameStateToEnding()
     {
+        this.Framecounter = 0;
         this.GameStateMachine.SetStateToEnding();
     }
 
@@ -647,6 +678,7 @@ public class GameController : IGame
      */
     public void SetGameStateToOptions()
     {
+        this.Framecounter = 0;
         this.GameStateMachine.SetGameStateToOptions();
     }
 
