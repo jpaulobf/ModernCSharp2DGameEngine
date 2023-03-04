@@ -145,6 +145,9 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\toggle_off.png");
             Images.Add("button-toggle-off", image);
+
+            image = BitmapEx.New("img\\end.png");
+            Images.Add("the-end", image);
         }
         catch (Exception ex)
         {
