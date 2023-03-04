@@ -5,6 +5,7 @@ using Util;
 public class Ending
 {
     private IGame GameRef;
+    private Bitmap TheEnd     = Util.LoadingStuffs.GetInstance().GetImage("the-end");
 
     /**
      * Constructor
@@ -27,7 +28,7 @@ public class Ending
      */
     public void Draw(Graphics gfx) 
     {
-        Console.WriteLine("aui........");
+        gfx.DrawImage(this.TheEnd, 200, 200, this.TheEnd.Width, this.TheEnd.Height);
     }
 
     /**
