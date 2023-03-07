@@ -36,7 +36,7 @@ public class Ending
      */
     public void Update(long frametime) 
     {
-        
+        //after animation, reset game to the first stage
     }
 
     /**
@@ -54,6 +54,9 @@ public class Ending
 
         //draw ending logo
         gfx.DrawImage(this.TheEnd, X, Y, this.TheEnd.Width, this.TheEnd.Height);
+
+        //draw any key to restart the game
+        
     }
 
     /**
