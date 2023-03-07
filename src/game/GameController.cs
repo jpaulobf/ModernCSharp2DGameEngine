@@ -288,9 +288,6 @@ public class GameController : IGame
 
                     //draw the Score
                     this.Score.Draw(this.InternalGraphics);
-
-                    // Draw Player Sprite
-                    this.Player.Draw(this.InternalGraphics);
                 }
             }
             this.SkipDraw = false;
