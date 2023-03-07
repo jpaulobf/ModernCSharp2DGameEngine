@@ -29,8 +29,6 @@ public class Ending
         this.X /= this.GameRef.GetScaleW();
         this.Y -= this.GameRef.GetHUD().GetHudHeight();
         this.Y /= this.GameRef.GetScaleH();
-
-        Console.WriteLine(X + "  " + Y);
     }
 
     /**
