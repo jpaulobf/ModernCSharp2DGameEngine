@@ -1,7 +1,8 @@
 namespace Game;
 
-using Util;
-
+/**
+ * Class representing the end of the game
+ */
 public class Ending
 {
     private IGame GameRef;
