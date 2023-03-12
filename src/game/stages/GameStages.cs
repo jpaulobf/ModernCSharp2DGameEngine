@@ -29,7 +29,7 @@ public class GameStages : IStagesDef
     private const short PIXEL_WIDTH                         = 18;
     private const byte PIXEL_HEIGHT                         = 4;
     private const byte STAGES_COLUMNS                       = 41;
-    private const short MAX_STAGES                          = 1;
+    private const short MAX_STAGES                          = 3;
     private short CURRENT_STAGE                             = 1;
     private short NEXT_STAGE;
     private const byte OPENING_LINES                        = 108;
