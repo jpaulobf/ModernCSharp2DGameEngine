@@ -446,6 +446,7 @@ public class GameStages : IStagesDef
         }
 
         /*
+        //some statistics
         gfx.DrawString("Player current line: " + this.PlayerCurrentLine + "", new Font("Arial", 10), Brushes.Black, 0, 20);
         gfx.DrawString("Player topscreen line: " + this.PlayerTopScreenLine + "", new Font("Arial", 10), Brushes.Black, 0, 40);
         gfx.DrawString("Top * Pixel: " + this.PlayerTopScreenLinePixel + "", new Font("Arial", 10), Brushes.Black, 0, 60);
@@ -531,7 +532,7 @@ public class GameStages : IStagesDef
     }
 
     /**
-     * TODO:
+     * Get the current sprites on screen (if necessary, get the elements of next stage and concat)
      */
     public IEnumerable<GameSprite> GetSpritesInScreen()
     {
