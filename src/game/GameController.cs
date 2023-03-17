@@ -29,6 +29,7 @@ public class GameController : IGame
     private float ScaleH                    = 1.0F;
     private bool WindowResizing             = false;
     private bool Terminate                  = false;
+    private Object? TempSender;
 
     //-----------------------------------------------------//
     //--- Game Elements control                         ---//
@@ -352,6 +353,46 @@ public class GameController : IGame
 
             //disable the Invalidate
             this.Invalidate = false;
+        }
+
+        if (this.WindowResizing)
+        {
+
+            this.SkipDrawOnce();
+            this.SkipRenderOnce();
+
+            try 
+            {
+                if (TempSender != null)
+                {
+                    //calc new scale
+                    int width = ((Form)TempSender).Width;
+                    int height = ((Form)TempSender).Height;
+                    this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
+                    this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
+
+                    Console.WriteLine(width);
+
+                    // --->> dotnet preferable code
+                    //Invalidate the current buffer
+                    //BufferedGraphicsManager.Current.Invalidate();
+                    //BufferedGraphicsManager.Current.Dispose();
+
+                    // --->> dotnet preferable code
+                    //apply new scale
+                    //this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
+                    //this.InternalGraphics   = BufferedGraphics.Graphics;
+                    
+                    this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
+                    this.InternalGraphics.InterpolationMode = this.Interpolation;
+                }
+            } 
+            catch (Exception ex) 
+            {
+                Console.WriteLine(ex);
+            }
+
+            this.WindowResizing = false;
         }
     }
 
@@ -708,47 +749,13 @@ public class GameController : IGame
     public HUD GetHUD()                                         {   return (this.Hud);                              }
 
     /**
-     * Resize screen (buggy...)
+     * Resize screen (WIP...)
      */
-    public async void Resize(object? sender, System.EventArgs e)
+    public void Resize(object? sender, System.EventArgs e)
     {
-        //stop the render method
         this.WindowResizing = true;
+        this.TempSender = sender;
         System.Threading.Thread.Sleep(1);
-        this.SkipDrawOnce();
-        this.SkipRenderOnce();
-
-        try 
-        {
-            if (sender != null)
-            {
-                //calc new scale
-                int width = ((Form)sender).Width;
-                int height = ((Form)sender).Height;
-                this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
-                this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
-
-                // --->> dotnet preferable code
-                //Invalidate the current buffer
-                //BufferedGraphicsManager.Current.Invalidate();
-                //BufferedGraphicsManager.Current.Dispose();
-
-                // --->> dotnet preferable code
-                //apply new scale
-                //this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
-                //this.InternalGraphics   = BufferedGraphics.Graphics;
-                
-                this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
-                this.InternalGraphics.InterpolationMode = this.Interpolation;
-            }
-        } 
-        catch (Exception ex) 
-        {
-            Console.WriteLine(ex);
-        } 
-        finally 
-        {
-            await Task.Run(() => this.WindowResizing = false);
-        }
+        
     }
 }
