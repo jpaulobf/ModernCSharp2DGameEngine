@@ -32,7 +32,7 @@ public interface IGame
     /**
      * Release anything (if necessary)
      */
-    void Release(long frametime);
+    public void Release(long frametime);
 
     /**
      * Define the game Resolution (accessor)
