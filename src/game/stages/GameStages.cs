@@ -48,6 +48,8 @@ public class GameStages : IStagesDef
     private short LinesInNextStage                          = 0;
     private float RenderAreaWidth                           = 0f;
     private float RenderAreaHeight                          = 0f;
+    private float OgRenderAreaWidth                         = 0f;
+    private float OgRenderAreaHeight                        = 0f;
     private volatile float OpeningLineY                     = 0f;
     private volatile float CurrentLineDestY                 = 0f;
     private volatile float NextLineY                        = 0f;
@@ -102,6 +104,8 @@ public class GameStages : IStagesDef
         //calc the render area
         this.RenderAreaWidth    = this.GameRef.GetInternalResolutionWidth() * this.ScaleW;
         this.RenderAreaHeight   = (this.GameRef.GetInternalResolutionHeight() - this.GameRef.GetHUD().GetHudHeight()) * this.ScaleH;
+        this.OgRenderAreaWidth  = this.RenderAreaWidth;
+        this.OgRenderAreaHeight = this.RenderAreaHeight;
 
         //load opening imagebuffer 1 & 2
         this.LoadOpeningScenarioGraphics();
@@ -126,6 +130,18 @@ public class GameStages : IStagesDef
 
         //the offset starts negative for the opening animation
         this.Offset = -PIXEL_HEIGHT * OPENING_LINES;
+    }
+
+    public void UpdateScale(float scaleW, float scaleH)
+    {
+        Console.WriteLine("scaleW: " + scaleW);
+        Console.WriteLine("scaleH: " + scaleH);
+
+        this.RenderAreaWidth    = this.OgRenderAreaWidth * scaleW;
+        this.RenderAreaHeight   = this.OgRenderAreaHeight * scaleH;
+
+        Console.WriteLine("this.RenderAreaWidth: " + this.RenderAreaWidth);
+        Console.WriteLine("this.OgRenderAreaWidth: " + this.OgRenderAreaWidth);
     }
 
     /**
@@ -601,6 +617,8 @@ public class GameStages : IStagesDef
         this.PlayerBottomScreenLinePixel    = (this.PlayerCurrentLine + 11) * PIXEL_HEIGHT;
         this.TempTopOffset                  = 0f;
         this.TempBottom                     = 0f;
+        this.RenderAreaWidth                = this.OgRenderAreaWidth;
+        this.RenderAreaHeight               = this.OgRenderAreaHeight;
 
         foreach (var item in this.CurrentStageSpritesDefinition) 
         {
