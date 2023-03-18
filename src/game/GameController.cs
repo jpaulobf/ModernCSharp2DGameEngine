@@ -21,7 +21,7 @@ public class GameController : IGame
     private volatile Bitmap BufferedImage;
     private volatile Graphics InternalGraphics;
     public Size Resolution                  { get; set; }
-    public Size WindowSize                  { get; }
+    public Size WindowSize                  { get; set; }
     public InterpolationMode Interpolation  { get; }
     protected int InternalResolutionWidth   = 1000; //738;
     protected int InternalResolutionHeight  = 700; //516;
@@ -394,6 +394,10 @@ public class GameController : IGame
                     //transform the image based on calc scale
                     this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
                     this.InternalGraphics.InterpolationMode = this.Interpolation;
+                    
+                    //set the new window size
+                    this.WindowSize = new Size((int)width, (int)height);
+                    
 
                     //this.Stages.UpdateScale(this.ScaleW, this.ScaleH);
                 }
