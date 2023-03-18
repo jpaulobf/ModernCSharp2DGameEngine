@@ -367,8 +367,17 @@ public class GameController : IGame
                     //calc new scale
                     float width                     = ((Form)TempSender).ClientSize.Width;
                     float height                    = ((Form)TempSender).ClientSize.Height;
-                    this.InternalResolutionWidth    = 738;
-                    this.InternalResolutionHeight   = 516;
+
+                    if (this.GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
+                    {
+                        this.InternalResolutionWidth   = 1000;
+                        this.InternalResolutionHeight  = 700;
+                    }
+                    else
+                    {
+                        this.InternalResolutionWidth    = 738;
+                        this.InternalResolutionHeight   = 516;
+                    }
 
                     //calc the scale
                     this.ScaleW                     = width / this.InternalResolutionWidth;
