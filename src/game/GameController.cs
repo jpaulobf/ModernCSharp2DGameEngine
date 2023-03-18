@@ -343,13 +343,13 @@ public class GameController : IGame
             this.InternalGraphics.InterpolationMode = this.Interpolation;
 
             //create the game objects
-            this.Player             = new Player(this);
-            this.Hud                = new HUD(this);
-            this.Score              = new Score(this);
-            this.GameOver           = new GameOver(this);
-            this.Stages             = new GameStages(this);
-            this.Exit               = new Exit(this);
-            this.Ending             = new Ending(this);
+            this.Player                 = new Player(this);
+            this.Hud                    = new HUD(this);
+            this.Score                  = new Score(this);
+            this.GameOver               = new GameOver(this);
+            this.Stages                 = new GameStages(this);
+            this.Exit                   = new Exit(this);
+            this.Ending                 = new Ending(this);
 
             //disable the Invalidate
             this.Invalidate = false;
@@ -357,7 +357,6 @@ public class GameController : IGame
 
         if (this.WindowResizing)
         {
-
             this.SkipDrawOnce();
             this.SkipRenderOnce();
 
@@ -366,25 +365,28 @@ public class GameController : IGame
                 if (TempSender != null)
                 {
                     //calc new scale
-                    int width = ((Form)TempSender).Width;
-                    int height = ((Form)TempSender).Height;
-                    this.ScaleW = (float)((float)width/(float)this.InternalResolutionWidth);
-                    this.ScaleH = (float)((float)height/(float)this.InternalResolutionHeight);
+                    float width                     = ((Form)TempSender).ClientSize.Width;
+                    float height                    = ((Form)TempSender).ClientSize.Height;
+                    this.InternalResolutionWidth    = 738;
+                    this.InternalResolutionHeight   = 516;
 
-                    Console.WriteLine(width);
+                    //calc the scale
+                    this.ScaleW                     = width / this.InternalResolutionWidth;
+                    this.ScaleH                     = height / this.InternalResolutionHeight;
 
-                    // --->> dotnet preferable code
-                    //Invalidate the current buffer
-                    //BufferedGraphicsManager.Current.Invalidate();
-                    //BufferedGraphicsManager.Current.Dispose();
-
-                    // --->> dotnet preferable code
-                    //apply new scale
-                    //this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, width, height));
-                    //this.InternalGraphics   = BufferedGraphics.Graphics;
+                    //create the imagebuffer
+                    this.BufferedImage              = (this.InternalResolutionWidth > width)?new Bitmap(InternalResolutionWidth, InternalResolutionHeight):new Bitmap((int)width, (int)height);
                     
+                    // -->>>> gdi+ style
+                    Graphics graphics               = Graphics.FromImage(this.BufferedImage);
+                    IntPtr hdc                      = graphics.GetHdc();
+                    this.InternalGraphics           = Graphics.FromHdc(hdc);
+
+                    //transform the image based on calc scale
                     this.InternalGraphics.ScaleTransform(ScaleW, ScaleH);
                     this.InternalGraphics.InterpolationMode = this.Interpolation;
+
+                    //this.Stages.UpdateScale(this.ScaleW, this.ScaleH);
                 }
             } 
             catch (Exception ex) 
@@ -756,6 +758,5 @@ public class GameController : IGame
         this.WindowResizing = true;
         this.TempSender = sender;
         System.Threading.Thread.Sleep(1);
-        
     }
 }
