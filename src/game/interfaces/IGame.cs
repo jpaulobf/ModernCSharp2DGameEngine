@@ -190,4 +190,6 @@ public interface IGame
     public bool IsShotCollidingWithBackground(GameSprite sprite);
     
     public void SetGameStateToEnding();
+    
+    public void ToogleFullScreen();
 }
