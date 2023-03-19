@@ -61,12 +61,16 @@ public class GameController : IGame
     private GameOver GameOver;
     private Exit Exit;
     private Ending Ending;
+    private Object Form;
     
     /**
      * Game constructor
      */
-    public GameController(Size resolution, Size windowSize, InterpolationMode interpolationMode) {
+    public GameController(Object form, Size resolution, Size windowSize, InterpolationMode interpolationMode) {
 
+        //add the parent class reference
+        this.Form = form;
+        
         //store the window resolution
         this.Resolution             = resolution;
         this.WindowSize             = windowSize;
@@ -365,18 +369,18 @@ public class GameController : IGame
                 if (TempSender != null)
                 {
                     //calc new scale
-                    float width                     = ((Form)TempSender).ClientSize.Width;
-                    float height                    = ((Form)TempSender).ClientSize.Height;
+                    float width     = ((Form)TempSender).ClientSize.Width;
+                    float height    = ((Form)TempSender).ClientSize.Height;
 
-                    if (this.GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
-                    {
-                        this.InternalResolutionWidth   = 1000;
-                        this.InternalResolutionHeight  = 700;
-                    }
-                    else
+                    if (this.GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
                     {
                         this.InternalResolutionWidth    = 738;
                         this.InternalResolutionHeight   = 516;
+                    }
+                    else
+                    {
+                        this.InternalResolutionWidth   = 1000;
+                        this.InternalResolutionHeight  = 700;
                     }
 
                     //calc the scale
@@ -771,5 +775,13 @@ public class GameController : IGame
         this.WindowResizing = true;
         this.TempSender = sender;
         System.Threading.Thread.Sleep(1);
+    }
+
+    /**
+     * Toogle game to fullscreen/window mode
+     */
+    public void ToogleFullScreen()
+    {
+        ((Engine.MyGame.Canvas)this.Form).ToogleFullScreen();
     }
 }
