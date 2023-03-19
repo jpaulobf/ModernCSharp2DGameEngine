@@ -8,11 +8,13 @@ public class Options
     private Bitmap Selector;
     private Bitmap LabelPlayMusic;
     private Bitmap LabelPlaySFX;
+    private Bitmap LabelFullScreen;
     private Bitmap LabelExitOptions;
     private Bitmap ButtonToggleOn;
     private Bitmap ButtonToggleOff;
     private bool ButtonToggle1      = true;
     private bool ButtonToggle2      = false;
+    private bool ButtonToggle3      = false;
     private byte CurrentPosition    = 0;
     private const int OgSelectorX   = 66;
     private int SelectorX           = OgSelectorX;
@@ -23,12 +25,16 @@ public class Options
     private int LabelPlayMusicY     = 120;
     private int LabelPlaySFXX       = 128;
     private int LabelPlaySFXY       = 190;
+    private int LabelFullScreenX    = 128;
+    private int LabelFullScreenY    = 260;
     private int LabelExitOptionsX   = 38;
     private int LabelExitOptionsY   = 627;
     private int ButtonToggle1X      = 773;
     private int ButtonToggle1Y      = 120;
     private int ButtonToggle2X      = 773;
     private int ButtonToggle2Y      = 190;
+    private int ButtonToggle3X      = 773;
+    private int ButtonToggle3Y      = 260;
 
     /**
      * Constructor
@@ -39,6 +45,7 @@ public class Options
         this.Selector           = LoadingStuffs.GetInstance().GetImage("selector");
         this.LabelPlayMusic     = LoadingStuffs.GetInstance().GetImage("label-play-music");
         this.LabelPlaySFX       = LoadingStuffs.GetInstance().GetImage("label-play-sfx");
+        this.LabelFullScreen    = LoadingStuffs.GetInstance().GetImage("label-fullscreen");
         this.LabelExitOptions   = LoadingStuffs.GetInstance().GetImage("label-exit-options");
         this.ButtonToggleOn     = LoadingStuffs.GetInstance().GetImage("button-toggle-on");
         this.ButtonToggleOff    = LoadingStuffs.GetInstance().GetImage("button-toggle-off");
@@ -58,9 +65,11 @@ public class Options
         gfx.DrawImage(this.Selector, this.SelectorX, this.SelectorY, this.Selector.Width, this.Selector.Height);
         gfx.DrawImage(this.LabelPlayMusic, this.LabelPlayMusicX, this.LabelPlayMusicY, this.LabelPlayMusic.Width, this.LabelPlayMusic.Height);
         gfx.DrawImage(this.LabelPlaySFX, this.LabelPlaySFXX, this.LabelPlaySFXY, this.LabelPlaySFX.Width, this.LabelPlaySFX.Height);
+        gfx.DrawImage(this.LabelFullScreen, this.LabelFullScreenX, this.LabelFullScreenY, this.LabelFullScreen.Width, this.LabelFullScreen.Height);
         gfx.DrawImage(this.LabelExitOptions, this.LabelExitOptionsX, this.LabelExitOptionsY, this.LabelExitOptions.Width, this.LabelExitOptions.Height);
         gfx.DrawImage((this.ButtonToggle1)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle1X, this.ButtonToggle1Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
         gfx.DrawImage((this.ButtonToggle2)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle2X, this.ButtonToggle2Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
+        gfx.DrawImage((this.ButtonToggle3)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle3X, this.ButtonToggle3Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
     }
 
     /**
@@ -79,7 +88,7 @@ public class Options
         {
             if (this.CurrentPosition == 0)
             {
-                this.CurrentPosition = 2;
+                this.CurrentPosition = 3;
             }
             else 
             {
@@ -88,7 +97,7 @@ public class Options
         }
         else if (e.KeyValue == 40) //down
         {
-            if (this.CurrentPosition == 2)
+            if (this.CurrentPosition == 3)
             {
                 this.CurrentPosition = 0;
             }
@@ -107,10 +116,15 @@ public class Options
             {
                 this.ButtonToggle2 = !this.ButtonToggle2;
             }
+            else if (this.CurrentPosition == 2)
+            {
+                this.ButtonToggle3 = !this.ButtonToggle3;
+                this.GameRef.ToogleFullScreen();
+            }
         }
         else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
         {
-            if (this.CurrentPosition == 2)
+            if (this.CurrentPosition == 3)
             {
                 this.CurrentPosition = 0;
                 this.GameRef.SetGameStateToMenu();    
@@ -123,9 +137,9 @@ public class Options
         }
 
         //Correct the X & Y position of selection bar for the "exit command"
-        if (this.CurrentPosition == 2)
+        if (this.CurrentPosition == 3)
         {
-            diff    = 373;
+            diff    = 303;
             diffY   = -50;
         }
 
