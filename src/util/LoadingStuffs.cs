@@ -148,6 +148,9 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\end.png");
             Images.Add("the-end", image);
+
+            image = BitmapEx.New("img\\fullscreen_label.png");
+            Images.Add("label-fullscreen", image);
         }
         catch (Exception ex)
         {
