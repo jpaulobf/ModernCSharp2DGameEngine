@@ -31,7 +31,7 @@ public class MyGame
      * Author: Joao Paulo B Faria
      * Date:   04/sept/2022
      */
-    private class Canvas : Form, ICanvasEngine 
+    public class Canvas : Form, ICanvasEngine 
     {
         private IGame Game;
         private GameEngine GameEngine;
@@ -68,7 +68,7 @@ public class MyGame
             this.FormBorderStyle            = FormBorderStyle.FixedSingle;
 
             //go fullscreen
-            this.ToggleFullScreen(GoFullscreen);
+            this.SetFullScreen(GoFullscreen);
 
             //foward the keyboard methods
             this.FowardKeyboard();
@@ -76,14 +76,16 @@ public class MyGame
             if (this.GoFullscreen) 
             {
                 //init the game class
-                this.Game = new GameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                this.Game = new GameController(this,
+                                               new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                                new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                                InterpolationMode);
             } 
             else 
             {
                 //init the game class
-                this.Game = new GameController(new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
+                this.Game = new GameController(this,
+                                               new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                                new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
                                                InterpolationMode);
             }
@@ -117,7 +119,7 @@ public class MyGame
         /**
          * Toggle Fullscreen/Window Mode
          */
-        private void ToggleFullScreen(bool fullscreen)
+        private void SetFullScreen(bool fullscreen)
         {
             if (fullscreen) 
             {
@@ -147,12 +149,22 @@ public class MyGame
         void Canvas_KeyDown(object? sender, KeyEventArgs e)                             {   this.Game.KeyDown(sender, e);               }
         void Canvas_KeyUp(object? sender, KeyEventArgs e) 
         {
+            /*
             if (e.KeyValue == 113) 
             {
-                this.GoFullscreen = !this.GoFullscreen;
-                this.ToggleFullScreen(this.GoFullscreen);
+                ToogleFullScreen();
             }
+            */
             this.Game.KeyUp(sender, e);     
+        }
+
+        /**
+         * Toogle FullScreen
+         */
+        public void ToogleFullScreen()
+        {
+            this.GoFullscreen = !this.GoFullscreen;
+            this.SetFullScreen(this.GoFullscreen);
         }
 
         /**
