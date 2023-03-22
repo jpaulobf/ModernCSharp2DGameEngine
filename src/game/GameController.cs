@@ -116,6 +116,7 @@ public class GameController : IGame
      */
     public void Update(long frametime)
     {
+        //Update based on Current Game State
         if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
         {
             this.Menu.Update(frametime);
@@ -130,6 +131,7 @@ public class GameController : IGame
         }
         else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
         {
+            //sum the framecounter
             this.Framecounter += frametime;
 
             //start the music in the first frametime
