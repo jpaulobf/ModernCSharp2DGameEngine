@@ -7,6 +7,9 @@ using System.Drawing.Drawing2D;
 using Game.Stages;
 using Util;
 
+
+using System.Diagnostics;
+
 /**
  * Author: Joao P B Faria
  * Date: Oct/2022
@@ -383,6 +386,12 @@ public class GameController : IGame
                     {
                         this.InternalResolutionWidth   = 1000;
                         this.InternalResolutionHeight  = 700;
+                    }
+
+                    //if the window is fullscreen, control rendering stretched or not
+                    if (this.Options.Fullscreen && !this.Options.Stretched)
+                    {
+                        width = (height * this.InternalResolutionWidth) / this.InternalResolutionHeight;
                     }
 
                     //calc the scale
