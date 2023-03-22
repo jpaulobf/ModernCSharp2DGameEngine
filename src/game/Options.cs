@@ -35,6 +35,8 @@ public class Options
     private int ButtonToggle2Y      = 190;
     private int ButtonToggle3X      = 773;
     private int ButtonToggle3Y      = 260;
+    internal bool Stretched {get;set;}  = true;
+    internal bool Fullscreen {get;set;} = false;
 
     /**
      * Constructor
@@ -119,6 +121,7 @@ public class Options
             else if (this.CurrentPosition == 2)
             {
                 this.ButtonToggle3 = !this.ButtonToggle3;
+                this.Fullscreen = this.ButtonToggle3;
                 this.GameRef.ToogleFullScreen();
             }
         }
