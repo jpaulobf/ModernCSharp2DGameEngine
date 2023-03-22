@@ -768,7 +768,7 @@ public class GameController : IGame
     public HUD GetHUD()                                         {   return (this.Hud);                              }
 
     /**
-     * Resize screen (WIP...)
+     * Resize screen
      */
     public void Resize(object? sender, System.EventArgs e)
     {
