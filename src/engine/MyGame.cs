@@ -63,6 +63,7 @@ public class MyGame
             //create the backbuffer image
             this.Graphics                   = this.CreateGraphics();
             this.Graphics.InterpolationMode = InterpolationMode;
+            this.BackColor                  = Color.FromArgb(0, 0, 0);
 
             //no resizible
             this.FormBorderStyle            = FormBorderStyle.FixedSingle;
