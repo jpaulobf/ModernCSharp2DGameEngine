@@ -30,6 +30,7 @@ public class GameController : IGame
     protected int InternalResolutionHeight  = 700; //516;
     private float ScaleW                    = 1.0F;
     private float ScaleH                    = 1.0F;
+    private int RenderX                     = 0;
     private bool WindowResizing             = false;
     private bool Terminate                  = false;
     private Object? TempSender;
@@ -317,7 +318,7 @@ public class GameController : IGame
             //gdi+ style
             IntPtr dhdc = targetGraphics.GetHdc();
             IntPtr shdc = this.InternalGraphics.GetHdc();
-            BitmapEx.BitBlt(dhdc, 0, 0, this.WindowSize.Width, this.WindowSize.Height, shdc, 0, 0, BitmapEx.SRCCOPY);
+            BitmapEx.BitBlt(dhdc, this.RenderX, 0, this.WindowSize.Width, this.WindowSize.Height, shdc, 0, 0, BitmapEx.SRCCOPY);
             this.InternalGraphics.ReleaseHdc(shdc);
             targetGraphics.ReleaseHdc(dhdc);
         }
@@ -376,6 +377,7 @@ public class GameController : IGame
                     //calc new scale
                     float width     = ((Form)TempSender).ClientSize.Width;
                     float height    = ((Form)TempSender).ClientSize.Height;
+                    this.RenderX    = 0;
 
                     if (this.GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
                     {
@@ -391,7 +393,9 @@ public class GameController : IGame
                     //if the window is fullscreen, control rendering stretched or not
                     if (this.Options.Fullscreen && !this.Options.Stretched)
                     {
+                        float temp = width;
                         width = (height * this.InternalResolutionWidth) / this.InternalResolutionHeight;
+                        this.RenderX = (int)((temp / 2) - (width / 2));
                     }
 
                     //calc the scale
