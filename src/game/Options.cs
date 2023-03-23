@@ -9,12 +9,14 @@ public class Options
     private Bitmap LabelPlayMusic;
     private Bitmap LabelPlaySFX;
     private Bitmap LabelFullScreen;
+    private Bitmap LabelStretched;
     private Bitmap LabelExitOptions;
     private Bitmap ButtonToggleOn;
     private Bitmap ButtonToggleOff;
     private bool ButtonToggle1      = true;
     private bool ButtonToggle2      = false;
     private bool ButtonToggle3      = false;
+    private bool ButtonToggle4      = false;
     private byte CurrentPosition    = 0;
     private const int OgSelectorX   = 66;
     private int SelectorX           = OgSelectorX;
@@ -29,13 +31,17 @@ public class Options
     private int LabelFullScreenY    = 260;
     private int LabelExitOptionsX   = 38;
     private int LabelExitOptionsY   = 627;
+    private int LabelStretchedX     = 128;
+    private int LabelStretchedY     = 330;
     private int ButtonToggle1X      = 773;
     private int ButtonToggle1Y      = 120;
     private int ButtonToggle2X      = 773;
     private int ButtonToggle2Y      = 190;
     private int ButtonToggle3X      = 773;
     private int ButtonToggle3Y      = 260;
-    internal bool Stretched {get;set;}  = true;
+    private int ButtonToggle4X      = 773;
+    private int ButtonToggle4Y      = 330;
+    internal bool Stretched {get;set;}  = false;
     internal bool Fullscreen {get;set;} = false;
 
     /**
@@ -49,6 +55,7 @@ public class Options
         this.LabelPlaySFX       = LoadingStuffs.GetInstance().GetImage("label-play-sfx");
         this.LabelFullScreen    = LoadingStuffs.GetInstance().GetImage("label-fullscreen");
         this.LabelExitOptions   = LoadingStuffs.GetInstance().GetImage("label-exit-options");
+        this.LabelStretched     = LoadingStuffs.GetInstance().GetImage("label-stretched");
         this.ButtonToggleOn     = LoadingStuffs.GetInstance().GetImage("button-toggle-on");
         this.ButtonToggleOff    = LoadingStuffs.GetInstance().GetImage("button-toggle-off");
     }
@@ -72,6 +79,11 @@ public class Options
         gfx.DrawImage((this.ButtonToggle1)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle1X, this.ButtonToggle1Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
         gfx.DrawImage((this.ButtonToggle2)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle2X, this.ButtonToggle2Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
         gfx.DrawImage((this.ButtonToggle3)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle3X, this.ButtonToggle3Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
+        if (this.ButtonToggle3)
+        {
+            gfx.DrawImage(this.LabelStretched, this.LabelStretchedX, this.LabelStretchedY, this.LabelStretched.Width, this.LabelStretched.Height);
+            gfx.DrawImage((this.ButtonToggle4)?this.ButtonToggleOn:this.ButtonToggleOff, this.ButtonToggle4X, this.ButtonToggle4Y, this.ButtonToggleOn.Width, this.ButtonToggleOn.Height);
+        }
     }
 
     /**
