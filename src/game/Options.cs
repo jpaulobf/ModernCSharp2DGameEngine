@@ -102,22 +102,30 @@ public class Options
         {
             if (this.CurrentPosition == 0)
             {
-                this.CurrentPosition = 3;
+                this.CurrentPosition = 4;
             }
             else 
             {
                 this.CurrentPosition--;
+                if (!this.Fullscreen && this.CurrentPosition == 3)
+                {
+                    this.CurrentPosition = 2;
+                }
             }
         }
         else if (e.KeyValue == 40) //down
         {
-            if (this.CurrentPosition == 3)
+            if (this.CurrentPosition == 4)
             {
                 this.CurrentPosition = 0;
             }
             else 
             {
                 this.CurrentPosition++;
+                if (!this.Fullscreen && this.CurrentPosition == 3)
+                {
+                    this.CurrentPosition = 4;
+                }
             }
         }
         else if (e.KeyValue == 37 || e.KeyValue == 39) //left || right
@@ -136,10 +144,16 @@ public class Options
                 this.Fullscreen = this.ButtonToggle3;
                 this.GameRef.ToogleFullScreen();
             }
+            else if (this.CurrentPosition == 3)
+            {
+                this.ButtonToggle4 = !this.ButtonToggle4;
+                this.Stretched = this.ButtonToggle4;
+                this.GameRef.ControlStretched();
+            }
         }
         else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
         {
-            if (this.CurrentPosition == 3)
+            if (this.CurrentPosition == 4)
             {
                 this.CurrentPosition = 0;
                 this.GameRef.SetGameStateToMenu();    
@@ -152,9 +166,9 @@ public class Options
         }
 
         //Correct the X & Y position of selection bar for the "exit command"
-        if (this.CurrentPosition == 3)
+        if (this.CurrentPosition == 4)
         {
-            diff    = 303;
+            diff    = 233;
             diffY   = -50;
         }
 
