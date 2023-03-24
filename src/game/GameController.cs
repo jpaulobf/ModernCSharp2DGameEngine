@@ -23,6 +23,8 @@ public class GameController : IGame
     private volatile BufferedGraphics BufferedGraphics;
     private volatile Bitmap BufferedImage;
     private volatile Graphics InternalGraphics;
+    private volatile Graphics BlackGraphics;
+    private Graphics? FormGraphics;
     public Size Resolution                  { get; set; }
     public Size WindowSize                  { get; set; }
     public InterpolationMode Interpolation  { get; }
@@ -34,6 +36,7 @@ public class GameController : IGame
     private bool WindowResizing             = false;
     private bool Terminate                  = false;
     private Object? TempSender;
+    IntPtr test;
 
     //-----------------------------------------------------//
     //--- Game Elements control                         ---//
@@ -89,6 +92,13 @@ public class GameController : IGame
         Graphics graphics           = Graphics.FromImage(this.BufferedImage);
         IntPtr hdc                  = graphics.GetHdc();
         this.InternalGraphics       = Graphics.FromHdc(hdc);
+
+        Graphics bGraphics          = Graphics.FromImage(new Bitmap(2000, 2000));
+        IntPtr blackHdc             = bGraphics.GetHdc();
+        this.BlackGraphics          = Graphics.FromHdc(blackHdc);
+        this.BlackGraphics.Clear(Color.Black);
+        this.BlackGraphics.FillRectangle(Brushes.Black, 0, 0, 2000, 2000);
+        this.test = this.BlackGraphics.GetHdc();
 
         // -->>>> dotnet preferable style (same performance)
         // this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, windowSize.Width, windowSize.Height));
@@ -315,6 +325,9 @@ public class GameController : IGame
             // --->> dotnet preferable code
             // this.BufferedGraphics.Render(targetGraphics);
             
+            //save the targetGraphics
+            this.FormGraphics = targetGraphics;
+
             //gdi+ style
             IntPtr dhdc = targetGraphics.GetHdc();
             IntPtr shdc = this.InternalGraphics.GetHdc();
@@ -393,9 +406,9 @@ public class GameController : IGame
                     //if the window is fullscreen, control rendering stretched or not
                     if (this.Options.Fullscreen && !this.Options.Stretched)
                     {
-                        float temp = width;
-                        width = (height * this.InternalResolutionWidth) / this.InternalResolutionHeight;
-                        this.RenderX = (int)((temp / 2) - (width / 2));
+                        float temp      = width;
+                        width           = (height * this.InternalResolutionWidth) / this.InternalResolutionHeight;
+                        this.RenderX    = (int)((temp / 2) - (width / 2));
                     }
 
                     //calc the scale
@@ -416,9 +429,14 @@ public class GameController : IGame
                     
                     //set the new window size
                     this.WindowSize = new Size((int)width, (int)height);
-                    
 
-                    //this.Stages.UpdateScale(this.ScaleW, this.ScaleH);
+                    //Clear the background color.
+                    if (this.FormGraphics != null)
+                    {
+                        IntPtr dhdc = this.FormGraphics.GetHdc();
+                        BitmapEx.BitBlt(dhdc, 0, 0, this.WindowSize.Width, this.WindowSize.Height, test, 0, 0, BitmapEx.SRCCOPY);
+                        this.FormGraphics.ReleaseHdc(dhdc);
+                    }
                 }
             } 
             catch (Exception ex) 
@@ -798,5 +816,11 @@ public class GameController : IGame
     public void ToogleFullScreen()
     {
         ((Engine.MyGame.Canvas)this.Form).ToogleFullScreen();
+    }
+
+    public void ControlStretched()
+    {
+        this.WindowResizing = true;
+        System.Threading.Thread.Sleep(1);
     }
 }
