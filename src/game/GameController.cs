@@ -50,6 +50,7 @@ public class GameController : IGame
     private volatile bool ResetAfterDead    = false;
     private volatile bool ShowPlayerSprite  = false;
     private volatile bool Invalidate        = false;
+    private volatile bool ResetRender       = false;
     private long Framecounter               = 0;
     private Util.SoundPlayerEx GameMusic    = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "\\sfx\\main.wav");
     private Util.SoundPlayerEx EndingMusic  = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "\\sfx\\ending.wav");
@@ -73,10 +74,12 @@ public class GameController : IGame
     /**
      * Game constructor
      */
-    public GameController(Object form, Size resolution, Size windowSize, InterpolationMode interpolationMode) {
+    public GameController(Object form, Graphics formGraphics, Size resolution, Size windowSize, InterpolationMode interpolationMode) 
+    {
 
         //add the parent class reference
         this.Form = form;
+        this.FormGraphics = formGraphics;
         
         //store the window resolution
         this.Resolution             = resolution;
@@ -318,7 +321,7 @@ public class GameController : IGame
     /**
      * Render the BackBuffer
      */
-    public void Render(Graphics targetGraphics) 
+    public void Render()//Graphics targetGraphics) 
     {
         if (!this.SkipRender)
         {
@@ -326,14 +329,21 @@ public class GameController : IGame
             // this.BufferedGraphics.Render(targetGraphics);
             
             //save the targetGraphics
-            this.FormGraphics = targetGraphics;
-
+            //this.FormGraphics = targetGraphics;
+            
             //gdi+ style
-            IntPtr dhdc = targetGraphics.GetHdc();
+            IntPtr dhdc = this.FormGraphics.GetHdc();
             IntPtr shdc = this.InternalGraphics.GetHdc();
             BitmapEx.BitBlt(dhdc, this.RenderX, 0, this.WindowSize.Width, this.WindowSize.Height, shdc, 0, 0, BitmapEx.SRCCOPY);
+
+            if (this.ResetRender)
+            {
+                BitmapEx.BitBlt(dhdc, this.RenderX, 0, 2000, 2000, test, 0, 0, BitmapEx.SRCCOPY);
+                this.ResetRender = false;
+            }
+
             this.InternalGraphics.ReleaseHdc(shdc);
-            targetGraphics.ReleaseHdc(dhdc);
+            this.FormGraphics.ReleaseHdc(dhdc);
         }
 
         this.SkipRender = false;
@@ -431,11 +441,12 @@ public class GameController : IGame
                     this.WindowSize = new Size((int)width, (int)height);
 
                     //Clear the background color.
-                    if (this.FormGraphics != null)
+                    if (this.FormGraphics != null && this.Options.Fullscreen && !this.Options.Stretched)
                     {
                         IntPtr dhdc = this.FormGraphics.GetHdc();
                         BitmapEx.BitBlt(dhdc, 0, 0, this.WindowSize.Width, this.WindowSize.Height, test, 0, 0, BitmapEx.SRCCOPY);
                         this.FormGraphics.ReleaseHdc(dhdc);
+                        this.ResetRender = true;
                     }
                 }
             } 
@@ -443,7 +454,6 @@ public class GameController : IGame
             {
                 Console.WriteLine(ex);
             }
-
             this.WindowResizing = false;
         }
     }
