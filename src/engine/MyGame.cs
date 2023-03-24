@@ -78,6 +78,7 @@ public class MyGame
             {
                 //init the game class
                 this.Game = new GameController(this,
+                                               this.Graphics,
                                                new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                                new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                                InterpolationMode);
@@ -86,6 +87,7 @@ public class MyGame
             {
                 //init the game class
                 this.Game = new GameController(this,
+                                               this.Graphics,
                                                new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height),
                                                new Size(ExternalResolutionWidth, ExternalResolutionHeight), 
                                                InterpolationMode);
@@ -190,7 +192,7 @@ public class MyGame
          */
         public void Render() 
         {
-            this.Game.Render(this.Graphics);
+            this.Game.Render();
             if (this.Game.GetTerminateStatus())
             {
                 this.Invoke(new Action(()=> this.Close()));
