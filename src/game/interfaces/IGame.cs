@@ -192,4 +192,6 @@ public interface IGame
     public void SetGameStateToEnding();
     
     public void ToogleFullScreen();
+
+    public void ControlStretched();
 }
