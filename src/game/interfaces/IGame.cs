@@ -27,7 +27,7 @@ public interface IGame
     /**
      * Render is the method responsible for "printing" the backbuffer to the current buffer
      */
-    public void Render(Graphics targetGraphics);
+    public void Render();
 
     /**
      * Release anything (if necessary)
