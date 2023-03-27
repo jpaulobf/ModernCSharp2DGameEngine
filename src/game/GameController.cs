@@ -828,7 +828,10 @@ public class GameController : IGame
         ((Engine.MyGame.Canvas)this.Form).ToogleFullScreen();
     }
 
-    public void ControlStretched()
+    /**
+     * Toggle the Stretched mode
+     */
+    public void ToggleStretched()
     {
         this.WindowResizing = true;
         System.Threading.Thread.Sleep(1);
