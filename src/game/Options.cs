@@ -148,7 +148,7 @@ public class Options
             {
                 this.ButtonToggle4 = !this.ButtonToggle4;
                 this.Stretched = this.ButtonToggle4;
-                this.GameRef.ControlStretched();
+                this.GameRef.ToggleStretched();
             }
         }
         else if (e.KeyValue == 32 || e.KeyValue == 13) //space or enter
