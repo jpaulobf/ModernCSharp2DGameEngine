@@ -193,5 +193,5 @@ public interface IGame
     
     public void ToogleFullScreen();
 
-    public void ControlStretched();
+    public void ToggleStretched();
 }
