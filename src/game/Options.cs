@@ -142,7 +142,7 @@ public class Options
             {
                 this.ButtonToggle3 = !this.ButtonToggle3;
                 this.Fullscreen = this.ButtonToggle3;
-                this.GameRef.ToogleFullScreen();
+                this.GameRef.ToggleFullScreen();
             }
             else if (this.CurrentPosition == 3)
             {
