@@ -197,7 +197,7 @@ public interface IGame
     /**
      * Access game-engine to Toggle Fullscreen
      */
-    public void ToogleFullScreen();
+    public void ToggleFullScreen();
 
     /**
      * Acess game-engine to Toggle Stretched
