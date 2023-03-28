@@ -823,7 +823,7 @@ public class GameController : IGame
     /**
      * Toogle game to fullscreen/window mode
      */
-    public void ToogleFullScreen()
+    public void ToggleFullScreen()
     {
         ((Engine.MyGame.Canvas)this.Form).ToogleFullScreen();
     }
