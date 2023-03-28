@@ -194,7 +194,13 @@ public interface IGame
      */   
     public void SetGameStateToEnding();
     
+    /**
+     * Access game-engine to Toggle Fullscreen
+     */
     public void ToogleFullScreen();
 
+    /**
+     * Acess game-engine to Toggle Stretched
+     */
     public void ToggleStretched();
 }
