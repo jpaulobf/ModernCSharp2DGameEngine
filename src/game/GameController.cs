@@ -821,7 +821,7 @@ public class GameController : IGame
     }
 
     /**
-     * Toogle game to fullscreen/window mode
+     * Toggle game to fullscreen/window mode
      */
     public void ToggleFullScreen()
     {
