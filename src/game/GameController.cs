@@ -769,6 +769,9 @@ public class GameController : IGame
         this.GameStateMachine.SetStateToMenu();
     }
 
+    /**
+     * Set game state to ending
+     */
     public void SetGameStateToEnding()
     {
         this.Framecounter = 0;
