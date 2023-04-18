@@ -24,7 +24,7 @@ public class GameController : IGame
     private volatile Bitmap BufferedImage;
     private volatile Graphics InternalGraphics;
     private volatile Graphics BlackGraphics;
-    private Graphics? FormGraphics;
+    private Graphics FormGraphics;
     public Size Resolution                  { get; set; }
     public Size WindowSize                  { get; set; }
     public InterpolationMode Interpolation  { get; }
@@ -36,7 +36,7 @@ public class GameController : IGame
     private bool WindowResizing             = false;
     private bool Terminate                  = false;
     private Object? TempSender;
-    IntPtr test;
+    IntPtr BlackGraphicsHdc;
 
     //-----------------------------------------------------//
     //--- Game Elements control                         ---//
@@ -98,10 +98,12 @@ public class GameController : IGame
 
         Graphics bGraphics          = Graphics.FromImage(new Bitmap(2000, 2000));
         IntPtr blackHdc             = bGraphics.GetHdc();
+
+        //For image Reset
         this.BlackGraphics          = Graphics.FromHdc(blackHdc);
         this.BlackGraphics.Clear(Color.Black);
         this.BlackGraphics.FillRectangle(Brushes.Black, 0, 0, 2000, 2000);
-        this.test = this.BlackGraphics.GetHdc();
+        this.BlackGraphicsHdc       = this.BlackGraphics.GetHdc();
 
         // -->>>> dotnet preferable style (same performance)
         // this.BufferedGraphics   = BufferedGraphicsManager.Current.Allocate(Graphics.FromImage(this.BufferedImage), new Rectangle(0, 0, windowSize.Width, windowSize.Height));
@@ -338,7 +340,7 @@ public class GameController : IGame
 
             if (this.ResetRender)
             {
-                BitmapEx.BitBlt(dhdc, this.RenderX, 0, 2000, 2000, test, 0, 0, BitmapEx.SRCCOPY);
+                BitmapEx.BitBlt(dhdc, this.RenderX, 0, 2000, 2000, BlackGraphicsHdc, 0, 0, BitmapEx.SRCCOPY);
                 this.ResetRender = false;
             }
 
@@ -444,7 +446,7 @@ public class GameController : IGame
                     if (this.FormGraphics != null && this.Options.Fullscreen && !this.Options.Stretched)
                     {
                         IntPtr dhdc = this.FormGraphics.GetHdc();
-                        BitmapEx.BitBlt(dhdc, 0, 0, this.WindowSize.Width, this.WindowSize.Height, test, 0, 0, BitmapEx.SRCCOPY);
+                        BitmapEx.BitBlt(dhdc, 0, 0, this.WindowSize.Width, this.WindowSize.Height, BlackGraphicsHdc, 0, 0, BitmapEx.SRCCOPY);
                         this.FormGraphics.ReleaseHdc(dhdc);
                         this.ResetRender = true;
                     }
