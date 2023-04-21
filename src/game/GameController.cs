@@ -7,9 +7,6 @@ using System.Drawing.Drawing2D;
 using Game.Stages;
 using Util;
 
-
-using System.Diagnostics;
-
 /**
  * Author: Joao P B Faria
  * Date: Oct/2022
