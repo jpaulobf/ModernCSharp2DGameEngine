@@ -3,13 +3,14 @@ namespace Game;
 public class GameOver
 {
     private IGame GameRef;
+    private long Framecounter = 0;
 
     /**
      * Constructor
      */
     public GameOver(IGame game) 
     {
-        this.GameRef        = game;
+        this.GameRef = game;
     }
 
     /**
@@ -17,7 +18,12 @@ public class GameOver
      */
     public void Update(long frametime) 
     {
-        //TODO
+        this.Framecounter += frametime;
+        if (this.Framecounter == frametime) 
+        {
+            //stop music
+            //start gameover music
+        }
     }
 
     /**
