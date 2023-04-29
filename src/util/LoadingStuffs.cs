@@ -154,6 +154,9 @@ public class LoadingStuffs
 
             image = BitmapEx.New("img\\lb_stretched.png");
             Images.Add("label-stretched", image);
+
+            image = BitmapEx.New("img\\gameover.png");
+            Images.Add("gameover", image);
         }
         catch (Exception ex)
         {
