@@ -94,7 +94,8 @@ public class Menu
             if (this.CurrentPosition == 0)
             {
                 this.GameRef.InitGameConfigurations();
-                this.GameRef.SetGameStateToInGame();             
+                this.GameRef.SetGameStateToInGame();
+                this.GameRef.SetGameStateToGameOver();
             }
             else if (this.CurrentPosition == 1)
             {
