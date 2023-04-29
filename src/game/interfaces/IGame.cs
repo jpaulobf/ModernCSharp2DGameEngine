@@ -145,6 +145,11 @@ public interface IGame
     public void SetGameStateToOptions();
 
     /**
+     * Change game state to "GameOver"
+     */
+    public void SetGameStateToGameOver();
+
+    /**
      * Exit the game
      */
     public void ExitGame();
