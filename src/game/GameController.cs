@@ -785,6 +785,15 @@ public class GameController : IGame
     }
 
     /**
+     * Set GameState to Game Over
+     */
+    public void SetGameStateToGameOver()
+    {
+        this.Framecounter = 0;
+        this.GameStateMachine.SetGameStateToGameOver();
+    }
+
+    /**
      * Set game status to "exit"
      */
     public void ExitGame()
@@ -802,6 +811,7 @@ public class GameController : IGame
     public IEnumerable<GameSprite> GetCurrentScreenSprites()    {  
         return (this.Stages.GetSpritesInScreen());
     }
+
     public Graphics GetGraphics()                               {   return (this.InternalGraphics);                 }
     public int GetInternalResolutionWidth()                     {   return (this.InternalResolutionWidth);          }
     public int GetInternalResolutionHeight()                    {   return (this.InternalResolutionHeight);         }
