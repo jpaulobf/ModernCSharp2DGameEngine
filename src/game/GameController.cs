@@ -75,8 +75,8 @@ public class GameController : IGame
     {
 
         //add the parent class reference
-        this.Form = form;
-        this.FormGraphics = formGraphics;
+        this.Form                   = form;
+        this.FormGraphics           = formGraphics;
         
         //store the window resolution
         this.Resolution             = resolution;
@@ -86,7 +86,9 @@ public class GameController : IGame
         this.Interpolation          = interpolationMode;
 
         //create the imagebuffer
-        this.BufferedImage = (this.InternalResolutionWidth > this.WindowSize.Width)?new Bitmap(InternalResolutionWidth, InternalResolutionHeight):new Bitmap(this.WindowSize.Width, this.WindowSize.Height);
+        this.BufferedImage          = (this.InternalResolutionWidth > this.WindowSize.Width)?
+                                        new Bitmap(InternalResolutionWidth, InternalResolutionHeight):
+                                        new Bitmap(this.WindowSize.Width, this.WindowSize.Height);
         
         // -->>>> gdi+ style
         Graphics graphics           = Graphics.FromImage(this.BufferedImage);
@@ -242,8 +244,8 @@ public class GameController : IGame
      */
     public void Draw(long frametime)
     {
-        if (!this.WindowResizing) 
-        {
+        // if (!this.WindowResizing) 
+        // {
             if (!this.SkipDraw)
             {
                 if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
@@ -314,7 +316,7 @@ public class GameController : IGame
                 }
             }
             this.SkipDraw = false;
-        }
+        // }
     }
     
     /**
@@ -363,7 +365,9 @@ public class GameController : IGame
             this.ScaleH = (float)((float)this.WindowSize.Height / (float)this.InternalResolutionHeight);
 
             //create the imagebuffer
-            this.BufferedImage          = (this.InternalResolutionWidth > this.WindowSize.Width)?new Bitmap(InternalResolutionWidth, InternalResolutionHeight):new Bitmap(this.WindowSize.Width, this.WindowSize.Height);
+            this.BufferedImage          = (this.InternalResolutionWidth > this.WindowSize.Width)?
+                                            new Bitmap(InternalResolutionWidth, InternalResolutionHeight):
+                                            new Bitmap(this.WindowSize.Width, this.WindowSize.Height);
             
             // -->>>> gdi+ style
             Graphics graphics           = Graphics.FromImage(this.BufferedImage);
@@ -808,10 +812,7 @@ public class GameController : IGame
     }
     
     //Accessors
-    public IEnumerable<GameSprite> GetCurrentScreenSprites()    {  
-        return (this.Stages.GetSpritesInScreen());
-    }
-
+    public IEnumerable<GameSprite> GetCurrentScreenSprites()    {   return (this.Stages.GetSpritesInScreen());      }
     public Graphics GetGraphics()                               {   return (this.InternalGraphics);                 }
     public int GetInternalResolutionWidth()                     {   return (this.InternalResolutionWidth);          }
     public int GetInternalResolutionHeight()                    {   return (this.InternalResolutionHeight);         }
@@ -819,7 +820,7 @@ public class GameController : IGame
     public float GetScaleH()                                    {   return (this.ScaleH);                           }
     public Player GetPlayer()                                   {   return (this.Player);                           }
     public bool GetTerminateStatus()                            {   return (this.Terminate);                        }
-    public GameStages GetStages()                              {   return (this.Stages);                           }
+    public GameStages GetStages()                               {   return (this.Stages);                           }
     public HUD GetHUD()                                         {   return (this.Hud);                              }
 
     /**
@@ -828,6 +829,8 @@ public class GameController : IGame
     public void Resize(object? sender, System.EventArgs e)
     {
         this.WindowResizing = true;
+        this.SkipDraw = true;
+        this.SkipRender = true;
         this.TempSender = sender;
         System.Threading.Thread.Sleep(1);
     }
@@ -846,6 +849,8 @@ public class GameController : IGame
     public void ToggleStretched()
     {
         this.WindowResizing = true;
+        this.SkipDraw = true;
+        this.SkipRender = true;
         System.Threading.Thread.Sleep(1);
     }
 }
