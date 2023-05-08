@@ -9,8 +9,7 @@ public class GameOver
     private Bitmap GameOverImage;
     private float GameOverImageX = 0;
     private float GameOverImageY = 0;
-    private float GameOverImageW = 0;
-    private float GameOverImageH = 0;
+    private Util.SoundPlayerEx GameOverMusic;
 
     /**
      * Constructor
@@ -19,13 +18,9 @@ public class GameOver
     {
         this.GameRef        = game;
         this.GameOverImage  = LoadingStuffs.GetInstance().GetImage("gameover");
-        
-        this.GameOverImageW = this.GameOverImage.Width / this.GameRef.GetScaleW();
-        this.GameOverImageH = this.GameOverImage.Height / this.GameRef.GetScaleH();
-
-        this.GameOverImageX = (this.GameRef.GetInternalResolutionWidth() / 2) - (this.GameOverImageW / 2);
-        this.GameOverImageY = (this.GameRef.GetInternalResolutionHeight() / 2) - (this.GameOverImageH / 2) - 30;
-
+        this.GameOverMusic  = new Util.SoundPlayerEx(Util.Utility.getCurrentPath() + "\\sfx\\gameover-theme.wav");
+        this.GameOverImageX = (this.GameRef.GetInternalResolutionWidth() / 2) - (this.GameOverImage.Width / 2);
+        this.GameOverImageY = (this.GameRef.GetInternalResolutionHeight() / 2) - (this.GameOverImage.Height / 2) - 30;
     }
 
     /**
@@ -36,8 +31,7 @@ public class GameOver
         this.Framecounter += frametime;
         if (this.Framecounter == frametime) 
         {
-            //stop music
-            //start gameover music
+            this.GameOverMusic.Play();
         }
     }
 
@@ -47,7 +41,7 @@ public class GameOver
     public void Draw(Graphics gfx) 
     {
         gfx.FillRectangle(Brushes.Black, 0, 0, this.GameRef.GetInternalResolutionWidth(), this.GameRef.GetInternalResolutionHeight());
-        gfx.DrawImage(this.GameOverImage, this.GameOverImageX, this.GameOverImageY, this.GameOverImageW, this.GameOverImageH);
+        gfx.DrawImage(this.GameOverImage, this.GameOverImageX, this.GameOverImageY, this.GameOverImage.Width, this.GameOverImage.Height);
     }
 
     /**

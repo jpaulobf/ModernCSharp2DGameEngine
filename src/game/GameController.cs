@@ -244,79 +244,76 @@ public class GameController : IGame
      */
     public void Draw(long frametime)
     {
-        // if (!this.WindowResizing) 
-        // {
-            if (!this.SkipDraw)
+        if (!this.SkipDraw)
+        {
+            if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
             {
-                if (GameStateMachine.GetCurrentGameState() == StateMachine.MENU)
-                {
-                    this.Menu.Draw(this.InternalGraphics);
-                }
-                else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTIONS)
-                {
-                    this.Options.Draw(this.InternalGraphics);
-                }
-                else if (GameStateMachine.GetCurrentGameState() == StateMachine.EXITING)
-                {
-                    //draw the stage bg & enemies
-                    this.Stages.Draw(this.InternalGraphics);
+                this.Menu.Draw(this.InternalGraphics);
+            }
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.OPTIONS)
+            {
+                this.Options.Draw(this.InternalGraphics);
+            }
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.EXITING)
+            {
+                //draw the stage bg & enemies
+                this.Stages.Draw(this.InternalGraphics);
 
-                    //draw the HUD
-                    this.Hud.Draw(this.InternalGraphics);
+                //draw the HUD
+                this.Hud.Draw(this.InternalGraphics);
 
-                    //draw the Score
-                    this.Score.Draw(this.InternalGraphics);
+                //draw the Score
+                this.Score.Draw(this.InternalGraphics);
 
+                // Draw Player Sprite
+                this.Player.Draw(this.InternalGraphics);
+
+                //Draw Exiting Board
+                this.Exit.Draw(this.InternalGraphics);
+            }
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
+            {
+                //draw the stage bg & enemies
+                this.Stages.Draw(this.InternalGraphics);
+
+                //draw the HUD
+                this.Hud.Draw(this.InternalGraphics);
+
+                //draw the Score
+                this.Score.Draw(this.InternalGraphics);
+
+                if (this.ShowPlayerSprite) 
+                {
                     // Draw Player Sprite
                     this.Player.Draw(this.InternalGraphics);
-
-                    //Draw Exiting Board
-                    this.Exit.Draw(this.InternalGraphics);
                 }
-                else if (GameStateMachine.GetCurrentGameState() == StateMachine.IN_GAME)
+
+                //draw pause message
+                if (this.Paused) 
                 {
-                    //draw the stage bg & enemies
-                    this.Stages.Draw(this.InternalGraphics);
-
-                    //draw the HUD
-                    this.Hud.Draw(this.InternalGraphics);
-
-                    //draw the Score
-                    this.Score.Draw(this.InternalGraphics);
-
-                    if (this.ShowPlayerSprite) 
-                    {
-                        // Draw Player Sprite
-                        this.Player.Draw(this.InternalGraphics);
-                    }
-
-                    //draw pause message
-                    if (this.Paused) 
-                    {
-                        this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(180, 255, 255, 255)), 0, PausePoint.Y - 20, this.WindowSize.Width, 60);
-                        this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y - 20, this.WindowSize.Width, 2);
-                        this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y + 40, this.WindowSize.Width, 2);
-                        this.InternalGraphics.DrawString("Game Paused!", PauseFont, Brushes.Black, PausePoint);
-                    }
-                }
-                else if (GameStateMachine.GetCurrentGameState() == StateMachine.GAME_OVER)
-                {
-                    this.GameOver.Draw(this.InternalGraphics);
-                }
-                else if (GameStateMachine.GetCurrentGameState() == StateMachine.ENDING)
-                {
-                    //draw the ending scene...
-                    this.Ending.Draw(this.InternalGraphics);
-
-                    //draw the HUD
-                    this.Hud.Draw(this.InternalGraphics);
-
-                    //draw the Score
-                    this.Score.Draw(this.InternalGraphics);
+                    this.InternalGraphics.FillRectangle(new SolidBrush(Color.FromArgb(180, 255, 255, 255)), 0, PausePoint.Y - 20, this.WindowSize.Width, 60);
+                    this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y - 20, this.WindowSize.Width, 2);
+                    this.InternalGraphics.FillRectangle(Brushes.LightGray, 0, PausePoint.Y + 40, this.WindowSize.Width, 2);
+                    this.InternalGraphics.DrawString("Game Paused!", PauseFont, Brushes.Black, PausePoint);
                 }
             }
-            this.SkipDraw = false;
-        // }
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.GAME_OVER)
+            {
+                this.GameOver.Draw(this.InternalGraphics);
+            }
+            else if (GameStateMachine.GetCurrentGameState() == StateMachine.ENDING)
+            {
+                //draw the ending scene...
+                this.Ending.Draw(this.InternalGraphics);
+
+                //draw the HUD
+                this.Hud.Draw(this.InternalGraphics);
+
+                //draw the Score
+                this.Score.Draw(this.InternalGraphics);
+            }
+        }
+        this.SkipDraw = false;
     }
     
     /**
